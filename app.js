@@ -6,7 +6,6 @@ dotenv.config({path:"./config.env"});
 
 // Initialize Express app
 const app = express();
-const PORT = 8000; // As suggested in the brief for local testing [cite: 44]
 
 // === APP CONFIGURATION ===
 // Set EJS as the templating engine [cite: 13]
@@ -28,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // === ROUTE IMPORTS (The Vertical Slices) ===
 // Each team member's dedicated routing file 
 // const authRoutes = require('./routes/auth');               // Person 1
-// const petRoutes = require('./routes/pets');                // Person 2
+const petRoutes = require('./routes/pets.js');                // Person 2
 // const browseRoutes = require('./routes/browse');           // Person 3
 // const applicationRoutes = require('./routes/applications');// Person 4
 // const dashboardRoutes = require('./routes/dashboard');     // Person 5
@@ -36,7 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // === MOUNTING ROUTES ===
 // app.use('/', authRoutes);
-// app.use('/pets', petRoutes);
+app.use('/pets', petRoutes);
 // app.use('/browse', browseRoutes);
 // app.use('/applications', applicationRoutes);
 // app.use('/dashboard', dashboardRoutes);
