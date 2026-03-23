@@ -6,8 +6,6 @@ dotenv.config({path:"./config.env"});
 
 // Initialize Express app
 const app = express();
-const PORT = 8000; // As suggested in the brief for local testing [cite: 44]
-
 // === APP CONFIGURATION ===
 // Set EJS as the templating engine [cite: 13]
 app.set('view engine', 'ejs');
