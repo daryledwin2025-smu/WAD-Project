@@ -21,7 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Create session to remain logged in through all the html pages
 app.use(
   session({
-    secret: process.env.SECRET,  
+    secret: '123',  
     resave: false,
     saveUninitialized: false
   })
