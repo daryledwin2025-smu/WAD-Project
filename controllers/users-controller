@@ -1,20 +1,46 @@
 const User = require("../models/user-model");
-
+const bcrypt = require("bcrypt");
 
 exports.displayLogin = (req, res) => {
-    res.render("user-login", { user: undefined });
+  return res.render("user-login", { user: undefined });
 }
 
 exports.submitLogin = async (req, res) => {
-    const username = req.body.username;
-    try {
-        const user = await User.getUserByUsername(username)
+  const username = req.body.username;
+  const pass = req.body.pass;
+  try {
+    const user = await User.getUserByUsername(username);
+    // user contrains infor stored from MongoDB
+    if (!user) {
+      return res.redirect("/user-login")
+    } else {
+      const match = await bcrypt.compare(pass, user.pass);
+      if (match) {
         req.session.user = user;
-        res.render("user-login", { user })
-    } catch (error) {
-        console.log("Error")
+        console.log(user.account)
+        if (user.account === "Shelter") {
+          console.log("GOING TO HOME-SHELTER");
+          return res.redirect("/home-shelter");
+        } else {
+          console.log("GOING TO HOME");
+          return res.redirect("/home")
+        }
+      } else {
+        return res.redirect("/user-login")
+      }
     }
+  } catch (error) {
+    return res.redirect("/user-login")
+  }
 }
+//     try {
+//         const user = await User.getUserByUsername(username)
+//         req.session.user = user;
+//         res.render("user-login", { user })
+//     } catch (error) {
+//         console.log("Error")
+//     }
+// }
 
 exports.editProfile = (req, res) => {
   try {
@@ -30,33 +56,54 @@ exports.editProfile = (req, res) => {
 };
 
 exports.displayRegister = (req, res) => {
-    res.render("user-register", { user: undefined });
+  res.render("user-register", { user: undefined });
 }
 
 exports.submitRegister = async (req, res) => {
-    let username = req.body.username;
-    let pass = req.body.pass;
-    let account = req.body.account;
-    let user = undefined;
+  let username = req.body.username;
+  let pass = req.body.pass;
+  pass = await bcrypt.hash(pass, 10);
+  let email = req.body.email;
+  let phone = req.body.phone;
+  let gender = req.body.gender;
+  let account = req.body.account;
+  if (account !== "Shelter") {
+    shelterName = null;
+    shelterEmail = null;
+    shelterAddress = null;
+    shelterNumber = null;
+  } else {
+    shelterName = req.body.shelterName;
+    shelterEmail = req.body.shelterEmail;
+    shelterAddress = req.body.shelterAddress;
+    shelterNumber = req.body.shelterNumber;
+  }
+  let newUser = { username, pass, email, phone, gender, account, shelterName, shelterEmail, shelterNumber, shelterAddress };
 
-    if (username && pass && account) {
-        user = { username, pass, account };
-        try {
-            await User.createUser(user);
-            req.session.user = user;
-            console.log("User created success")
-        } catch (error) {
-            console.log("error");
-            return res.render("error", { error })
-        }
-    }
-    res.render("user-login", { user });
+  // if (username && pass && account) {
+  //     user = { username, pass, account };
+  try {
+    await User.createUser(newUser);
+    console.log("User created success");
+    return res.redirect("/user-login");
+  } catch (error) {
+    console.log("error", { error });
+    return res.redirect("/user-register");
+  }
+  // }
+  // res.render("user-login", { user });
 }
 
 
 exports.deleteAccount = async (req, res) => {
   try {
-    await User.deleteUserByUsername(req.session.user.username);
+    if (!req.session || !req.session.user) {
+      return res.redirect('/user-login');
+    }
+
+    const user = req.session.user;
+
+    await User.deleteUserByUsername(user.username);
 
     req.session.destroy((err) => {
       if (err) {
@@ -67,5 +114,43 @@ exports.deleteAccount = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.render('error', { error });
+  }
+};
+
+exports.showHome = async (req, res) => {
+  try {
+    if (!req.session.user) {
+      return res.redirect("/user-login");
+    }
+    const user = req.session.user;
+    const shelters = await User.getAllShelters();
+
+    return res.render("home", { user, shelters });
+  } catch (error) {
+    console.log(error);
+    return res.render("error", { error });
+  }
+};
+
+exports.showHomeShelter = (req, res) => {
+  if (!req.session.user) {
+    return res.redirect("/user-login");
+  } else {
+    if (user.account === "Shelter") {
+      return res.render("home-shelter", { user });
+    } else {
+      return res.redirect("/home")
+    }
+  }
+}
+
+
+exports.showAllShelters = async (req, res) => {
+  try {
+    const shelters = await User.getAllShelters();
+    res.render("all-shelters", { shelters });
+  } catch (error) {
+    console.log(error);
+    res.render("error", { error });
   }
 };
