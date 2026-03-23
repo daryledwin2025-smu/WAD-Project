@@ -1,0 +1,71 @@
+const User = require("../models/user-model");
+
+
+exports.displayLogin = (req, res) => {
+    res.render("user-login", { user: undefined });
+}
+
+exports.submitLogin = async (req, res) => {
+    const username = req.body.username;
+    try {
+        const user = await User.getUserByUsername(username)
+        req.session.user = user;
+        res.render("user-login", { user })
+    } catch (error) {
+        console.log("Error")
+    }
+}
+
+exports.editProfile = (req, res) => {
+  try {
+    if (!req.session || !req.session.user) {
+      return res.redirect('/user-login');  // not logged in
+    }
+
+    res.render('user-edit', { user: req.session.user });
+  } catch (error) {
+    console.log(error);
+    res.render('error', { error });
+  }
+};
+
+exports.displayRegister = (req, res) => {
+    res.render("user-register", { user: undefined });
+}
+
+exports.submitRegister = async (req, res) => {
+    let username = req.body.username;
+    let pass = req.body.pass;
+    let account = req.body.account;
+    let user = undefined;
+
+    if (username && pass && account) {
+        user = { username, pass, account };
+        try {
+            await User.createUser(user);
+            req.session.user = user;
+            console.log("User created success")
+        } catch (error) {
+            console.log("error");
+            return res.render("error", { error })
+        }
+    }
+    res.render("user-login", { user });
+}
+
+
+exports.deleteAccount = async (req, res) => {
+  try {
+    await User.deleteUserByUsername(req.session.user.username);
+
+    req.session.destroy((err) => {
+      if (err) {
+        return res.render('error', { error: err });
+      }
+      res.redirect('/user-login');
+    });
+  } catch (error) {
+    console.log(error);
+    res.render('error', { error });
+  }
+};
