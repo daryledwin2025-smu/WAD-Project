@@ -11,13 +11,9 @@ const app = express();
 // === APP CONFIGURATION ===
 // Set EJS as the templating engine [cite: 13]
 app.set('view engine', 'ejs');
-// Point to the views folder 
-app.set('views', path.join(__dirname, 'views'));
-
 // === MIDDLEWARE ===
 // To parse form data from the basic HTML forms [cite: 24]
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json()); 
 
 // Serve static files (like your index.html or any basic CSS/images)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -64,6 +60,18 @@ app.use('/applications', applicationRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/favourites', favouriteRoutes);
 
+
+// === DATABASE ===
+async function connectDB(){
+  try{
+  await mongoose.connect(process.env.DB); // connect is an async function
+  console.log('Database connected successfully!');
+  }
+  catch(error){
+    console.log("Database connection failed",error)
+  }
+}
+connectDB();
 // === START SERVER ===
 function startServer() {
     const hostname = "localhost";
