@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+
+<body>
+    <h1>Register</h1>
+    <% if (user) { %>
+        <p>Hello <%= user.username %>, you have successfully registered!</p>
+        <% } else { %>
+            <form method="post">
+                <label for="account">Account:</label>
+                <select id="account" name="account">
+                    <option value="" selected></option>
+                    <option value="Adopter">Adopter</option>
+                    <option value="Shelter">Shelter</option>
+                </select><br><br>
+                Username : <br>
+                <input type="text" name="username">
+                <br>
+                
+                Password : <br>
+                <input type="password" name="pass">
+                <!-- Email : <br>
+                <input type="email" name="email">
+                <br>
+                Phone : <br>
+                <input type="number" name="phone">
+                <br>
+                Address : <br>
+                <input type="text" name="address">
+                <br>
+                Gender:
+                <select id='gender' name="gender">
+                    <option value="Male" selected>Male</option>
+                    <option value="Female">Female</option>
+                </select> <br> -->
+                <!-- <br>
+                Access Code : <br>
+                <input type="code" name="code"> -->
+                <br><br>
+
+                
+                <div id="shelterFields" style="display: none;">
+                    Shelter Name : <br>
+                    <input type="text" name="shelterName">
+                    <br><br>
+
+                    Shelter Address : <br>
+                    <input type="text" name="shelterAddress">
+                    <br><br>
+
+                    Contact Number : <br>
+                    <input type="text" name="contactNumber">
+                    <br><br>
+                </div>
+                <br><br>
+                <button type="submit">Register</button>
+            </form>
+            <% }%>
+
+</body>
+
+</html>
+
+<script>
+    const account = document.getElementById("account");
+    const shelterFields = document.getElementById("shelterFields");
+
+    account.addEventListener("change", function () {
+        if (account.value === "Shelter") {
+            shelterFields.style.display = "block";
+        } else {
+            shelterFields.style.display = "none";
+        }
+    });
+</script>

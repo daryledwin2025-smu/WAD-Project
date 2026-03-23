@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+</head>
+<body>
+    <h1>Edit Profile</h1>
+     <form action="/user-edit" method="post">
+    Username:<br>
+    <input type="text" name="username" value="<%= user.username %>">
+    <br><br>
+
+    Password:<br>
+    <input type="text" name="pass" value="<%= user.pass %>">
+    <br><br>
+
+    Account:<br>
+    <input type="text" name="account" value="<%= user.account %>">
+    <br><br>
+
+    <button type="submit">Save Changes</button>
+  </form>
+  <form action="/delete-account" method="post"
+      onsubmit="return confirm('Are you sure you want to delete your account?')">
+  <button type="submit">Delete Account</button>
+</form>
+    
+</body>
+</html>

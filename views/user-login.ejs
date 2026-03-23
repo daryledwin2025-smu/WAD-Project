@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+    <h1>Log in</h1>
+    <% if (user) { %>
+        <% console.log("Hello") %>
+            <p>Welcome <%= user.username %>!</p>
+            <button type="button" onclick="location.href='/user-edit'">
+                Edit Profile
+            </button>
+            <button type="button" onclick="location.href='/user-login'">
+                Log Out
+            </button>
+            <% } else { %>
+                <form method="post">
+                    Username : <br>
+                    <input type="text" name="username">
+                    <br>
+                    Password : <br>
+                    <input type="password" name="pass">
+                    <br><br>
+                    <!-- <label for="type">Account:</label>
+                    <select id="type" name="type">
+                        <option value="Adopter">Adopter</option>
+                        <option value="Shelter">Shelter</option>
+                    </select>
+                    <br>
+                    <br> -->
+                    <button type="submit">Log In</button>
+                </form>
+                <p>No account? Click <a href="user-register">here</a> to Register</p>
+                <% }%>
+
+</body>
+
+</html>
