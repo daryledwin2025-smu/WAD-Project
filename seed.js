@@ -3,7 +3,7 @@ const Pet = require('./models/Pet');
 const Application = require('./models/Application');
 
 // Connect to your local MongoDB database
-mongoose.connect('mongodb://localhost:27017/pet_adoption_db')
+mongoose.connect('mongodb://127.0.0.1:27017/pet_adoption_db')
     .then(() => console.log('Connected to MongoDB for seeding...'))
     .catch(err => console.error('Connection error:', err));
 

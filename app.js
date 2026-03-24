@@ -55,7 +55,7 @@ app.use(
 // === DATABASE CONNECTION ===
 // Connecting to a single MongoDB database [cite: 20]
 // Replace 'pet_adoption_db' with your actual local or Atlas connection string [cite: 28]
-mongoose.connect('mongodb://localhost:27017/pet_adoption_db')
+mongoose.connect('mongodb://127.0.0.1:27017/pet_adoption_db')
   .then(() => console.log('Connected to MongoDB successfully!'))
   .catch((err) => console.error('MongoDB connection error:', err));
 async function connectDB() {
@@ -70,20 +70,20 @@ async function connectDB() {
 
 // === ROUTE IMPORTS (The Vertical Slices) ===
 // Each team member's dedicated routing file 
-const usersRoutes = require("./routes/users-routes")       // Person 1
-const petRoutes = require('./routes/pets');                // Person 2
-const browseRoutes = require('./routes/browse');           // Person 3
+// const usersRoutes = require("./routes/users-routes")       // Person 1
+// const petRoutes = require('./routes/pets');                // Person 2
+// const browseRoutes = require('./routes/browse');           // Person 3
 const applicationRoutes = require('./routes/applications');// Person 4
-const dashboardRoutes = require('./routes/dashboard');     // Person 5
-const favouriteRoutes = require('./routes/favourites');    // Person 6 (Optional)
+// const dashboardRoutes = require('./routes/dashboard');     // Person 5
+// const favouriteRoutes = require('./routes/favourites');    // Person 6 (Optional)
 
 // === MOUNTING ROUTES ===
-app.use('/', usersRoutes);
-app.use('/pets', petRoutes);
-app.use('/browse', browseRoutes);
+// app.use('/', usersRoutes);
+// app.use('/pets', petRoutes);
+// app.use('/browse', browseRoutes);
 app.use('/applications', applicationRoutes);
-app.use('/dashboard', dashboardRoutes);
-app.use('/favourites', favouriteRoutes);
+// app.use('/dashboard', dashboardRoutes);
+// app.use('/favourites', favouriteRoutes);
 
 // A temporary route to mimic the browse page for testing
 const Pet = require('./models/Pet');
