@@ -55,7 +55,7 @@ app.use(
 // === DATABASE CONNECTION ===
 // Connecting to a single MongoDB database [cite: 20]
 // Replace 'pet_adoption_db' with your actual local or Atlas connection string [cite: 28]
-mongoose.connect('mongodb://127.0.0.1:27017/pet_adoption_db')
+mongoose.connect('mongodb://localhost:27017/pet_adoption_db')
   .then(() => console.log('Connected to MongoDB successfully!'))
   .catch((err) => console.error('MongoDB connection error:', err));
 async function connectDB() {
