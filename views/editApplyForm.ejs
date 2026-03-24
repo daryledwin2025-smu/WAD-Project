@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Draft: <%= app.pet.name %></title>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/home">Home</a> | 
+            <a href="/browse">Browse Pets</a> | 
+            <a href="/applications/mine">My Applications</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Edit Draft Application for <%= app.pet.name %></h1>
+        
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div style="color: red; border: 1px solid red; padding: 10px; margin-bottom: 15px;">
+                <strong><%= error %></strong>
+            </div>
+        <% } %>
+
+        <form action="/applications/edit/<%= app._id %>" method="POST">
+            <fieldset>
+                <legend>Update Applicant Information</legend>
+                
+                <div style="margin-bottom: 15px;">
+                    <label for="livingSituation"><strong>What is your current living situation?</strong></label><br>
+                    <select name="livingSituation" id="livingSituation">
+                        <option value="">-- Select an option --</option>
+                        <option value="HDB" <%= app.livingSituation === 'HDB' ? 'selected' : '' %>>HDB</option>
+                        <option value="Condo" <%= app.livingSituation === 'Condo' ? 'selected' : '' %>>Condo</option>
+                        <option value="Landed" <%= app.livingSituation === 'Landed' ? 'selected' : '' %>>Landed Property</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label for="experienceDetails"><strong>Describe your experience with pets:</strong></label><br>
+                    <textarea name="experienceDetails" id="experienceDetails" rows="5" cols="50" placeholder="Have you owned a pet before?"><%= app.experienceDetails %></textarea>
+                </div>
+            </fieldset>
+
+            <br>
+            <button type="submit" name="action" value="draft">Update Draft</button>
+            <button type="submit" name="action" value="submit">Submit Final Application</button>
+        </form>
+
+        <br>
+        <a href="/applications/mine">Cancel and return to My Applications</a>
+    </main>
+</body>
+</html>

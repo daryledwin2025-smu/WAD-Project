@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Applications</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/home">Home</a> | 
+            <a href="/browse">Browse Pets</a> | 
+            <a href="/applications/mine">My Applications</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>My Adoption Applications</h1>
+
+        <% if (applications.length === 0) { %>
+            <p>You haven't started any applications yet.</p>
+            <a href="/browse">Find a pet to adopt</a>
+        <% } else { %>
+            <table border="1" cellpadding="10" cellspacing="0" style="width: 100%; text-align: left;">
+                <thead>
+                    <tr style="background-color: #f2f2f2;">
+                        <th>Pet Name</th>
+                        <th>Status</th>
+                        <th>Date Started</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% applications.forEach(function(app) { %>
+                        <tr>
+                            <td><%= app.pet.name %></td>
+                            <td>
+                                <strong><%= app.status %></strong>
+                            </td>
+                            <td><%= app.applicationDate.toDateString() %></td>
+                            <td>
+                                <% if (app.status === 'Draft') { %>
+                                    <a href="/applications/edit/<%= app._id %>">Edit Draft</a> | 
+                                <% } %>
+
+                                <form action="/applications/delete/<%= app._id %>" method="POST" style="display:inline;">
+                                    <button type="submit" onclick="return confirm('Are you sure you want to withdraw and delete this application?');">
+                                        Withdraw
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } %>
+    </main>
+</body>
+</html>
