@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head><title>All Reviews</title></head>
+<body>
+    <a href="/browse?shelterId=<%= shelterId %>">Back to shelter</a>
+    <h2>All Reviews for <%= shelter.username %></h2>
+
+    <% if (reviews.length === 0) { %>
+        <p>No reviews yet. Be the first!</p>
+    <% } else { %>
+        <% reviews.forEach(review => { %>
+            <p><strong><%= review.reviewer.username %></strong> — ⭐ <%= review.rating %>/5</p>
+            <p><%= review.comment %></p>
+            <p><small><%= new Date(review.createdAt).toDateString() %></small></p>
+
+            <% if (user && review.reviewer._id.toString() === user._id.toString()) { %>
+                <a href="/browse/reviews/<%= review._id %>/edit">Edit</a>
+                <form action="/browse/reviews/<%= review._id %>/delete" method="POST" style="display:inline;">
+                    <input type="hidden" name="shelterId" value="<%= shelterId %>">
+                    <button type="submit">Delete</button>
+                </form>
+            <% } %>
+            <hr>
+        <% }) %>
+    <% } %>
+
+    <h3>Leave a Review</h3>
+    <form action="/browse/reviews" method="POST">
+        <input type="hidden" name="shelterId" value="<%= shelterId %>">
+        <label>Rating:</label>
+        <select name="rating">
+            <option value="5">⭐⭐⭐⭐⭐ 5</option>
+            <option value="4">⭐⭐⭐⭐ 4</option>
+            <option value="3">⭐⭐⭐ 3</option>
+            <option value="2">⭐⭐ 2</option>
+            <option value="1">⭐ 1</option>
+        </select>
+        <br><br>
+        <label>Comment:</label><br>
+        <textarea name="comment" rows="4" cols="50" required></textarea>
+        <br><br>
+        <button type="submit">Submit Review</button>
+    </form>
+</body>
+</html>

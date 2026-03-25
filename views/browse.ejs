@@ -43,5 +43,29 @@
         </tbody>
     </table>
 
+<hr>
+<h3>Reviews <%= avgRating ? '⭐ ' + avgRating + '/5' : '' %></h3>
+
+<% if (reviews.length === 0) { %>
+    <p>No reviews yet.</p>
+<% } else { %>
+    <% reviews.forEach(review => { %>
+        <p><strong><%= review.reviewer.username %></strong> — ⭐ <%= review.rating %>/5</p>
+        <p><%= review.comment %></p>
+        <p><small><%= new Date(review.createdAt).toDateString() %></small></p>
+
+        <% if (user && review.reviewer._id.toString() === user._id.toString()) { %>
+            <a href="/browse/reviews/<%= review._id %>/edit">Edit</a>
+            <form action="/browse/reviews/<%= review._id %>/delete" method="POST" style="display:inline;">
+                <input type="hidden" name="shelterId" value="<%= shelterId %>">
+                <button type="submit">Delete</button>
+            </form>
+        <% } %>
+        <hr>
+    <% }) %>
+<% } %>
+
+<a href="/browse/reviews/all?shelterId=<%= shelterId %>">See all reviews →</a>
+
 </body>
 </html>

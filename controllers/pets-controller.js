@@ -20,14 +20,25 @@ exports.addPet = async (req,res)=>{
 }
 
 exports.displayAllPets = async (req,res)=>{
-      try {
-    shelterId = req.query.shelterId;
-    let allPets = await Pet.retrieveAllPetsByShelterId(shelterId);// fetch all the list    
-    // console.log(allPets);
-    // console.log(`query: ${shelterId}`);
-    res.render("browse", { allPets }); // Render the EJS form view and pass the posts
-  } catch (error) {
-    console.error(error);
-    res.send("Error reading database"); // Send error message if fetching fails
+    try {
+        shelterId = req.query.shelterId;
+        let allPets = await Pet.retrieveAllPetsByShelterId(shelterId);// fetch all the list    
+        // console.log(allPets);
+        // console.log(`query: ${shelterId}`);
+        
+        // Darryl's reviews logic
+        const Review = require("../models/Review");
+        const reviews = await Review.find({ shelter: shelterId })
+            .populate("reviewer", "username")
+            .sort({ createdAt: -1 })
+            .limit(3);
+        const avgRating = reviews.length > 0
+            ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+            : null;
+
+        res.render("browse", { allPets, reviews, avgRating, shelterId, user: req.session.user });// Render the EJS form view and pass the posts
+    } catch (error) {
+        console.error(error);
+        res.send("Error reading database"); // Send error message if fetching fails
   }
 }
