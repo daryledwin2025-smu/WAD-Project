@@ -7,7 +7,7 @@ router.get("/mine", applicationsController.showMyApplications);
 
 // submit new application (or save draft)
 // router.get("/new/:petId", applicationsController.displayApplyForm);
-// router.post("/new/:petId", applicationsController.submitApplication);
+router.post("/new/:petId", applicationsController.submitApplication);
  router.get("/applyForm", applicationsController.displayApplyForm);
 
 // edit a draft application

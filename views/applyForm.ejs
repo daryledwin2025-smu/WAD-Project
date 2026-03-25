@@ -1,8 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Apply to Adopt <%= petName %></title>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/home">Home</a> | 
+            <a href="/browse">Browse Pets</a> | 
+            <a href="/applications/mine">My Applications</a>
+        </nav>
+    </header>
 
+    <main>
+        <h1>Adoption Application for <%= petName %></h1>
+        
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div style="color: red; border: 1px solid red; padding: 10px; margin-bottom: 15px;">
+                <strong><%= error %></strong>
+            </div>
+        <% } %>
 
+        <form action="/applications/new/<%= petId %>" method="POST">
+            <fieldset>
+                <legend>Applicant Information</legend>
+                
+                <div style="margin-bottom: 15px;">
+                    <label for="livingSituation"><strong>What is your current living situation?</strong></label><br>
+                    <select name="livingSituation" id="livingSituation">
+                        <option value="">-- Select an option --</option>
+                        <option value="HDB">HDB</option>
+                        <option value="Condo">Condo</option>
+                        <option value="Landed">Landed Property</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label for="experienceDetails"><strong>Describe your experience with pets:</strong></label><br>
+                    <textarea name="experienceDetails" id="experienceDetails" rows="5" cols="50" placeholder="Have you owned a pet before?"></textarea>
+                </div>
+            </fieldset>
 
-Yay! You have chosen to adopt <%=petName%>!
-<br>
-PetId: <%=petId%> 
-<br>
-Adoption Form:
+            <br>
+            <button type="submit" name="action" value="draft">Save as Draft</button>
+            <button type="submit" name="action" value="submit">Submit Application</button>
+        </form>
+    </main>
+</body>
+</html>
