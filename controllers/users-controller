@@ -136,8 +136,8 @@ exports.showHomeShelter = (req, res) => {
   if (!req.session.user) {
     return res.redirect("/user-login");
   } else {
-    if (user.account === "Shelter") {
-      return res.render("home-shelter", { user });
+    if (req.session.user.account === "Shelter") {
+      return res.render("home-shelter", { user: req.session.user }); // edited 
     } else {
       return res.redirect("/home")
     }

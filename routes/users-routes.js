@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const usersController = require("../controllers/users-controller");
 
-router.get("/user-login", usersController.displayLogin);
+router.get("/", usersController.displayLogin); // edited the root to be login page
 router.post("/user-login", usersController.submitLogin);
 
 router.get("/user-register", usersController.displayRegister);
