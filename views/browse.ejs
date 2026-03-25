@@ -20,7 +20,7 @@
 </head>
 <body>
 
-    <h2 style="text-align:center;">Pet List</h2>
+    <h2 style="text-align:center;">Pets In <%=shelterId%>(make this nicer ltr lol)</h2>
     
     <table>
         <thead>
@@ -29,7 +29,6 @@
                 <th>Breed</th>
                 <th>Age</th>
                 <th>Description</th>
-                <th>Shelter</th>
             </tr>
         </thead>
         <tbody>
@@ -39,7 +38,6 @@
                     <td><%= pet.breed %></td>
                     <td><%= pet.age %></td>
                     <td><%= pet.description %></td>
-                    <td><%= pet.shelterUsername %></td>
                 </tr>
             <% }) %>
         </tbody>

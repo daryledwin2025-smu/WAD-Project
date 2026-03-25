@@ -24,14 +24,6 @@ app.use(session({
 }));
 
 // === MOCK SESSION (optional for testing) ===
-app.use((req, res, next) => {
-    req.session.user = { 
-        _id: new mongoose.Types.ObjectId(),
-        username: 'Joshua',
-        account: 'Adopter'
-    };
-    next();
-});
 
 // === STATIC FILES ===
 app.use(express.static(path.join(__dirname, 'public')));

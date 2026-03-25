@@ -17,7 +17,7 @@ const petSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    shelterUsername: {
+    shelterId: {
         type: String,
         required: true
     }
@@ -33,6 +33,6 @@ exports.retrieveAllPets = ()=>{
   return Pet.find();
 };
 
-exports.retrieveAllPetsByShelterUsername = (username)=> {
-  return Pet.find({ shelterUsername: username });
+exports.retrieveAllPetsByShelterId  = (shelterId)=> {
+    return Pet.find({shelterId});
 };

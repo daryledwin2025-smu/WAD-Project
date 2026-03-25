@@ -10,7 +10,7 @@ exports.displayAddPet = (req,res)=>{
 // FUNCTIONS
 exports.addPet = async (req,res)=>{
     let pet = req.body;
-    pet.shelterUsername = req.session.user.username;
+    pet.shelterId = req.session.user._id;
     try{
         let result = await Pet.addBook(pet);
     }
@@ -21,8 +21,10 @@ exports.addPet = async (req,res)=>{
 
 exports.displayAllPets = async (req,res)=>{
       try {
-    let allPets = await Pet.retrieveAllPets();// fetch all the list    
-    console.log(allPets);
+    shelterId = req.query.shelterId;
+    let allPets = await Pet.retrieveAllPetsByShelterId(shelterId);// fetch all the list    
+    // console.log(allPets);
+    // console.log(`query: ${shelterId}`);
     res.render("browse", { allPets }); // Render the EJS form view and pass the posts
   } catch (error) {
     console.error(error);
