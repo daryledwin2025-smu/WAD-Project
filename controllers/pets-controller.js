@@ -22,7 +22,10 @@ exports.addPet = async (req,res)=>{
 exports.displayAllPets = async (req,res)=>{
     try {
         shelterId = req.query.shelterId;
-        let allPets = await Pet.retrieveAllPetsByShelterId(shelterId);// fetch all the list    
+        if (shelterId === undefined) {
+            return res.redirect("/home");
+        } 
+        let allPets = await Pet.retrieveAllPetsByShelterId(shelterId); // fetch all the list    
         // console.log(allPets);
         // console.log(`query: ${shelterId}`);
         
