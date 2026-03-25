@@ -15,37 +15,38 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-// === SESSION SETUP ===
-app.use(session({
-    secret: 'is113-secret-key',
-    resave: false,
-    saveUninitialized: true
-}));
-
-// === MOCK SESSION (optional for testing) ===
-
-// === STATIC FILES ===
 app.use(express.static(path.join(__dirname, 'public')));
 
-// === ROUTES ===
+// === SESSION SETUP (use ENV from your friend - better practice) ===
+app.use(session({
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: false
+}));
+
+// === ROUTE IMPORTS ===
+// (keep YOUR routes structure)
 const usersRoutes = require("./routes/users-routes");
 const petRoutes = require('./routes/pets-routes');
 const browseRoutes = require('./routes/browse-routes');
 // const applicationRoutes = require('./routes/applications');
 
+// === MOUNTING ROUTES ===
 app.use('/', usersRoutes);
 app.use('/pets', petRoutes);
 app.use('/browse', browseRoutes);
 // app.use('/applications', applicationRoutes);
 
-// === DATABASE CONNECTION ===
+// ❌ REMOVED friend's temporary /browse route
+// because it conflicts with browseRoutes
+
+// === DATABASE CONNECTION (keep your cleaner async/await version) ===
 async function connectDB() {
     try {
         await mongoose.connect(process.env.DB);
-        console.log("MongoDB connected successfully");
+        console.log('Database connected successfully!');
     } catch (error) {
-        console.error("MongoDB connection failed:", error.message);
+        console.error('Database connection failed:', error);
         process.exit(1);
     }
 }
