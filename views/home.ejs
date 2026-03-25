@@ -16,7 +16,7 @@
 <% shelters.forEach((shelter, index) => { %>
   <div>
     <p><h2><%= index + 1 %>. </h2>
-      Shelter Name: <a href="/shelter/<%= shelter._id %>"><%= shelter.shelterName %></a>
+      Shelter Name: <a href="/browse?shelterId=<%= shelter._id %>"><%= shelter.shelterName %></a>
     </p>
     <p>Shelter Email: <%= shelter.shelterEmail %></p>
     <p>Shelter Number: <%= shelter.shelterNumber %></p>
