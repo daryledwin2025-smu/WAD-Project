@@ -10,7 +10,7 @@ exports.displayAddPet = (req,res)=>{
 // FUNCTIONS
 exports.addPet = async (req,res)=>{
     let pet = req.body;
-    pet.shelterId = req.session.user.username;
+    pet.shelterUsername = req.session.user.username;
     try{
         let result = await Pet.addBook(pet);
     }
