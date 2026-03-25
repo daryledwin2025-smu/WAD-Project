@@ -1,14 +1,25 @@
 const fs = require('fs/promises');
 
-const Dashboard = require('../models/dashboard-model');
+const Dashboard = require('../models/descisionlog');
 
 exports.showDashboard = async (req, res) => {
     try {
-    let dashboardList = await Dashboard.retrieveAll();// fetch all the list    
+    let dashboardList = await Dashboard.retrieveAll();    
     console.log(dashboardList);
-    res.render("dashboard", { dashboardList }); // Render the EJS form view and pass the posts
+    res.render("dashboard", { dashboardList }); 
     } catch (error) {
     console.error(error);
-    res.send("Error reading database"); // Send error message if fetching fails
+    res.send("Error reading database"); 
+    } 
+};
+
+exports.showApplications = async (req, res) => {
+    try {
+    let applicationList = await Dashboard.retrievePending(shelterName);    
+    console.log(applicationList);
+    res.render("descionLog", { applicationList }); 
+    } catch (error) {
+    console.error(error);
+    res.send("Error reading database"); 
     } 
 };

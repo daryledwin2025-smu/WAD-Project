@@ -2,9 +2,20 @@
 <html>
 
 <body>
-<table border="1">
-    <% 
-</table>
+    <table border="1">
+        <tr>
+            <th>
+                Applications
+            </th>
+        </tr>
+        <% dashboardList.forEach(application=> { %>
+            <tr>
+                <td>
+                    <%= application %>
+                </td>
+            </tr>
+            <% }); %>
+    </table>
 </body>
 
 </html>
