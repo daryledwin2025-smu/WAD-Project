@@ -29,6 +29,7 @@
                 <th>Breed</th>
                 <th>Age</th>
                 <th>Description</th>
+                <th>View More</th>
             </tr>
         </thead>
         <tbody>
@@ -38,6 +39,7 @@
                     <td><%= pet.breed %></td>
                     <td><%= pet.age %></td>
                     <td><%= pet.description %></td>
+                    <td> <a href="/browse/petDetail?petId=<%=pet._id%>">View More</a> </td>
                 </tr>
             <% }) %>
         </tbody>

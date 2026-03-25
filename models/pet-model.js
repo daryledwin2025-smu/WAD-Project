@@ -36,3 +36,6 @@ exports.retrieveAllPets = ()=>{
 exports.retrieveAllPetsByShelterId  = (shelterId)=> {
     return Pet.find({shelterId});
 };
+exports.displayPetById = (petId)=>{
+    return Pet.findOne({_id:petId})
+}

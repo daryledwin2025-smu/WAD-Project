@@ -42,3 +42,12 @@ exports.displayAllPets = async (req,res)=>{
         res.send("Error reading database"); // Send error message if fetching fails
   }
 }
+
+exports.displayPetDetail = async (req,res)=>{
+    let petId = req.query.petId;    
+    console.log(petId);
+    let pet = await Pet.displayPetById(petId);
+    console.log(pet);
+    res.render("pet-detail",{pet});
+}
+

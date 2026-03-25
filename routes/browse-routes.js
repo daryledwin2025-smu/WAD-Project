@@ -10,5 +10,6 @@ router.post("/reviews", ReviewController.submitReview);
 router.get("/reviews/:id/edit", ReviewController.showEditReview);
 router.post("/reviews/:id/edit", ReviewController.submitEditReview);
 router.post("/reviews/:id/delete", ReviewController.deleteReview);
+router.get("/petDetail",petsController.displayPetDetail);
 
 module.exports = router;
