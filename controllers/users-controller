@@ -85,7 +85,7 @@ exports.submitRegister = async (req, res) => {
   try {
     await User.createUser(newUser);
     console.log("User created success");
-    return res.redirect("/user-login");
+    return res.redirect("/");
   } catch (error) {
     console.log("error", { error });
     return res.redirect("/user-register");

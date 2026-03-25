@@ -36,6 +36,10 @@ exports.submitReview = async (req, res) => {
 exports.showEditReview = async (req, res) => {
     try {
         const review = await Review.findById(req.params.id).populate("shelter");
+        // Block if not the reviewer
+        if (review.reviewer.toString() !== req.session.user._id.toString()) {
+            return res.status(403).send("You are not allowed to do that");
+        }
         res.render("editReview", { review, shelterId: review.shelter._id, user: req.session.user });
     } catch (error) {
         console.error(error);
@@ -46,6 +50,12 @@ exports.showEditReview = async (req, res) => {
 // POST /browse/reviews/:id/edit
 exports.submitEditReview = async (req, res) => {
     try {
+        const review = await Review.findById(req.params.id);
+
+        // Block if not the reviewer
+        if (review.reviewer.toString() !== req.session.user._id.toString()) {
+            return res.status(403).send("You are not allowed to do that");
+        }
         await Review.findByIdAndUpdate(req.params.id, {
             rating: req.body.rating,
             comment: req.body.comment
@@ -60,6 +70,12 @@ exports.submitEditReview = async (req, res) => {
 // POST /browse/reviews/:id/delete
 exports.deleteReview = async (req, res) => {
     try {
+        const review = await Review.findById(req.params.id);
+
+        // Block if not the reviewer
+        if (review.reviewer.toString() !== req.session.user._id.toString()) {
+            return res.status(403).send("You are not allowed to do that");
+        }
         await Review.findByIdAndDelete(req.params.id);
         res.redirect(`/browse?shelterId=${req.body.shelterId}`);
     } catch (error) {
