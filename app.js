@@ -28,7 +28,7 @@ app.use(session({
 const usersRoutes = require("./routes/users-routes");    // Person 1
 const petRoutes = require('./routes/pets-routes');       // Person 2
 const browseRoutes = require('./routes/browse-routes');  // Person 3
-// const applicationRoutes = require('./routes/applications'); // Person 4
+const applicationRoutes = require('./routes/applications'); // Person 4
 // const dashboardRoutes = require('./routes/dashboard');      // Person 5
 // const favouriteRoutes = require('./routes/favourites');     // Person 6
 
@@ -36,7 +36,7 @@ const browseRoutes = require('./routes/browse-routes');  // Person 3
 app.use('/', usersRoutes);
 app.use('/pets', petRoutes);
 app.use('/browse', browseRoutes);
-// app.use('/applications', applicationRoutes);
+app.use('/applications', applicationRoutes);
 // app.use('/dashboard', dashboardRoutes);
 // app.use('/favourites', favouriteRoutes);
 // because it conflicts with browseRoutes
