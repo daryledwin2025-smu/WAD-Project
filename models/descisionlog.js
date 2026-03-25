@@ -36,7 +36,7 @@ const descisionLogSchema = new mongoose.Schema({
 
 });
 
-const Descisionlog = mongoose.model('DescisionLog', descisionLogSchema, 'descisionLog');
+const Descisionlog = mongoose.model('DescisionLog', descisionLogSchema, 'descisionLogs');
 
 exports.retrievePending = function (shelterName) {
     return Descisionlog.find ( { shelterName: {$in: [ shelterName ]}, status: {$in: ['Pending']} } );

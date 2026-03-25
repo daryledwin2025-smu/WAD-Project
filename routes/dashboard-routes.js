@@ -4,11 +4,10 @@ const dashboardController = require("../controllers/dashboard-controller")
 
 
 
-router.get("/dashboard", dashboardController.showDashboard);
+router.get("/", dashboardController.showDashboard);
 
 router.get("/applicationDetails", dashboardController.showApplications);
 
 router.post("/applicationDetails", dashboardController.showApplications);
-
 
 module.exports = router;
