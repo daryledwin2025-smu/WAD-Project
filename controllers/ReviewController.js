@@ -5,8 +5,8 @@ const UserModel = require("../models/user-model");
 exports.showAllReviews = async (req, res) => {
     try {
         const shelterId = req.query.shelterId;
-        const shelter = await UserModel.getUserById(shelterId);
-        const reviews = await Review.find({ shelter: shelterId })
+        const shelter = await UserModel.getUserById(shelterId); // retrieve shelter data based on shelter ID
+        const reviews = await Review.find({ shelter: shelterId }) // find reviews for specific shelterID, returns a list
             .populate("reviewer", "username")
             .sort({ createdAt: -1 });
         res.render("reviews", { shelter, reviews, shelterId, user: req.session.user });

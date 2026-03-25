@@ -12,12 +12,12 @@ exports.submitLogin = async (req, res) => {
     const user = await User.getUserByUsername(username);
     // user contrains infor stored from MongoDB
     if (!user) {
-      return res.redirect("/user-login")
+      return res.redirect("/")
     } else {
       const match = await bcrypt.compare(pass, user.pass);
       if (match) {
         req.session.user = user;
-        console.log(user.account)
+        console.log(user)
         if (user.account === "Shelter") {
           console.log("GOING TO HOME-SHELTER");
           return res.redirect("/home-shelter");
@@ -45,7 +45,7 @@ exports.submitLogin = async (req, res) => {
 exports.editProfile = (req, res) => {
   try {
     if (!req.session || !req.session.user) {
-      return res.redirect('/user-login');  // not logged in
+      return res.redirect('/');  // not logged in
     }
 
     res.render('user-edit', { user: req.session.user });
@@ -98,7 +98,7 @@ exports.submitRegister = async (req, res) => {
 exports.deleteAccount = async (req, res) => {
   try {
     if (!req.session || !req.session.user) {
-      return res.redirect('/user-login');
+      return res.redirect('/');
     }
 
     const user = req.session.user;
@@ -109,7 +109,7 @@ exports.deleteAccount = async (req, res) => {
       if (err) {
         return res.render('error', { error: err });
       }
-      res.redirect('/user-login');
+      res.redirect('/');
     });
   } catch (error) {
     console.log(error);
@@ -120,7 +120,7 @@ exports.deleteAccount = async (req, res) => {
 exports.showHome = async (req, res) => {
   try {
     if (!req.session.user) {
-      return res.redirect("/user-login");
+      return res.redirect("/");
     }
     const user = req.session.user;
     const shelters = await User.getAllShelters();
@@ -134,7 +134,7 @@ exports.showHome = async (req, res) => {
 
 exports.showHomeShelter = (req, res) => {
   if (!req.session.user) {
-    return res.redirect("/user-login");
+    return res.redirect("/");
   } else {
     if (req.session.user.account === "Shelter") {
       return res.render("home-shelter", { user: req.session.user }); // edited 

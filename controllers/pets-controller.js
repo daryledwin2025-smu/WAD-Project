@@ -1,4 +1,6 @@
 const Pet = require("../models/pet-model")
+const UserModel = require("../models/user-model");
+
 // DISPLAYS
 exports.displayMyListings = (req, res) => {
     res.render("myListings", {});
@@ -21,7 +23,8 @@ exports.addPet = async (req,res)=>{
 
 exports.displayAllPets = async (req,res)=>{
     try {
-        shelterId = req.query.shelterId;
+        const shelterId = req.query.shelterId;
+        const shelter = await UserModel.getUserById(shelterId); 
         if (shelterId === undefined) {
             return res.redirect("/home");
         } 
@@ -31,15 +34,19 @@ exports.displayAllPets = async (req,res)=>{
         
         // Darryl's reviews logic
         const Review = require("../models/Review");
-        const reviews = await Review.find({ shelter: shelterId })
-            .populate("reviewer", "username")
-            .sort({ createdAt: -1 })
-            .limit(3);
+        const reviews = await Review.find({ shelter: shelterId }) // read from reviews collection, .find comes in the model automatically (find reviews for the specific shelter and create a list)
+            .populate("reviewer", "username") // reviewer is an objectId pointing to user collection (based on schema), reviewer becomes object with id and username (from User collection) as its keys
+            .sort({ createdAt: -1 }) // sort in descending order of date
+            .limit(3); // display first 3 items in list only
+        let totalRating = 0
+        reviews.forEach(review => {
+            totalRating += review.rating
+        });
         const avgRating = reviews.length > 0
-            ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+            ? (totalRating / reviews.length).toFixed(1)
             : null;
 
-        res.render("browse", { allPets, reviews, avgRating, shelterId, user: req.session.user });// Render the EJS form view and pass the posts
+        res.render("browse", { allPets, reviews, avgRating, shelterId, shelter, user: req.session.user });// Render the EJS form view and pass the posts
     } catch (error) {
         console.error(error);
         res.send("Error reading database"); // Send error message if fetching fails

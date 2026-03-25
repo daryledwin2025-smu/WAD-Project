@@ -3,7 +3,7 @@
 <head><title>All Reviews</title></head>
 <body>
     <a href="/browse?shelterId=<%= shelterId %>">Back to shelter</a>
-    <h2>All Reviews for <%= shelter.username %></h2>
+    <h2>All Reviews for <%= shelter.shelterName %></h2>
 
     <% if (reviews.length === 0) { %>
         <p>No reviews yet. Be the first!</p>
@@ -37,7 +37,7 @@
         </select>
         <br><br>
         <label>Comment:</label><br>
-        <textarea name="comment" rows="4" cols="50" required></textarea>
+        <textarea name="comment" rows="4" cols="50" placeholder="Write your review" required></textarea>
         <br><br>
         <button type="submit">Submit Review</button>
     </form>
