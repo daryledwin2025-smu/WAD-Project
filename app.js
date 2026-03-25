@@ -2,30 +2,52 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const session = require('express-session');
-const dotenv = require('dotenv')
-dotenv.config({ path: './config.env' })
-// love
-// Initialize Express app
+const dotenv = require('dotenv');
+
+dotenv.config({ path: './config.env' });
+
 const app = express();
+const PORT = 8000;
 
 // === APP CONFIGURATION ===
-// Set EJS as the templating engine [cite: 13]
 app.set('view engine', 'ejs');
-// === MIDDLEWARE ===
-// To parse form data from the basic HTML forms [cite: 24]
-app.use(express.urlencoded({ extended: true }));
+app.set('views', path.join(__dirname, 'views'));
 
-// Save static files (like your index.html or any basic CSS/images)
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// === SESSION SETUP ===
+app.use(session({
+    secret: 'is113-secret-key',
+    resave: false,
+    saveUninitialized: true
+}));
+
+// === MOCK SESSION (optional for testing) ===
+app.use((req, res, next) => {
+    req.session.user = { 
+        _id: new mongoose.Types.ObjectId(),
+        username: 'Joshua',
+        account: 'Adopter'
+    };
+    next();
+});
+
+// === STATIC FILES ===
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Create session to remain logged in through all the html pages
-app.use(
-  session({
-    secret: process.env.SECRET,  
-    resave: false,
-    saveUninitialized: false
-  })
-);
+// === ROUTES ===
+const usersRoutes = require("./routes/users-routes");
+const petRoutes = require('./routes/pets-routes');
+const browseRoutes = require('./routes/browse-routes');
+// const applicationRoutes = require('./routes/applications');
+
+app.use('/', usersRoutes);
+app.use('/pets', petRoutes);
+app.use('/browse', browseRoutes);
+// app.use('/applications', applicationRoutes);
+
+// === DATABASE CONNECTION ===
 async function connectDB() {
     try {
         await mongoose.connect(process.env.DB);
@@ -36,42 +58,13 @@ async function connectDB() {
     }
 }
 
-// === MOUNTING ROUTES ===
-const usersRoutes = require("./routes/users-routes")       // Person 1
-const petRoutes = require('./routes/pets-routes');                // Person 2
-const browseRoutes = require('./routes/browse-routes');           // Person 2&3
-// const applicationRoutes = require('./routes/applications');// Person 4
-// const dashboardRoutes = require('./routes/dashboard');     // Person 5
-// const favouriteRoutes = require('./routes/favourites');    // Person 6 (Optional)
-
-// === MOUNTING ROUTES ===
-app.use('/', usersRoutes);
-app.use('/pets', petRoutes);
-app.use('/browse', browseRoutes);
-// app.use('/applications', applicationRoutes);
-// app.use('/dashboard', dashboardRoutes);
-// app.use('/favourites', favouriteRoutes);
-
-
-// === DATABASE ===
-async function connectDB(){
-  try{
-  await mongoose.connect(process.env.DB); // connect is an async function
-  console.log('Database connected successfully!');
-  }
-  catch(error){
-    console.log("Database connection failed",error)
-  }
-}
-connectDB();
 // === START SERVER ===
-function startServer() {
-    const hostname = "localhost";
-    const port = 8000;
+async function startServer() {
+    await connectDB();
 
-    app.listen(port, hostname, () => {
-        console.log(`Server running at http://${hostname}:${port}/`);
+    app.listen(PORT, () => {
+        console.log(`Server running at http://localhost:${PORT}`);
     });
 }
 
-connectDB().then(startServer);
+startServer();

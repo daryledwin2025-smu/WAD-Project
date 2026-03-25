@@ -19,46 +19,53 @@
                     <option value="Adopter">Adopter</option>
                     <option value="Shelter">Shelter</option>
                 </select><br><br>
+
                 Username : <br>
                 <input type="text" name="username">
-                <br>
-                
-                Password : <br>
-                <input type="password" name="pass">
-                <!-- Email : <br>
-                <input type="email" name="email">
-                <br>
-                Phone : <br>
-                <input type="number" name="phone">
-                <br>
-                Address : <br>
-                <input type="text" name="address">
-                <br>
-                Gender:
-                <select id='gender' name="gender">
-                    <option value="Male" selected>Male</option>
-                    <option value="Female">Female</option>
-                </select> <br> -->
-                <!-- <br>
-                Access Code : <br>
-                <input type="code" name="code"> -->
                 <br><br>
 
+                Password : <br>
+                <input type="password" name="pass">
+                <br><br>
+
+                Email : <br>
+                <input type="email" name="email">
+                <br><br>
+
+                Phone : <br>
+                <input type="text" name="phone">
+                <br><br>
+
+                Gender:
+                <input type="radio" id="male" name="gender" value="male">
+                <label for="male">Male</label>
+                <input type="radio" id="female" name="gender" value="female">
+                <label for="female">Female</label><br><br>
                 
+                <!-- Access Code : <br>
+                <input type="code" name="code">
+                <br><br> -->
+
+
                 <div id="shelterFields" style="display: none;">
                     Shelter Name : <br>
                     <input type="text" name="shelterName">
+                    <br><br>
+
+                    Shelter Email : <br>
+                    <input type="text" name="shelterEmail">
+                    <br><br>
+
+                    Contact Number : <br>
+                    <input type="text" name="shelterNumber">
                     <br><br>
 
                     Shelter Address : <br>
                     <input type="text" name="shelterAddress">
                     <br><br>
 
-                    Contact Number : <br>
-                    <input type="text" name="contactNumber">
-                    <br><br>
                 </div>
-                <br><br>
+                
                 <button type="submit">Register</button>
             </form>
             <% }%>

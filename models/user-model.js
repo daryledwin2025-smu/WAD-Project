@@ -9,40 +9,36 @@ const userSchema = new mongoose.Schema(
         },
         pass: {
             type : String,
-            required : true,
+            required : true
         },
-        // email: {
-        //     type : String,
-        //     required : true,
-        // },
-        // Phone: {
-        //     type : String,
-        //     required : true,
-        // },
-        // Gender: {
-        //     type : String,
-        //     required : true,
-        // },
-        // Address: {
-        //     type : String,
-        //     required : true,
-        // },
+        email: {
+            type : String,
+            required : true
+        },
+        phone: {
+            type : String,
+            required : true
+        },
+        gender: {
+            type : String,
+            required : true
+        },
         account: {
             type : String,
-            required : true,
+            required : true
+        },
+        shelterName: {
+            type : String
+        },
+        shelterEmail: {
+            type : String
+        },
+        shelterAddress: {
+            type : String
+        },
+        shelterNumber: {
+            type : String
         }
-        // shelterName: {
-        //     type : String,
-        //     required : false,
-        // },
-        // shelterAddress: {
-        //     type : String,
-        //     required : false,
-        // },
-        // shelterPhone: {
-        //     type : String,
-        //     required : false,
-        // }
     }
 )
 
@@ -56,6 +52,14 @@ exports.getUserByUsername = (username) => {
     return User.findOne({username});
 }
 
+// exports.updateUserByUsername = async (username, password) => {
+//   return User.updateOne({ username }, {password});
+// };
+
 exports.deleteUserByUsername = async (username) => {
-  return await User.findByIdAndDelete(username);
+  return User.findOneAndDelete({ username });
+};
+
+exports.getAllShelters = () => {
+  return User.find({ account: "Shelter" });
 };

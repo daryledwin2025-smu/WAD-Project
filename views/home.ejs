@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+
+<body>
+    <h1>Home</h1>
+<p>Welcome <%= user.username %>!</p>
+
+<h2>Shelters</h2>
+
+<% shelters.forEach((shelter, index) => { %>
+  <div>
+    <p><h2><%= index + 1 %>. </h2>
+      Shelter Name: <a href="/shelter/<%= shelter._id %>"><%= shelter.shelterName %></a>
+    </p>
+    <p>Shelter Email: <%= shelter.shelterEmail %></p>
+    <p>Shelter Number: <%= shelter.shelterNumber %></p>
+    <p>Shelter Address: <%= shelter.shelterAddress %></p>
+    <hr>
+  </div>
+<% }) %>
+
+</body>
+
+</html>
