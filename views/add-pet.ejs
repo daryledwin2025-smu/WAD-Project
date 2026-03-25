@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Pet</title>
+</head>
+<body>
+
+    <h1>Add New Pet</h1>
+
+    <form action="/pets/addPet" method="POST">
+
+        <div>
+            <label>Name:</label>
+            <input type="text" name="name" required>
+        </div>
+
+        <div>
+            <label>Breed:</label>
+            <input type="text" name="breed" required>
+        </div>
+
+        <div>
+            <label>Age:</label>
+            <input type="number" name="age" required>
+        </div>
+
+        <div>
+            <label>Description:</label>
+            <input type="text" name="description" required>
+        </div>
+
+        <button type="submit">Add Pet</button>
+
+    </form>
+
+    <br>
+
+    <a href="/pets/myListings">Back to My Listings</a>
+
+</body>
+</html>
