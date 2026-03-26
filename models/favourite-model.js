@@ -52,7 +52,3 @@ exports.removeFavourite = (favouriteId) => {
 exports.checkFavourite = (userId, petId) => {
     return Favourite.findOne({ userId, petId });
 };
-
-exports.removeAllByUserId = (userId) => {
-    return Favourite.deleteMany({ userId });
-};
