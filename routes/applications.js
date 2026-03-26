@@ -17,4 +17,9 @@ router.post("/edit/:appId", applicationsController.submitDraftEdit);
 // withdraw an application
 router.post("/delete/:appId", applicationsController.deleteApplication);
 
+// [SHELTER - READ] View all applications for a specific pet
+router.get("/pet/:petId", applicationsController.viewPetApplications);
+
+// [SHELTER - UPDATE] Approve or Reject an application
+router.post("/status/:appId", applicationsController.updateApplicationStatus);
 module.exports = router;

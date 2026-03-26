@@ -4,11 +4,14 @@ const Application = require("../models/Application");
 exports.showMyApplications = async (req, res) => {
   try {
     if (!req.session || !req.session.user) {
-      return res.redirect("/user-login");
+      return res.redirect("/");
     }
 
     const myApplications = await Application.find({ applicant: req.session.user._id }).populate("pet");
-    return res.render("myApplications", { applications: myApplications });
+    const validApplications = myApplications.filter(app => app.pet !== null);  
+    // handle cases when listing is deleted after application submitted
+
+    return res.render("myApplications", { applications: validApplications});
   } catch (error) {
     console.log(error);
     return res.render("error", { error });
@@ -43,7 +46,7 @@ exports.displayApplyForm = async (req, res) => {
 exports.submitApplication = async (req, res) => {
   try {
     if (!req.session || !req.session.user) {
-      return res.redirect("/user-login");
+      return res.redirect("/");
     }
 
     let livingSituation = req.body.livingSituation;
@@ -78,7 +81,7 @@ exports.submitApplication = async (req, res) => {
 exports.displayEditDraftForm = async (req, res) => {
   try {
     if (!req.session || !req.session.user) {
-      return res.redirect("/user-login");
+      return res.redirect("/");
     }
 
     const application = await Application.findOne({
@@ -101,7 +104,7 @@ exports.displayEditDraftForm = async (req, res) => {
 exports.submitDraftEdit = async (req, res) => {
   try {
     if (!req.session || !req.session.user) {
-      return res.redirect("/user-login");
+      return res.redirect("/");
     }
 
     let livingSituation = req.body.livingSituation;
@@ -137,7 +140,7 @@ exports.submitDraftEdit = async (req, res) => {
 exports.deleteApplication = async (req, res) => {
   try {
     if (!req.session || !req.session.user) {
-      return res.redirect("/user-login");
+      return res.redirect("/");
     }
 
     await Application.findOneAndDelete({
@@ -148,6 +151,52 @@ exports.deleteApplication = async (req, res) => {
     return res.redirect("/applications/mine");
   } catch (error) {
     console.log(error);
+    return res.render("error", { error });
+  }
+};
+
+exports.viewPetApplications = async (req, res) => {
+  try {
+    if (!req.session || !req.session.user) {
+      return res.redirect("/user-login");
+    }
+
+    // 1. Find the specific pet
+    const pet = await Pet.findById(req.params.petId);
+    if (!pet) {
+      return res.redirect("/pets/myListings");
+    }
+
+    // 2. Find all applications for this pet AND grab the applicant's user info (name/email)
+    const applications = await Application.find({ pet: req.params.petId }).populate("applicant");
+
+    // 3. Render the view with both pieces of data
+    return res.render("viewApplications", { pet: pet, applications: applications });
+  } catch (error) {
+    console.log("Error loading applications for pet:", error);
+    return res.render("error", { error });
+  }
+};
+
+exports.updateApplicationStatus = async (req, res) => {
+  try {
+    if (!req.session || !req.session.user) {
+      return res.redirect("/user-login");
+    }
+
+    const newStatus = req.body.newStatus; // 'Approved' or 'Rejected' coming from the button
+
+    // Find the application and update its status
+    const application = await Application.findByIdAndUpdate(
+      req.params.appId,
+      { status: newStatus },
+      { new: true } // Returns the updated document
+    );
+
+    // Redirect the shelter back to the same pet's application list
+    return res.redirect(`/applications/pet/${application.pet}`);
+  } catch (error) {
+    console.log("Error updating application status:", error);
     return res.render("error", { error });
   }
 };

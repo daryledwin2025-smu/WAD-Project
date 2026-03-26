@@ -22,10 +22,74 @@
 </head>
 <body>
 
-    <h2 style="text-align:center;">Pets In <%=shelter.shelterName%></h2>
-    
-    
-    <table>
+    <h2 style="text-align:center;"><%=allPets.length%> Pets Available In <%=shelter.shelterName%>!</h2>
+    <form method="GET" action="/browse" style="width:80%; margin:auto; margin-bottom:20px;">
+    <input type="hidden" name="shelterId" value="<%= shelterId %>">
+    <!-- Name -->
+    <input 
+        type="text" 
+        name="name" 
+        placeholder="Exact name"
+        value="<%= req.query.name || '' %>"
+    >
+
+    <!-- Size -->
+    <select name="size">
+        <option value="">All Sizes</option>
+
+        <option value="Small 🟢" <%= req.query.size === "Small 🟢" ? "selected" : "" %>>
+            Small 🟢
+        </option>
+
+        <option value="Medium 🟠" <%= req.query.size === "Medium 🟠" ? "selected" : "" %>>
+            Medium 🟠
+        </option>
+
+        <option value="Large 🔴" <%= req.query.size === "Large 🔴" ? "selected" : "" %>>
+            Large 🔴
+        </option>
+    </select>
+
+    <!-- Vaccinated -->
+    <label>
+        <input 
+            type="checkbox" 
+            name="vaccinated"
+            <%= req.query.vaccinated ? "checked" : "" %>
+        >
+        Vaccinated
+    </label>
+    <!-- Neutered -->
+<label>
+    <input 
+        type="checkbox" 
+        name="neutered"
+        <%= req.query.neutered ? "checked" : "" %>
+    >
+    Neutered
+</label>
+
+<!-- House Trained -->
+<label>
+    <input 
+        type="checkbox" 
+        name="houseTrained"
+        <%= req.query.houseTrained ? "checked" : "" %>
+    >
+    House Trained
+</label>
+
+    <!-- Submit -->
+    <button type="submit">Filter</button>
+
+    <!-- Reset -->
+    <a href="/browse?shelterId=<%=shelterId%>" style="margin-left:10px;">Reset</a>
+
+</form>
+    <%if(allPets.length==0){%>
+        <h2 style="text-align:center">No Pets Available :( Sorry!</h2>
+        <%} else{%>
+            <table>
         <thead>
             <tr>
                 <th>Name</th>
@@ -60,6 +124,7 @@
             <% }) %>
         </tbody>
     </table>
+    <%}%>
     <!-- DARRYL's SHELTER REVIEWS -->
 
 <hr>
