@@ -45,15 +45,19 @@ exports.displayAllPets = async (req,res)=>{
             .populate("reviewer", "username") // reviewer is an objectId pointing to user collection (based on schema), reviewer becomes object with id and username (from User collection) as its keys
             .sort({ createdAt: -1 }) // sort in descending order of date
             .limit(3); // display first 3 items in list only
+
+        const validReviews = reviews.filter(review => review.reviewer !== null); // keep element if condition is true
+        // filter out any reviews whose userID may be deleted 
+
         let totalRating = 0
-        reviews.forEach(review => {
+        validReviews.forEach(review => {
             totalRating += review.rating
         });
-        const avgRating = reviews.length > 0
-            ? (totalRating / reviews.length).toFixed(1)
+        const avgRating = validReviews.length > 0
+            ? (totalRating / validReviews.length).toFixed(1)
             : null;
 
-        res.render("browse", { allPets, reviews, avgRating, shelterId, shelter, user: req.session.user });// Render the EJS form view and pass the posts
+        res.render("browse", { allPets, reviews: validReviews, avgRating, shelterId, shelter, user: req.session.user });// Render the EJS form view and pass the posts
     } catch (error) {
         console.error(error);
         res.send("Error reading database"); // Send error message if fetching fails
