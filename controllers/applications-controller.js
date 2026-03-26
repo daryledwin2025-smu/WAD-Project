@@ -200,3 +200,20 @@ exports.updateApplicationStatus = async (req, res) => {
     return res.render("error", { error });
   }
 };
+
+exports.displayViewApplicationsByPet = async (req,res)=>{
+  try {
+    if (!req.session || !req.session.user) {
+      return res.redirect("/");
+    }
+    const petId = req.query.petId;
+    const myApplications = await Application.find({ pet: petId }).populate("pet");
+    const validApplications = myApplications.filter(app => app.pet !== null);  
+    // handle cases when listing is deleted after application submitted
+    console.log(validApplications)
+    return res.render("myApplications", { applications: validApplications});
+  } catch (error) {
+    console.log(error);
+    return res.render("error", { error });
+  }
+}
