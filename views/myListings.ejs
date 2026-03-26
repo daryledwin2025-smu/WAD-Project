@@ -33,6 +33,69 @@
   ✂️ Neutered &nbsp;&nbsp;
   🏠 House Trained
 </p>
+<form method="GET" action="/pets/myListings" style="width:80%; margin:auto; margin-bottom:20px;">
+
+    <!-- Name -->
+    <input 
+        type="text" 
+        name="name" 
+        placeholder="Exact name"
+        value="<%= req.query.name || '' %>"
+    >
+
+    <!-- Size -->
+    <select name="size">
+        <option value="">All Sizes</option>
+
+        <option value="Small 🟢" <%= req.query.size === "Small 🟢" ? "selected" : "" %>>
+            Small 🟢
+        </option>
+
+        <option value="Medium 🟠" <%= req.query.size === "Medium 🟠" ? "selected" : "" %>>
+            Medium 🟠
+        </option>
+
+        <option value="Large 🔴" <%= req.query.size === "Large 🔴" ? "selected" : "" %>>
+            Large 🔴
+        </option>
+    </select>
+
+    <!-- Vaccinated -->
+    <label>
+        <input 
+            type="checkbox" 
+            name="vaccinated"
+            <%= req.query.vaccinated ? "checked" : "" %>
+        >
+        Vaccinated
+    </label>
+    <!-- Neutered -->
+<label>
+    <input 
+        type="checkbox" 
+        name="neutered"
+        <%= req.query.neutered ? "checked" : "" %>
+    >
+    Neutered
+</label>
+
+<!-- House Trained -->
+<label>
+    <input 
+        type="checkbox" 
+        name="houseTrained"
+        <%= req.query.houseTrained ? "checked" : "" %>
+    >
+    House Trained
+</label>
+
+    <!-- Submit -->
+    <button type="submit">Filter</button>
+
+    <!-- Reset -->
+    <a href="/pets/myListings" style="margin-left:10px;">Reset</a>
+
+</form>
     <table>
         <thead>
             <tr>
