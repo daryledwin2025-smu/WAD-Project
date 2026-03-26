@@ -154,3 +154,49 @@ exports.deleteApplication = async (req, res) => {
     return res.render("error", { error });
   }
 };
+
+exports.viewPetApplications = async (req, res) => {
+  try {
+    if (!req.session || !req.session.user) {
+      return res.redirect("/user-login");
+    }
+
+    // 1. Find the specific pet
+    const pet = await Pet.findById(req.params.petId);
+    if (!pet) {
+      return res.redirect("/pets/myListings");
+    }
+
+    // 2. Find all applications for this pet AND grab the applicant's user info (name/email)
+    const applications = await Application.find({ pet: req.params.petId }).populate("applicant");
+
+    // 3. Render the view with both pieces of data
+    return res.render("viewApplications", { pet: pet, applications: applications });
+  } catch (error) {
+    console.log("Error loading applications for pet:", error);
+    return res.render("error", { error });
+  }
+};
+
+exports.updateApplicationStatus = async (req, res) => {
+  try {
+    if (!req.session || !req.session.user) {
+      return res.redirect("/user-login");
+    }
+
+    const newStatus = req.body.newStatus; // 'Approved' or 'Rejected' coming from the button
+
+    // Find the application and update its status
+    const application = await Application.findByIdAndUpdate(
+      req.params.appId,
+      { status: newStatus },
+      { new: true } // Returns the updated document
+    );
+
+    // Redirect the shelter back to the same pet's application list
+    return res.redirect(`/applications/pet/${application.pet}`);
+  } catch (error) {
+    console.log("Error updating application status:", error);
+    return res.render("error", { error });
+  }
+};
