@@ -44,22 +44,22 @@
         type="text" 
         name="name" 
         placeholder="Exact name"
-        value="<%= req.query.name || '' %>"
+        value="<%= query.name || '' %>"
     >
 
     <!-- Size -->
     <select name="size">
         <option value="">All Sizes</option>
 
-        <option value="Small 🟢" <%= req.query.size === "Small 🟢" ? "selected" : "" %>>
+        <option value="Small 🟢" <%= query.size === "Small 🟢" ? "selected" : "" %>>
             Small 🟢
         </option>
 
-        <option value="Medium 🟠" <%= req.query.size === "Medium 🟠" ? "selected" : "" %>>
+        <option value="Medium 🟠" <%= query.size === "Medium 🟠" ? "selected" : "" %>>
             Medium 🟠
         </option>
 
-        <option value="Large 🔴" <%= req.query.size === "Large 🔴" ? "selected" : "" %>>
+        <option value="Large 🔴" <%= query.size === "Large 🔴" ? "selected" : "" %>>
             Large 🔴
         </option>
     </select>
@@ -69,7 +69,7 @@
         <input 
             type="checkbox" 
             name="vaccinated"
-            <%= req.query.vaccinated ? "checked" : "" %>
+            <%= query.vaccinated ? "checked" : "" %>
         >
         Vaccinated
     </label>
@@ -78,7 +78,7 @@
     <input 
         type="checkbox" 
         name="neutered"
-        <%= req.query.neutered ? "checked" : "" %>
+        <%= query.neutered ? "checked" : "" %>
     >
     Neutered
 </label>
@@ -88,7 +88,7 @@
     <input 
         type="checkbox" 
         name="houseTrained"
-        <%= req.query.houseTrained ? "checked" : "" %>
+        <%= query.houseTrained ? "checked" : "" %>
     >
     House Trained
 </label>

@@ -31,7 +31,7 @@ exports.displayMyListings = async (req, res) => {
                 pet.name.toLowerCase().includes(req.query.name.trim().toLowerCase())
             );
         }
-    res.render("myListings", { allPets, req });
+    res.render("myListings", { allPets, query: req.query });
 };
 
 exports.displayAddPet = (req,res)=>{
@@ -114,7 +114,7 @@ exports.displayAllPets = async (req,res)=>{
             ? (totalRating / validReviews.length).toFixed(1)
             : null;
 
-        res.render("browse", { allPets, reviews: validReviews, avgRating, shelterId, shelter, user: req.session.user,req });// Render the EJS form view and pass the posts
+        res.render("browse", { allPets, reviews: validReviews, avgRating, shelterId, shelter, user: req.session.user, query: req.query });// Render the EJS form view and pass the posts
     } catch (error) {
         console.error(error);
         res.send("Error reading database"); // Send error message if fetching fails
