@@ -20,7 +20,10 @@ const petSchema = new mongoose.Schema({
     shelterId: {
         type: String,
         required: true
-    }
+    },
+    createdAt: { 
+        type: Date, 
+        default: Date.now }
 });
 
 const Pet = mongoose.model('Pet', petSchema, 'pets');
@@ -55,4 +58,8 @@ exports.editPet = (pet)=>{
 
 exports.deletePet = (petId)=>{
     return Pet.deleteOne({_id:petId})
+}
+
+exports.deletePetsByShelterId = (shelterId)=>{
+    return Pet.deleteMany({shelterId});
 }

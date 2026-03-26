@@ -18,6 +18,7 @@ exports.addPet = async (req,res)=>{
     pet.shelterId = req.session.user._id;
     try{
         let result = await Pet.addPet(pet);
+        res.redirect('/pets/myListings')
     }
     catch(error){
         console.log(error);
@@ -76,6 +77,7 @@ exports.editPet = async (req,res)=>{
     let pet = req.body;
     try{
         let result = await Pet.editPet(pet);
+        res.redirect('/pets/myListings')
     }
     catch(error){
         console.log(error);
@@ -95,3 +97,8 @@ exports.deletePet = async(req,res)=>{
         res.redirect("/pets/myListings");
     }
 }
+
+// exports.deletePetByShelterId = async(req,res)=>{
+//     const shelterId = req.session.user._id;
+//     await Pet.deletePetsByShelterId(shelterId);
+// }
