@@ -10,6 +10,8 @@
             border: 1px solid black;
             padding: 10px;
             text-align: left;
+            word-wrap: break-word;
+            max-width: 300px;   /* adjust this */
         }
         th {
             background-color: #f2f2f2;
@@ -34,9 +36,11 @@
                 <th>Age</th>
                 <th>Description</th>
                 <th>Size</th>
+                <th>More Information</th>
                 <th>Edit Pet Listing</th>
                 <th>Delete Pet Listing</th>
                 <th>View Applications</th>
+             
 
             </tr>
         </thead>
@@ -48,6 +52,11 @@
                     <td><%= pet.age %></td>
                     <td><%= pet.description %></td>
                     <td><%=pet.size%></td>
+                    <td>
+                    💉: <%= pet.vaccinated ? "✅" : "❌" %><br>
+                    ✂️: <%= pet.neutered ? "✅" : "❌" %><br>
+                    🏠: <%= pet.houseTrained ? "✅" : "❌" %>
+                    </td>
                     <td>
                         <a href="/pets/editPet?petId=<%= pet._id %>">Edit</a>
                     </td>
