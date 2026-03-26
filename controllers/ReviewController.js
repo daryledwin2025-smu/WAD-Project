@@ -9,7 +9,11 @@ exports.showAllReviews = async (req, res) => {
         const reviews = await Review.find({ shelter: shelterId }) // find reviews for specific shelterID, returns a list
             .populate("reviewer", "username")
             .sort({ createdAt: -1 });
-        res.render("reviews", { shelter, reviews, shelterId, user: req.session.user });
+
+        const validReviews = reviews.filter(review => review.reviewer !== null); // keep element if condition is true
+        // filter out any reviews whose userID may be deleted 
+
+        res.render("reviews", { shelter, reviews: validReviews, shelterId, user: req.session.user });
     } catch (error) {
         console.error(error);
         res.status(500).send("Server error");

@@ -22,6 +22,7 @@
 
     <h2 style="text-align:center;">Pets In <%=shelter.shelterName%></h2>
     
+    
     <table>
         <thead>
             <tr>
@@ -54,6 +55,7 @@
     <p>No reviews yet.</p>
 <% } else { %>
     <% reviews.forEach(review => { %>
+    <% if (review.reviewer) { %>
         <p><strong><%= review.reviewer.username %></strong> — ⭐ <%= review.rating %>/5</p>
         <p><%= review.comment %></p>
         <p><small><%= new Date(review.createdAt).toDateString() %></small></p>
@@ -65,8 +67,9 @@
                 <button type="submit">Delete</button>
             </form>
         <% } %>
-        <hr>
-    <% }) %>
+    <% } %>
+    <hr>
+<% }) %>
 <% } %>
 
 <a href="/browse/reviews/all?shelterId=<%= shelterId %>">See all reviews →</a>
