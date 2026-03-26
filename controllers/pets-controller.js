@@ -18,23 +18,23 @@ exports.displayMyListings = async (req, res) => {
     }
 
     if (req.query.neutered) {
-    query.neutered = true;
-}
+        query.neutered = true;
+    }
 
     if (req.query.houseTrained) {
         query.houseTrained = true;
     }
 
     let allPets = await Pet.filterPets(query);
-            if (req.query.name && req.query.name.trim() !== "") {
-            allPets = allPets.filter(pet =>
-                pet.name.toLowerCase().includes(req.query.name.trim().toLowerCase())
-            );
-        }
-    res.render("myListings", { allPets, query: req.query });
+    if (req.query.name && req.query.name.trim() !== "") {
+        allPets = allPets.filter(pet =>
+            pet.name.toLowerCase().includes(req.query.name.trim().toLowerCase())
+        );
+    }
+    res.render("myListings", { allPets, req });
 };
 
-exports.displayAddPet = (req,res)=>{
+exports.displayAddPet = (req, res) => {
     res.render("add-pet");
 }
 // FUNCTIONS
@@ -53,13 +53,13 @@ exports.addPet = async (req, res) => {
     }
 };
 
-exports.displayAllPets = async (req,res)=>{
+exports.displayAllPets = async (req, res) => {
     try {
         const shelterId = req.query.shelterId;
-        const shelter = await UserModel.getUserById(shelterId); 
+        const shelter = await UserModel.getUserById(shelterId);
         if (shelterId === undefined) {
             return res.redirect("/home");
-        } 
+        }
         let query = { shelterId: shelterId };
 
         // name
@@ -88,14 +88,14 @@ exports.displayAllPets = async (req,res)=>{
         }
 
         let allPets = await Pet.filterPets(query);        // console.log(allPets);
-          // name filter in JavaScript only
+        // name filter in JavaScript only
         if (req.query.name && req.query.name.trim() !== "") {
             allPets = allPets.filter(pet =>
                 pet.name.toLowerCase().includes(req.query.name.trim().toLowerCase())
             );
         }
         // console.log(`query: ${shelterId}`);
-        
+
         // Darryl's reviews logic
         const Review = require("../models/Review");
         const reviews = await Review.find({ shelter: shelterId }) // read from reviews collection, .find comes in the model automatically (find reviews for the specific shelter and create a list)
@@ -114,27 +114,27 @@ exports.displayAllPets = async (req,res)=>{
             ? (totalRating / validReviews.length).toFixed(1)
             : null;
 
-        res.render("browse", { allPets, reviews: validReviews, avgRating, shelterId, shelter, user: req.session.user, query: req.query });// Render the EJS form view and pass the posts
+        res.render("browse", { allPets, reviews: validReviews, avgRating, shelterId, shelter, user: req.session.user, req });// Render the EJS form view and pass the posts
     } catch (error) {
         console.error(error);
         res.send("Error reading database"); // Send error message if fetching fails
-  }
+    }
 }
 
-exports.displayPetDetail = async (req,res)=>{
-    let petId = req.query.petId;    
+exports.displayPetDetail = async (req, res) => {
+    let petId = req.query.petId;
     console.log(petId);
     let pet = await Pet.displayPetById(petId);
     console.log(pet);
-    res.render("pet-detail",{pet, user: req.session.user});
+    res.render("pet-detail", { pet, user: req.session.user });
 }
 
-exports.displayEditPet = async (req,res)=>{
-    let petId = req.query.petId;    
+exports.displayEditPet = async (req, res) => {
+    let petId = req.query.petId;
     console.log(petId);
     let pet = await Pet.displayPetById(petId);
     console.log(pet);
-    res.render("edit-pet",{pet});
+    res.render("edit-pet", { pet });
 }
 
 exports.editPet = async (req, res) => {
@@ -152,15 +152,15 @@ exports.editPet = async (req, res) => {
     }
 };
 
-exports.deletePet = async(req,res)=>{
+exports.deletePet = async (req, res) => {
     const petId = req.query.petId;
-    try{
+    try {
         success = await Pet.deletePet(petId);
-        if (success.deletedCount===1){
-        res.redirect("/pets/myListings");
-        console.log('Deleted Pet');
+        if (success.deletedCount === 1) {
+            res.redirect("/pets/myListings");
+            console.log('Deleted Pet');
         }
-    } catch(error){
+    } catch (error) {
         console.log(error);
         res.redirect("/pets/myListings");
     }

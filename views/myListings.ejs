@@ -6,13 +6,17 @@
             width: 80%;
             margin: 20px auto;
         }
-        th, td {
+
+        th,
+        td {
             border: 1px solid black;
             padding: 10px;
             text-align: left;
             word-wrap: break-word;
-            max-width: 300px;   /* adjust this */
+            max-width: 300px;
+            /* adjust this */
         }
+
         th {
             background-color: #f2f2f2;
         }
@@ -22,125 +26,122 @@
 <body>
 
     <h2 style="text-align:center;">My Listings</h2>
-<div style="width:80%; margin: auto; text-align: right;">
-    <a href="/pets/addPet">+ Add New Pet</a>
-</div>
-<div style="width:80%; margin: auto; text-align: left;">
-    <a href="/home-shelter">Back To Home</a>
-</div>
+    <div style="width:80%; margin: auto; text-align: right;">
+        <a href="/pets/addPet">+ Add New Pet</a>
+    </div>
+    <div style="width:80%; margin: auto; text-align: left;">
+        <a href="/home-shelter">Back To Home</a>
+    </div>
 
-        <h2 style="text-align:center">You Have <%=allPets.length%> Pets Listed!</h2>
+    <h2 style="text-align:center">You Have <%=allPets.length%> Pets Listed!</h2>
 
-<p style="text-align:center;">
-  💉 Vaccinated &nbsp;&nbsp;
-  ✂️ Neutered &nbsp;&nbsp;
-  🏠 House Trained
-</p>
+    <p style="text-align:center;">
+        💉 Vaccinated &nbsp;&nbsp;
+        ✂️ Neutered &nbsp;&nbsp;
+        🏠 House Trained
+    </p>
 
-<form method="GET" action="/pets/myListings" style="width:80%; margin:auto; margin-bottom:20px;">
+    <form method="GET" action="/pets/myListings" style="width:80%; margin:auto; margin-bottom:20px;">
 
-    <!-- Name -->
-    <input 
-        type="text" 
-        name="name" 
-        placeholder="Exact name"
-        value="<%= query.name || '' %>"
-    >
+        <!-- Name -->
+        <input type="text" name="name" placeholder="Exact name" value="<%= req.query.name || '' %>">
 
-    <!-- Size -->
-    <select name="size">
-        <option value="">All Sizes</option>
+        <!-- Size -->
+        <select name="size">
+            <option value="">All Sizes</option>
 
-        <option value="Small 🟢" <%= query.size === "Small 🟢" ? "selected" : "" %>>
-            Small 🟢
-        </option>
+            <option value="Small 🟢" <%=req.query.size==="Small 🟢" ? "selected" : "" %>>
+                Small 🟢
+            </option>
 
-        <option value="Medium 🟠" <%= query.size === "Medium 🟠" ? "selected" : "" %>>
-            Medium 🟠
-        </option>
+            <option value="Medium 🟠" <%=req.query.size==="Medium 🟠" ? "selected" : "" %>>
+                Medium 🟠
+            </option>
 
-        <option value="Large 🔴" <%= query.size === "Large 🔴" ? "selected" : "" %>>
-            Large 🔴
-        </option>
-    </select>
+            <option value="Large 🔴" <%=req.query.size==="Large 🔴" ? "selected" : "" %>>
+                Large 🔴
+            </option>
+        </select>
 
-    <!-- Vaccinated -->
-    <label>
-        <input 
-            type="checkbox" 
-            name="vaccinated"
-            <%= query.vaccinated ? "checked" : "" %>
-        >
-        Vaccinated
-    </label>
-    <!-- Neutered -->
-<label>
-    <input 
-        type="checkbox" 
-        name="neutered"
-        <%= query.neutered ? "checked" : "" %>
-    >
-    Neutered
-</label>
+        <!-- Vaccinated -->
+        <label>
+            <input type="checkbox" name="vaccinated" <%=req.query.vaccinated ? "checked" : "" %>
+            >
+            Vaccinated
+        </label>
+        <!-- Neutered -->
+        <label>
+            <input type="checkbox" name="neutered" <%=req.query.neutered ? "checked" : "" %>
+            >
+            Neutered
+        </label>
 
-<!-- House Trained -->
-<label>
-    <input 
-        type="checkbox" 
-        name="houseTrained"
-        <%= query.houseTrained ? "checked" : "" %>
-    >
-    House Trained
-</label>
+        <!-- House Trained -->
+        <label>
+            <input type="checkbox" name="houseTrained" <%=req.query.houseTrained ? "checked" : "" %>
+            >
+            House Trained
+        </label>
 
-    <!-- Submit -->
-    <button type="submit">Filter</button>
+        <!-- Submit -->
+        <button type="submit">Filter</button>
 
-    <!-- Reset -->
-    <a href="/pets/myListings" style="margin-left:10px;">Reset</a>
+        <!-- Reset -->
+        <a href="/pets/myListings" style="margin-left:10px;">Reset</a>
 
-</form>
+    </form>
     <%if(allPets.length==0){%>
         <h2 style="text-align:center"> Nothing here yet! Go ahead and add your first pet 🐶</h2>
         <%} else{%>
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Breed</th>
-                <th>Age</th>
-                <th>Description</th>
-                <th>Size</th>
-                <th>More Information</th>
-                <th>Edit Pet Listing</th>
-                <th>Delete Pet Listing</th>
-                <th>View Applications</th>
-             
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Breed</th>
+                        <th>Age</th>
+                        <th>Description</th>
+                        <th>Size</th>
+                        <th>More Information</th>
+                        <th>Edit Pet Listing</th>
+                        <th>Delete Pet Listing</th>
+                        <th>View Applications</th>
 
-            </tr>
-        </thead>
-        <tbody>
-            <% allPets.forEach(pet => { %>
-                <tr>
-                    <td><%= pet.name %></td>
-                    <td><%= pet.breed %></td>
-                    <td><%= pet.age %></td>
-                    <td><%= pet.description %></td>
-                    <td><%=pet.size%></td>
-                    <td>
-                    💉: <%= pet.vaccinated ? "✅" : "❌" %><br>
-                    ✂️: <%= pet.neutered ? "✅" : "❌" %><br>
-                    🏠: <%= pet.houseTrained ? "✅" : "❌" %>
-                    </td>
-                    <td>
-                        <a href="/pets/editPet?petId=<%= pet._id %>">Edit</a>
-                    </td>
-                    <td>
-                        <a href="/pets/deletePet?petId=<%=pet._id%>" onclick="return confirm('Are you sure you want to delete <%=pet.name%>?')">🗑️</a>
-                    </td>
-                    <td>
-                        <!-- link to view applications for this pet -->
-                        <a href="/applications/pet/<%= pet._id %>"">View Applications</a>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <% allPets.forEach(pet=> { %>
+                        <tr>
+                            <td>
+                                <%= pet.name %>
+                            </td>
+                            <td>
+                                <%= pet.breed %>
+                            </td>
+                            <td>
+                                <%= pet.age %>
+                            </td>
+                            <td>
+                                <%= pet.description %>
+                            </td>
+                            <td>
+                                <%=pet.size%>
+                            </td>
+                            <td>
+                                💉: <%= pet.vaccinated ? "✅" : "❌" %><br>
+                                    ✂️: <%= pet.neutered ? "✅" : "❌" %><br>
+                                        🏠: <%= pet.houseTrained ? "✅" : "❌" %>
+                            </td>
+                            <td>
+                                <a href="/pets/editPet?petId=<%= pet._id %>">Edit</a>
+                            </td>
+                            <td>
+                                <a href="/pets/deletePet?petId=<%=pet._id%>"
+                                    onclick="return confirm('Are you sure you want to delete <%=pet.name%>?')">🗑️</a>
+                            </td>
+                            <td>
+                                <!-- link to view applications for this pet -->
+                                <a href="/applications/pet/<%= pet._id %>"">View Applications</a>
                     </td>
                 </tr>
             <% }) %>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Pets</title>
     <style>
@@ -8,151 +9,165 @@
             width: 80%;
             margin: 20px auto;
         }
-        th, td {
+
+        th,
+        td {
             border: 1px solid black;
             padding: 10px;
             text-align: left;
             word-wrap: break-word;
-            max-width: 300px;   /* adjust this */
+            max-width: 300px;
+            /* adjust this */
         }
+
         th {
             background-color: #f2f2f2;
         }
     </style>
 </head>
+
 <body>
 
-    <h2 style="text-align:center;"><%=allPets.length%> Pets Available In <%=shelter.shelterName%>!</h2>
+    <h2 style="text-align:center;">
+        <%=allPets.length%> Pets Available In <%=shelter.shelterName%>!
+    </h2>
     <form method="GET" action="/browse" style="width:80%; margin:auto; margin-bottom:20px;">
-    <input type="hidden" name="shelterId" value="<%= shelterId %>">
-    <!-- Name -->
-    <input 
-        type="text" 
-        name="name" 
-        placeholder="Exact name"
-        value="<%= query.name || '' %>"
-    >
+        <input type="hidden" name="shelterId" value="<%= shelterId %>">
+        <!-- Name -->
+        <input type="text" name="name" placeholder="Exact name" value="<%= req.query.name || '' %>">
 
-    <!-- Size -->
-    <select name="size">
-        <option value="">All Sizes</option>
+        <!-- Size -->
+        <select name="size">
+            <option value="">All Sizes</option>
 
-        <option value="Small 🟢" <%= query.size === "Small 🟢" ? "selected" : "" %>>
-            Small 🟢
-        </option>
+            <option value="Small 🟢" <%=req.query.size==="Small 🟢" ? "selected" : "" %>>
+                Small 🟢
+            </option>
 
-        <option value="Medium 🟠" <%= query.size === "Medium 🟠" ? "selected" : "" %>>
-            Medium 🟠
-        </option>
+            <option value="Medium 🟠" <%=req.query.size==="Medium 🟠" ? "selected" : "" %>>
+                Medium 🟠
+            </option>
 
-        <option value="Large 🔴" <%= query.size === "Large 🔴" ? "selected" : "" %>>
-            Large 🔴
-        </option>
-    </select>
+            <option value="Large 🔴" <%=req.query.size==="Large 🔴" ? "selected" : "" %>>
+                Large 🔴
+            </option>
+        </select>
 
-    <!-- Vaccinated -->
-    <label>
-        <input 
-            type="checkbox" 
-            name="vaccinated"
-            <%= query.vaccinated ? "checked" : "" %>
-        >
-        Vaccinated
-    </label>
-    <!-- Neutered -->
-<label>
-    <input 
-        type="checkbox" 
-        name="neutered"
-        <%= query.neutered ? "checked" : "" %>
-    >
-    Neutered
-</label>
+        <!-- Vaccinated -->
+        <label>
+            <input type="checkbox" name="vaccinated" <%=req.query.vaccinated ? "checked" : "" %>
+            >
+            Vaccinated
+        </label>
+        <!-- Neutered -->
+        <label>
+            <input type="checkbox" name="neutered" <%=req.query.neutered ? "checked" : "" %>
+            >
+            Neutered
+        </label>
 
-<!-- House Trained -->
-<label>
-    <input 
-        type="checkbox" 
-        name="houseTrained"
-        <%= query.houseTrained ? "checked" : "" %>
-    >
-    House Trained
-</label>
+        <!-- House Trained -->
+        <label>
+            <input type="checkbox" name="houseTrained" <%=req.query.houseTrained ? "checked" : "" %>
+            >
+            House Trained
+        </label>
 
-    <!-- Submit -->
-    <button type="submit">Filter</button>
+        <!-- Submit -->
+        <button type="submit">Filter</button>
 
-    <!-- Reset -->
-    <a href="/browse?shelterId=<%=shelterId%>" style="margin-left:10px;">Reset</a>
+        <!-- Reset -->
+        <a href="/browse?shelterId=<%=shelterId%>" style="margin-left:10px;">Reset</a>
 
-</form>
+    </form>
     <%if(allPets.length==0){%>
         <h2 style="text-align:center">No Pets Available :( Sorry!</h2>
         <%} else{%>
             <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Breed</th>
-                <th>Age</th>
-                <th>Description</th>
-                <th>Size</th>
-                <th>View More</th>
-                <% if (user && user.account !=="Shelter" ) { %>
-                    <th>Favourite</th>
-                    <% } %>
-            </tr>
-        </thead>
-        <tbody>
-            <% allPets.forEach(pet => { %>
-                <tr>
-                    <td><%= pet.name %></td>
-                    <td><%= pet.breed %></td>
-                    <td><%= pet.age %></td>
-                    <td><%= pet.description.slice(0,100) %><%= pet.description.length > 50 ? "..." : "" %></td>
-                    <td><%=pet.size%></td>
-                    <td> <a href="/browse/petDetail?petId=<%=pet._id%>">View More</a> </td>
-                    <% if (user && user.account !=="Shelter" ) { %>
-                        <td>
-                            <form action="/favourites/add" method="POST" style="display:inline;">
-                                <input type="hidden" name="petId" value="<%= pet._id %>">
-                                <button type="submit">❤️</button>
-                            </form>
-                        </td>
-                        <% } %>
-                </tr>
-            <% }) %>
-        </tbody>
-    </table>
-    <%}%>
-    <!-- DARRYL's SHELTER REVIEWS -->
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Breed</th>
+                        <th>Age</th>
+                        <th>Description</th>
+                        <th>Size</th>
+                        <th>View More</th>
+                        <% if (user && user.account !=="Shelter" ) { %>
+                            <th>Favourite</th>
+                            <% } %>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% allPets.forEach(pet=> { %>
+                        <tr>
+                            <td>
+                                <%= pet.name %>
+                            </td>
+                            <td>
+                                <%= pet.breed %>
+                            </td>
+                            <td>
+                                <%= pet.age %>
+                            </td>
+                            <td>
+                                <%= pet.description.slice(0,100) %>
+                                    <%= pet.description.length> 50 ? "..." : "" %>
+                            </td>
+                            <td>
+                                <%=pet.size%>
+                            </td>
+                            <td> <a href="/browse/petDetail?petId=<%=pet._id%>">View More</a> </td>
+                            <% if (user && user.account !=="Shelter" ) { %>
+                                <td>
+                                    <form action="/favourites/add" method="POST" style="display:inline;">
+                                        <input type="hidden" name="petId" value="<%= pet._id %>">
+                                        <button type="submit">❤️</button>
+                                    </form>
+                                </td>
+                                <% } %>
+                        </tr>
+                        <% }) %>
+                </tbody>
+            </table>
+            <%}%>
+                <!-- DARRYL's SHELTER REVIEWS -->
 
-<hr>
-<h3>Reviews <%= avgRating ? '⭐ ' + avgRating + '/5' : '' %></h3>
+                <hr>
+                <h3>Reviews <%= avgRating ? '⭐ ' + avgRating + '/5' : '' %>
+                </h3>
 
-<% if (reviews.length === 0) { %>
-    <p>No reviews yet.</p>
-<% } else { %>
-    <% reviews.forEach(review => { %>
-    <% if (review.reviewer) { %>
-        <p><strong><%= review.reviewer.username %></strong> — ⭐ <%= review.rating %>/5</p>
-        <p><%= review.comment %></p>
-        <p><small><%= new Date(review.createdAt).toDateString() %></small></p>
+                <% if (reviews.length===0) { %>
+                    <p>No reviews yet.</p>
+                    <% } else { %>
+                        <% reviews.forEach(review=> { %>
+                            <% if (review.reviewer) { %>
+                                <p><strong>
+                                        <%= review.reviewer.username %>
+                                    </strong> — ⭐ <%= review.rating %>/5</p>
+                                <p>
+                                    <%= review.comment %>
+                                </p>
+                                <p><small>
+                                        <%= new Date(review.createdAt).toDateString() %>
+                                    </small></p>
 
-        <% if (user && review.reviewer._id.toString() === user._id.toString()) { %>
-            <a href="/browse/reviews/<%= review._id %>/edit">Edit</a>
-            <form action="/browse/reviews/<%= review._id %>/delete" method="POST" style="display:inline;">
-                <input type="hidden" name="shelterId" value="<%= shelterId %>">
-                <button type="submit">Delete</button>
-            </form>
-        <% } %>
-    <% } %>
-    <hr>
-<% }) %>
-<% } %>
+                                <% if (user && review.reviewer._id.toString()===user._id.toString()) { %>
+                                    <a href="/browse/reviews/<%= review._id %>/edit">Edit</a>
+                                    <form action="/browse/reviews/<%= review._id %>/delete" method="POST"
+                                        style="display:inline;">
+                                        <input type="hidden" name="shelterId" value="<%= shelterId %>">
+                                        <button type="submit">Delete</button>
+                                    </form>
+                                    <% } %>
+                                        <% } %>
+                                            <hr>
+                                            <% }) %>
+                                                <% } %>
 
-<a href="/browse/reviews/all?shelterId=<%= shelterId %>">See all reviews →</a>
+                                                    <a href="/browse/reviews/all?shelterId=<%= shelterId %>">See all
+                                                        reviews →</a>
 
 
 </body>
+
 </html>
