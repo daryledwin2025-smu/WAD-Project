@@ -30,7 +30,7 @@
                     <% favourites.forEach(fav=> { %>
                         <tr>
                             <td>
-                                <%= fav.petId.name %>
+                                <a href="/browse/petDetail?petId=<%= fav.petId._id %>"><%= fav.petId.name %></a>
                             </td>
                             <td>
                                 <%= fav.petId.breed %>
