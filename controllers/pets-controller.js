@@ -69,7 +69,7 @@ exports.displayPetDetail = async (req,res)=>{
     console.log(petId);
     let pet = await Pet.displayPetById(petId);
     console.log(pet);
-    res.render("pet-detail",{pet});
+    res.render("pet-detail",{pet, user: req.session.user});
 }
 
 exports.displayEditPet = async (req,res)=>{
