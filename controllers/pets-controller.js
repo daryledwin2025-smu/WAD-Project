@@ -4,10 +4,36 @@ const UserModel = require("../models/user-model");
 // DISPLAYS
 exports.displayMyListings = async (req, res) => {
     let userId = req.session.user._id;
-    let allPets = await Pet.retrieveAllPetsByShelterId(userId); // fetch all the list    
-    console.log(userId)
-    res.render("myListings", {allPets});
+
+    let query = { shelterId: userId };
+
+    // name filter (exact match)
+    if (req.query.name && req.query.name !== "") {
+        query.name = req.query.name;
+    }
+
+    // size filter
+    if (req.query.size && req.query.size !== "") {
+        query.size = req.query.size;
+    }
+
+    // vaccinated filter
+    if (req.query.vaccinated) {
+        query.vaccinated = true;
+    }
+
+    if (req.query.neutered) {
+    query.neutered = true;
 }
+
+    if (req.query.houseTrained) {
+        query.houseTrained = true;
+    }
+
+    let allPets = await Pet.filterPets(query);
+
+    res.render("myListings", { allPets, req });
+};
 
 exports.displayAddPet = (req,res)=>{
     res.render("add-pet");
@@ -35,8 +61,34 @@ exports.displayAllPets = async (req,res)=>{
         if (shelterId === undefined) {
             return res.redirect("/home");
         } 
-        let allPets = await Pet.retrieveAllPetsByShelterId(shelterId); // fetch all the list    
-        // console.log(allPets);
+        let query = { shelterId: shelterId };
+
+        // name
+        if (req.query.name && req.query.name !== "") {
+            query.name = req.query.name;
+        }
+
+        // size
+        if (req.query.size && req.query.size !== "") {
+            query.size = req.query.size;
+        }
+
+        // vaccinated
+        if (req.query.vaccinated) {
+            query.vaccinated = true;
+        }
+
+        // neutered
+        if (req.query.neutered) {
+            query.neutered = true;
+        }
+
+        // house trained
+        if (req.query.houseTrained) {
+            query.houseTrained = true;
+        }
+
+        let allPets = await Pet.filterPets(query);        // console.log(allPets);
         // console.log(`query: ${shelterId}`);
         
         // Darryl's reviews logic
@@ -57,7 +109,7 @@ exports.displayAllPets = async (req,res)=>{
             ? (totalRating / validReviews.length).toFixed(1)
             : null;
 
-        res.render("browse", { allPets, reviews: validReviews, avgRating, shelterId, shelter, user: req.session.user });// Render the EJS form view and pass the posts
+        res.render("browse", { allPets, reviews: validReviews, avgRating, shelterId, shelter, user: req.session.user,req });// Render the EJS form view and pass the posts
     } catch (error) {
         console.error(error);
         res.send("Error reading database"); // Send error message if fetching fails
