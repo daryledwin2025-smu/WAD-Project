@@ -4,11 +4,14 @@ const Application = require("../models/Application");
 exports.showMyApplications = async (req, res) => {
   try {
     if (!req.session || !req.session.user) {
-      return res.redirect("/user-login");
+      return res.redirect("/");
     }
 
     const myApplications = await Application.find({ applicant: req.session.user._id }).populate("pet");
-    return res.render("myApplications", { applications: myApplications });
+    const validApplications = myApplications.filter(app => app.pet !== null);  
+    // handle cases when listing is deleted after application submitted
+
+    return res.render("myApplications", { applications: validApplications});
   } catch (error) {
     console.log(error);
     return res.render("error", { error });
@@ -43,7 +46,7 @@ exports.displayApplyForm = async (req, res) => {
 exports.submitApplication = async (req, res) => {
   try {
     if (!req.session || !req.session.user) {
-      return res.redirect("/user-login");
+      return res.redirect("/");
     }
 
     let livingSituation = req.body.livingSituation;
@@ -78,7 +81,7 @@ exports.submitApplication = async (req, res) => {
 exports.displayEditDraftForm = async (req, res) => {
   try {
     if (!req.session || !req.session.user) {
-      return res.redirect("/user-login");
+      return res.redirect("/");
     }
 
     const application = await Application.findOne({
@@ -101,7 +104,7 @@ exports.displayEditDraftForm = async (req, res) => {
 exports.submitDraftEdit = async (req, res) => {
   try {
     if (!req.session || !req.session.user) {
-      return res.redirect("/user-login");
+      return res.redirect("/");
     }
 
     let livingSituation = req.body.livingSituation;
@@ -137,7 +140,7 @@ exports.submitDraftEdit = async (req, res) => {
 exports.deleteApplication = async (req, res) => {
   try {
     if (!req.session || !req.session.user) {
-      return res.redirect("/user-login");
+      return res.redirect("/");
     }
 
     await Application.findOneAndDelete({

@@ -7,11 +7,6 @@ exports.displayMyListings = async (req, res) => {
 
     let query = { shelterId: userId };
 
-    // name filter (exact match)
-    if (req.query.name && req.query.name !== "") {
-        query.name = req.query.name;
-    }
-
     // size filter
     if (req.query.size && req.query.size !== "") {
         query.size = req.query.size;
@@ -31,7 +26,11 @@ exports.displayMyListings = async (req, res) => {
     }
 
     let allPets = await Pet.filterPets(query);
-
+            if (req.query.name && req.query.name.trim() !== "") {
+            allPets = allPets.filter(pet =>
+                pet.name.toLowerCase().includes(req.query.name.trim().toLowerCase())
+            );
+        }
     res.render("myListings", { allPets, req });
 };
 
@@ -64,9 +63,9 @@ exports.displayAllPets = async (req,res)=>{
         let query = { shelterId: shelterId };
 
         // name
-        if (req.query.name && req.query.name !== "") {
-            query.name = req.query.name;
-        }
+        // if (req.query.name && req.query.name !== "") {
+        //     query.name = req.query.name;
+        // }
 
         // size
         if (req.query.size && req.query.size !== "") {
@@ -89,6 +88,12 @@ exports.displayAllPets = async (req,res)=>{
         }
 
         let allPets = await Pet.filterPets(query);        // console.log(allPets);
+          // name filter in JavaScript only
+        if (req.query.name && req.query.name.trim() !== "") {
+            allPets = allPets.filter(pet =>
+                pet.name.toLowerCase().includes(req.query.name.trim().toLowerCase())
+            );
+        }
         // console.log(`query: ${shelterId}`);
         
         // Darryl's reviews logic

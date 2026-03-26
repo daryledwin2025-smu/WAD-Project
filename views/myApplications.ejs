@@ -32,7 +32,7 @@
                 <tbody>
                     <% applications.forEach(function(app) { %>
                         <tr>
-                            <td><%= app.pet.name %></td>
+                            <td><%= app.pet ? app.pet.name : "Pet no longer available. Contact shelter for more info." %></td>
                             <td>
                                 <strong><%= app.status %></strong>
                             </td>

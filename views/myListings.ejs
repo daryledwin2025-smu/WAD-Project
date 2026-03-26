@@ -28,9 +28,7 @@
 <div style="width:80%; margin: auto; text-align: left;">
     <a href="/home-shelter">Back To Home</a>
 </div>
-    <%if(allPets.length==0){%>
-        <h2 style="text-align:center"> Nothing here yet! Go ahead and add your first pet 🐶</h2>
-        <%} else{%>
+
         <h2 style="text-align:center">You Have <%=allPets.length%> Pets Listed!</h2>
 
 <p style="text-align:center;">
@@ -102,7 +100,9 @@
     <a href="/pets/myListings" style="margin-left:10px;">Reset</a>
 
 </form>
-
+    <%if(allPets.length==0){%>
+        <h2 style="text-align:center"> Nothing here yet! Go ahead and add your first pet 🐶</h2>
+        <%} else{%>
     <table>
         <thead>
             <tr>
