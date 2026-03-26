@@ -25,7 +25,7 @@ const petSchema = new mongoose.Schema({
 
 const Pet = mongoose.model('Pet', petSchema, 'pets');
 
-exports.addBook = (newPet)=>{
+exports.addPet = (newPet)=>{
     return Pet.create(newPet);
 }
 
@@ -36,6 +36,23 @@ exports.retrieveAllPets = ()=>{
 exports.retrieveAllPetsByShelterId  = (shelterId)=> {
     return Pet.find({shelterId});
 };
+
 exports.displayPetById = (petId)=>{
     return Pet.findOne({_id:petId})
+}
+
+exports.editPet = (pet)=>{
+    return Pet.updateOne(
+  { _id: pet._id },
+  {
+    name: pet.name,
+    breed: pet.breed,
+    age: pet.age,
+    description: pet.description
+  }
+);
+}
+
+exports.deletePet = (petId)=>{
+    return Pet.deleteOne({_id:petId})
 }

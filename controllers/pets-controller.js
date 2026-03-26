@@ -2,8 +2,11 @@ const Pet = require("../models/pet-model")
 const UserModel = require("../models/user-model");
 
 // DISPLAYS
-exports.displayMyListings = (req, res) => {
-    res.render("myListings", {});
+exports.displayMyListings = async (req, res) => {
+    let userId = req.session.user._id;
+    let allPets = await Pet.retrieveAllPetsByShelterId(userId); // fetch all the list    
+    console.log(userId)
+    res.render("myListings", {allPets});
 }
 
 exports.displayAddPet = (req,res)=>{
@@ -14,7 +17,7 @@ exports.addPet = async (req,res)=>{
     let pet = req.body;
     pet.shelterId = req.session.user._id;
     try{
-        let result = await Pet.addBook(pet);
+        let result = await Pet.addPet(pet);
     }
     catch(error){
         console.log(error);
@@ -61,3 +64,34 @@ exports.displayPetDetail = async (req,res)=>{
     res.render("pet-detail",{pet});
 }
 
+exports.displayEditPet = async (req,res)=>{
+    let petId = req.query.petId;    
+    console.log(petId);
+    let pet = await Pet.displayPetById(petId);
+    console.log(pet);
+    res.render("edit-pet",{pet});
+}
+
+exports.editPet = async (req,res)=>{
+    let pet = req.body;
+    try{
+        let result = await Pet.editPet(pet);
+    }
+    catch(error){
+        console.log(error);
+    }
+}
+
+exports.deletePet = async(req,res)=>{
+    const petId = req.query.petId;
+    try{
+        success = await Pet.deletePet(petId);
+        if (success.deletedCount===1){
+        res.redirect("/pets/myListings");
+        console.log('Deleted Pet');
+        }
+    } catch(error){
+        console.log(error);
+        res.redirect("/pets/myListings");
+    }
+}

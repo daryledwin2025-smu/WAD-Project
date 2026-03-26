@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Pet</title>
+</head>
+<body>
+
+    <h1>Edit Pet</h1>
+
+    <form action="/pets/editPet" method="POST">
+
+        <div>
+            <label>Name:</label>
+            <input type="text" name="name" value="<%= pet.name %>" required>
+        </div>
+
+        <div>
+            <label>Breed:</label>
+            <input type="text" name="breed" value="<%= pet.breed %>" required>
+        </div>
+
+        <div>
+            <label>Age:</label>
+            <input type="number" name="age" value="<%= pet.age %>" required>
+        </div>
+
+        <div>
+            <label>Description:</label>
+            <input type="text" name="description" value="<%= pet.description %>" required>
+        </div>
+
+        <!-- hidden field to keep petId -->
+        <input type="hidden" name="_id" value="<%= pet._id %>">
+
+        <button type="submit">Save Changes</button>
+
+    </form>
+
+    <br>
+
+    <a href="/pets/myListings">Back to My Listings</a>
+
+</body>
+</html>
