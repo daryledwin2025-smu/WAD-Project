@@ -22,4 +22,7 @@ router.get("/pet/:petId", applicationsController.viewPetApplications);
 
 // [SHELTER - UPDATE] Approve or Reject an application
 router.post("/status/:appId", applicationsController.updateApplicationStatus);
+
+router.get("/viewApplications", applicationsController.displayViewApplicationsByPet);
+
 module.exports = router;
