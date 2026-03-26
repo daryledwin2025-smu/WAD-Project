@@ -1,11 +1,16 @@
 
 const Dashboard = require('../models/descisionlog');
+const Application = require('../models/Application')
 
 exports.showDashboard = async (req, res) => {
     try {
     let dashboardList = await Dashboard.retrieveAll();    
     console.log(dashboardList);
-    res.render("dashboard", { dashboardList }); 
+    if(dashboardList.length == 0){
+        dashboardList = ['There are no Applications.']
+        res.render("dashboard", { dashboardList })
+    }else{
+        res.render("dashboard", { dashboardList }) };
     } catch (error) {
     console.error(error);
     res.send("Error reading database"); 

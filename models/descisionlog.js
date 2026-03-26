@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 
 const descisionLogSchema = new mongoose.Schema({
     applicant: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'User',
         required: true
     },
     pet: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'Pet',
         required: true
     },
@@ -26,9 +26,9 @@ const descisionLogSchema = new mongoose.Schema({
     },
     applicationDate: {
         type: Date,
-        default: Date.now
+        required: true
     },
-    shelterName:{
+    shelterId:{
         type: String,
         required: true
     }
