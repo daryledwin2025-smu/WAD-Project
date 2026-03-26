@@ -20,7 +20,7 @@
 </head>
 <body>
 
-    <h2 style="text-align:center;">Pets In <%=shelterId%>(make this nicer ltr lol)</h2>
+    <h2 style="text-align:center;">Pets In <%=shelter.shelterName%></h2>
     
     <table>
         <thead>
@@ -29,6 +29,7 @@
                 <th>Breed</th>
                 <th>Age</th>
                 <th>Description</th>
+                <th>View More</th>
             </tr>
         </thead>
         <tbody>
@@ -38,10 +39,38 @@
                     <td><%= pet.breed %></td>
                     <td><%= pet.age %></td>
                     <td><%= pet.description %></td>
+                    <td> <a href="/browse/petDetail?petId=<%=pet._id%>">View More</a> </td>
                 </tr>
             <% }) %>
         </tbody>
     </table>
+
+<hr>
+<h3>Adoption</h3>
+<a href="../myApplications>">Adoption application</a>
+<h3>Reviews <%= avgRating ? '⭐ ' + avgRating + '/5' : '' %></h3>
+
+<% if (reviews.length === 0) { %>
+    <p>No reviews yet.</p>
+<% } else { %>
+    <% reviews.forEach(review => { %>
+        <p><strong><%= review.reviewer.username %></strong> — ⭐ <%= review.rating %>/5</p>
+        <p><%= review.comment %></p>
+        <p><small><%= new Date(review.createdAt).toDateString() %></small></p>
+
+        <% if (user && review.reviewer._id.toString() === user._id.toString()) { %>
+            <a href="/browse/reviews/<%= review._id %>/edit">Edit</a>
+            <form action="/browse/reviews/<%= review._id %>/delete" method="POST" style="display:inline;">
+                <input type="hidden" name="shelterId" value="<%= shelterId %>">
+                <button type="submit">Delete</button>
+            </form>
+        <% } %>
+        <hr>
+    <% }) %>
+<% } %>
+
+<a href="/browse/reviews/all?shelterId=<%= shelterId %>">See all reviews →</a>
+
 
 </body>
 </html>

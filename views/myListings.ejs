@@ -1,1 +1,64 @@
-hello!
+<head>
+    <title>Pets</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2 style="text-align:center;">My Listings</h2>
+<div style="width:80%; margin: auto; text-align: right;">
+    <a href="/pets/addPet">+ Add New Pet</a>
+</div>
+<div style="width:80%; margin: auto; text-align: left;">
+    <a href="/home-shelter">Back To Home</a>
+</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Breed</th>
+                <th>Age</th>
+                <th>Description</th>
+                <th>Edit Pet Listing</th>
+                <th>Delete Pet Listing</th>
+                <th>View Applications</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <% allPets.forEach(pet => { %>
+                <tr>
+                    <td><%= pet.name %></td>
+                    <td><%= pet.breed %></td>
+                    <td><%= pet.age %></td>
+                    <td><%= pet.description %></td>
+                    <td>
+                        <a href="/pets/editPet?petId=<%= pet._id %>">Edit</a>
+                    </td>
+                    <td>
+                        <a href="/pets/deletePet?petId=<%=pet._id%>" onclick="return confirm('Are you sure you want to delete <%=pet.name%>?')">🗑️</a>
+                    </td>
+                    <td>
+                        <!-- link to view applications for this pet -->
+                        <a href="">View Applications</a>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+</body>

@@ -1,0 +1,8 @@
+<h2>Meet <%= pet.name %> 🐶</h2>
+
+<p><strong>Name:</strong> <%= pet.name %></p>
+<p><strong>Breed:</strong> <%= pet.breed %></p>
+<p><strong>Age:</strong> <%= pet.age %></p>
+<p><strong>Description:</strong> <%= pet.description %></p>
+
+<a href="/applications/applyForm?petId=<%= pet._id %>&petName=<%= pet.name %>">Click here to adopt <%= pet.name %>!</a> 

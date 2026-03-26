@@ -3,7 +3,7 @@ const router = express.Router();
 const usersController = require("../controllers/users-controller");
 
 router.get("/", usersController.displayLogin); // edited the root to be login page
-router.post("/user-login", usersController.submitLogin);
+router.post("/", usersController.submitLogin);
 
 router.get("/user-register", usersController.displayRegister);
 router.post("/user-register", usersController.submitRegister);
