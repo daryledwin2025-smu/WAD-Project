@@ -26,12 +26,33 @@
             <input type="number" name="age" value="<%= pet.age %>" required>
         </div>
 <br>
-
+Dog size:
+<select name="size" required>
+  <option value="">Select size</option>
+  <option value="Small 🟢" <%= pet.size === "Small 🟢" ? "selected" : "" %>>Small 🟢</option>
+  <option value="Medium 🟠" <%= pet.size === "Medium 🟠" ? "selected" : "" %>>Medium 🟠</option>
+  <option value="Large 🔴" <%= pet.size === "Large 🔴" ? "selected" : "" %>>Large 🔴</option>
+</select>
+<br><br>
         <label>Description:</label><br>
         <textarea name="description" rows="4" cols="40"><%= pet.description %></textarea>
 <br>
-<br>
+<h3>Other Information</h3>
 
+<label>
+  <input type="checkbox" name="vaccinated" <%= pet.vaccinated ? "checked" : "" %>>
+  Vaccinated
+</label><br>
+
+<label>
+  <input type="checkbox" name="neutered" <%= pet.neutered ? "checked" : "" %>>
+  Neutered
+</label><br>
+
+<label>
+  <input type="checkbox" name="houseTrained" <%= pet.houseTrained ? "checked" : "" %>>
+  House Trained
+</label><br><br>
         <!-- hidden field to keep petId -->
         <input type="hidden" name="_id" value="<%= pet._id %>">
 

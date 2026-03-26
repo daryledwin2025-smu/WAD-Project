@@ -1,4 +1,3 @@
-const fs = require('fs/promises');
 
 const Dashboard = require('../models/descisionlog');
 
@@ -17,9 +16,13 @@ exports.showApplications = async (req, res) => {
     try {
     let applicationList = await Dashboard.retrievePending(shelterName);    
     console.log(applicationList);
-    res.render("descionLog", { applicationList }); 
+    res.render("descisionLog", { applicationList }); 
     } catch (error) {
     console.error(error);
     res.send("Error reading database"); 
     } 
+};
+
+exports.showPage = (req, res) => {
+    res.render("dashboard");
 };

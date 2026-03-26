@@ -10,6 +10,8 @@
             border: 1px solid black;
             padding: 10px;
             text-align: left;
+            word-wrap: break-word;
+            max-width: 300px;   /* adjust this */
         }
         th {
             background-color: #f2f2f2;
@@ -26,6 +28,11 @@
 <div style="width:80%; margin: auto; text-align: left;">
     <a href="/home-shelter">Back To Home</a>
 </div>
+<p style="text-align:center;">
+  💉 Vaccinated &nbsp;&nbsp;
+  ✂️ Neutered &nbsp;&nbsp;
+  🏠 House Trained
+</p>
     <table>
         <thead>
             <tr>
@@ -33,9 +40,12 @@
                 <th>Breed</th>
                 <th>Age</th>
                 <th>Description</th>
+                <th>Size</th>
+                <th>More Information</th>
                 <th>Edit Pet Listing</th>
                 <th>Delete Pet Listing</th>
                 <th>View Applications</th>
+             
 
             </tr>
         </thead>
@@ -46,6 +56,12 @@
                     <td><%= pet.breed %></td>
                     <td><%= pet.age %></td>
                     <td><%= pet.description %></td>
+                    <td><%=pet.size%></td>
+                    <td>
+                    💉: <%= pet.vaccinated ? "✅" : "❌" %><br>
+                    ✂️: <%= pet.neutered ? "✅" : "❌" %><br>
+                    🏠: <%= pet.houseTrained ? "✅" : "❌" %>
+                    </td>
                     <td>
                         <a href="/pets/editPet?petId=<%= pet._id %>">Edit</a>
                     </td>

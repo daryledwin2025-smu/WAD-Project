@@ -13,17 +13,20 @@ exports.displayAddPet = (req,res)=>{
     res.render("add-pet");
 }
 // FUNCTIONS
-exports.addPet = async (req,res)=>{
+exports.addPet = async (req, res) => {
     let pet = req.body;
+    // handle checkboxes
+    pet.vaccinated = pet.vaccinated ? true : false;
+    pet.neutered = pet.neutered ? true : false;
+    pet.houseTrained = pet.houseTrained ? true : false;
     pet.shelterId = req.session.user._id;
-    try{
+    try {
         let result = await Pet.addPet(pet);
-        res.redirect('/pets/myListings')
-    }
-    catch(error){
+        res.redirect('/pets/myListings');
+    } catch (error) {
         console.log(error);
     }
-}
+};
 
 exports.displayAllPets = async (req,res)=>{
     try {
@@ -77,16 +80,20 @@ exports.displayEditPet = async (req,res)=>{
     res.render("edit-pet",{pet});
 }
 
-exports.editPet = async (req,res)=>{
+exports.editPet = async (req, res) => {
     let pet = req.body;
-    try{
+    // handle checkboxes
+    pet.vaccinated = pet.vaccinated ? true : false;
+    pet.neutered = pet.neutered ? true : false;
+    pet.houseTrained = pet.houseTrained ? true : false;
+
+    try {
         let result = await Pet.editPet(pet);
-        res.redirect('/pets/myListings')
-    }
-    catch(error){
+        res.redirect('/pets/myListings');
+    } catch (error) {
         console.log(error);
     }
-}
+};
 
 exports.deletePet = async(req,res)=>{
     const petId = req.query.petId;

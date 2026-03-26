@@ -21,9 +21,26 @@ const petSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    size: {
+    type: String,
+    required: true
+    },
     createdAt: { 
         type: Date, 
-        default: Date.now }
+        default: Date.now 
+    },
+    vaccinated: { 
+        type: Boolean, 
+        default: false 
+        },
+    neutered: { 
+        type: Boolean, 
+        default: false 
+    },
+houseTrained: { 
+    type: Boolean, 
+    default: false 
+}
 });
 
 const Pet = mongoose.model('Pet', petSchema, 'pets');
@@ -44,18 +61,21 @@ exports.displayPetById = (petId)=>{
     return Pet.findOne({_id:petId})
 }
 
-exports.editPet = (pet)=>{
+exports.editPet = (pet) => {
     return Pet.updateOne(
-  { _id: pet._id },
-  {
-    name: pet.name,
-    breed: pet.breed,
-    age: pet.age,
-    description: pet.description
-  }
-);
+        { _id: pet._id },
+        {
+            name: pet.name,
+            breed: pet.breed,
+            age: pet.age,
+            description: pet.description,
+            size: pet.size,
+            vaccinated: pet.vaccinated,
+            neutered: pet.neutered,
+            houseTrained: pet.houseTrained
+        }
+    );
 }
-
 exports.deletePet = (petId)=>{
     return Pet.deleteOne({_id:petId})
 }
