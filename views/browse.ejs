@@ -21,9 +21,7 @@
     </style>
 </head>
 <body>
- <%if(allPets.length==0){%>
-        <h2 style="text-align:center">No Pets Available :( Sorry!</h2>
-        <%} else{%>
+
     <h2 style="text-align:center;"><%=allPets.length%> Pets Available In <%=shelter.shelterName%>!</h2>
     <form method="GET" action="/browse" style="width:80%; margin:auto; margin-bottom:20px;">
     <input type="hidden" name="shelterId" value="<%= shelterId %>">
@@ -88,7 +86,9 @@
     <a href="/browse?shelterId=<%=shelterId%>" style="margin-left:10px;">Reset</a>
 
 </form>
-   
+    <%if(allPets.length==0){%>
+        <h2 style="text-align:center">No Pets Available :( Sorry!</h2>
+        <%} else{%>
             <table>
         <thead>
             <tr>
