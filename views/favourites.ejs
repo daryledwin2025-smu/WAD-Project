@@ -11,61 +11,74 @@
     <h2>❤️ My Favourites</h2>
     <p>Welcome, <%= user.username %>! Here are your favourited pets.</p>
 
-    <% if (favourites.length===0) { %>
-        <p>You haven't favourited any pets yet. <a href="/home">Browse shelters</a> to find pets you love!</p>
-        <% } else { %>
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>Pet Name</th>
-                        <th>Breed</th>
-                        <th>Age</th>
-                        <th>Size</th>
-                        <th>My Note</th>
-                        <th>Date Added</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% favourites.forEach(fav=> { %>
-                        <tr>
-                            <td>
-                                <a href="/browse/petDetail?petId=<%= fav.petId._id %>"><%= fav.petId.name %></a>
-                            </td>
-                            <td>
-                                <%= fav.petId.breed %>
-                            </td>
-                            <td>
-                                <%= fav.petId.age %>
-                            </td>
-                            <td>
-                                <%= fav.petId.size %>
-                            </td>
-                            <td class="note-text">
-                                <% if (fav.note && fav.note.length> 0) { %>
-                                    <%= fav.note.length> 100 ? fav.note.slice(0, 100) + "..." : fav.note %>
-                                        <% } else { %>
-                                            No note yet
-                                            <% } %>
-                            </td>
-                            <td>
-                                <%= new Date(fav.createdAt).toDateString() %>
-                            </td>
-                            <td class="actions">
-                                <a href="/favourites/editNote?favouriteId=<%= fav._id %>">📝 Edit Note</a>
-                                <form action="/favourites/remove" method="POST"
-                                    onsubmit="return confirm('Are you sure you want to remove this pet from your favourites?');">
-                                    <input type="hidden" name="favouriteId" value="<%= fav._id %>">
-                                    <button type="submit">🗑️ Remove</button>
-                                </form>
-                            </td>
-                        </tr>
-                        <% }) %>
-                </tbody>
-            </table>
-            <% } %>
+    <% if (msg==="added" ) { %>
+        <p><strong>✅ Pet added to your favourites!</strong></p>
+        <% } else if (msg==="removed" ) { %>
+            <p><strong>🗑️ Pet removed from your favourites.</strong></p>
+            <% } else if (msg==="noted" ) { %>
+                <p><strong>📝 Note updated successfully!</strong></p>
+                <% } %>
 
-                <p><a href="/home">← Back to Home</a></p>
+                    <% if (favourites.length===0) { %>
+                        <p>You haven't favourited any pets yet. <a href="/home">Browse shelters</a> to find pets you
+                            love!</p>
+                        <% } else { %>
+                            <table border="1">
+                                <thead>
+                                    <tr>
+                                        <th>Pet Name</th>
+                                        <th>Breed</th>
+                                        <th>Age</th>
+                                        <th>Size</th>
+                                        <th>My Note</th>
+                                        <th>Date Added</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% favourites.forEach(fav=> { %>
+                                        <tr>
+                                            <td>
+                                                <a href="/browse/petDetail?petId=<%= fav.petId._id %>">
+                                                    <%= fav.petId.name %>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <%= fav.petId.breed %>
+                                            </td>
+                                            <td>
+                                                <%= fav.petId.age %>
+                                            </td>
+                                            <td>
+                                                <%= fav.petId.size %>
+                                            </td>
+                                            <td class="note-text">
+                                                <% if (fav.note && fav.note.length> 0) { %>
+                                                    <%= fav.note.length> 100 ? fav.note.slice(0, 100) + "..." : fav.note
+                                                        %>
+                                                        <% } else { %>
+                                                            No note yet
+                                                            <% } %>
+                                            </td>
+                                            <td>
+                                                <%= new Date(fav.createdAt).toDateString() %>
+                                            </td>
+                                            <td class="actions">
+                                                <a href="/favourites/editNote?favouriteId=<%= fav._id %>">📝 Edit
+                                                    Note</a>
+                                                <form action="/favourites/remove" method="POST"
+                                                    onsubmit="return confirm('Are you sure you want to remove this pet from your favourites?');">
+                                                    <input type="hidden" name="favouriteId" value="<%= fav._id %>">
+                                                    <button type="submit">🗑️ Remove</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                                </tbody>
+                            </table>
+                            <% } %>
+
+                                <p><a href="/home">← Back to Home</a></p>
 
 </body>
 

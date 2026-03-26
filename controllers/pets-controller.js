@@ -1,5 +1,6 @@
 const Pet = require("../models/pet-model")
 const UserModel = require("../models/user-model");
+const Favourite = require("../models/favourite-model");
 
 // DISPLAYS
 exports.displayMyListings = async (req, res) => {
@@ -114,7 +115,13 @@ exports.displayAllPets = async (req, res) => {
             ? (totalRating / validReviews.length).toFixed(1)
             : null;
 
-        res.render("browse", { allPets, reviews: validReviews, avgRating, shelterId, shelter, user: req.session.user, req });// Render the EJS form view and pass the posts
+        let favouritedPetIds = [];
+        if (req.session.user && req.session.user.account !== "Shelter") {
+            const userFavs = await Favourite.getFavouritesByUserId(req.session.user._id);
+            favouritedPetIds = userFavs.filter(f => f.petId !== null).map(f => f.petId._id.toString());
+        }
+
+        res.render("browse", { allPets, reviews: validReviews, avgRating, shelterId, shelter, user: req.session.user, req, favouritedPetIds });
     } catch (error) {
         console.error(error);
         res.send("Error reading database"); // Send error message if fetching fails

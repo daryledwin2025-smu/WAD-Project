@@ -21,7 +21,7 @@ exports.addFavourite = async (req, res) => {
         }
 
         await Favourite.addFavourite(userId, petId);
-        res.redirect("/favourites");
+        res.redirect("/favourites?msg=added");
     } catch (error) {
         console.log("Error adding favourite:", error);
         res.redirect("/home");
@@ -35,7 +35,7 @@ exports.viewFavourites = async (req, res) => {
 
         const validFavourites = favourites.filter(fav => fav.petId !== null);
 
-        res.render("favourites", { favourites: validFavourites, user: req.session.user });
+        res.render("favourites", { favourites: validFavourites, user: req.session.user, msg: req.query.msg || "" });
     } catch (error) {
         console.log("Error viewing favourites:", error);
         res.redirect("/home");
@@ -87,7 +87,7 @@ exports.submitEditNote = async (req, res) => {
         }
 
         await Favourite.updateNote(favouriteId, note.trim());
-        res.redirect("/favourites");
+        res.redirect("/favourites?msg=noted");
     } catch (error) {
         console.log("Error updating note:", error);
         res.redirect("/favourites");
@@ -113,7 +113,7 @@ exports.removeFavourite = async (req, res) => {
         }
 
         await Favourite.removeFavourite(favouriteId);
-        res.redirect("/favourites");
+        res.redirect("/favourites?msg=removed");
     } catch (error) {
         console.log("Error removing favourite:", error);
         res.redirect("/favourites");
