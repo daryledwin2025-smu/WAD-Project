@@ -26,7 +26,14 @@
             <input type="number" name="age" value="<%= pet.age %>" required>
         </div>
 <br>
-
+Dog size:
+<select name="size" required>
+  <option value="">Select size</option>
+  <option value="Small 🟢" <%= pet.size === "Small 🟢" ? "selected" : "" %>>Small 🟢</option>
+  <option value="Medium 🟠" <%= pet.size === "Medium 🟠" ? "selected" : "" %>>Medium 🟠</option>
+  <option value="Large 🔴" <%= pet.size === "Large 🔴" ? "selected" : "" %>>Large 🔴</option>
+</select>
+<br><br>
         <label>Description:</label><br>
         <textarea name="description" rows="4" cols="40"><%= pet.description %></textarea>
 <br>

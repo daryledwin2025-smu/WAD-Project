@@ -21,6 +21,10 @@ const petSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    size: {
+    type: String,
+    required: true
+    },
     createdAt: { 
         type: Date, 
         default: Date.now }
@@ -51,7 +55,8 @@ exports.editPet = (pet)=>{
     name: pet.name,
     breed: pet.breed,
     age: pet.age,
-    description: pet.description
+    description: pet.description,
+    size:pet.size
   }
 );
 }

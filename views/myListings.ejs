@@ -33,6 +33,7 @@
                 <th>Breed</th>
                 <th>Age</th>
                 <th>Description</th>
+                <th>Size</th>
                 <th>Edit Pet Listing</th>
                 <th>Delete Pet Listing</th>
                 <th>View Applications</th>
@@ -46,6 +47,7 @@
                     <td><%= pet.breed %></td>
                     <td><%= pet.age %></td>
                     <td><%= pet.description %></td>
+                    <td><%=pet.size%></td>
                     <td>
                         <a href="/pets/editPet?petId=<%= pet._id %>">Edit</a>
                     </td>

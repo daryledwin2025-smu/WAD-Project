@@ -29,6 +29,7 @@
                 <th>Breed</th>
                 <th>Age</th>
                 <th>Description</th>
+                <th>Size</th>
                 <th>View More</th>
             </tr>
         </thead>
@@ -39,11 +40,13 @@
                     <td><%= pet.breed %></td>
                     <td><%= pet.age %></td>
                     <td><%= pet.description %></td>
+                    <td><%=pet.size%></td>
                     <td> <a href="/browse/petDetail?petId=<%=pet._id%>">View More</a> </td>
                 </tr>
             <% }) %>
         </tbody>
     </table>
+    <!-- DARRYL's SHELTER REVIEWS -->
 
 <hr>
 <h3>Adoption</h3>
