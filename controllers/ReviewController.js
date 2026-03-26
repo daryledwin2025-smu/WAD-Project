@@ -4,9 +4,6 @@ const UserModel = require("../models/user-model");
 // GET /browse/reviews/all?shelterId=xxx
 exports.showAllReviews = async (req, res) => {
     try {
-        if (!req.session.user) {
-            return res.redirect("/");
-        }
         const shelterId = req.query.shelterId;
         const shelter = await UserModel.getUserById(shelterId); // retrieve shelter data based on shelter ID
         const reviews = await Review.find({ shelter: shelterId }) // find reviews for specific shelterID, returns a list
@@ -26,9 +23,6 @@ exports.showAllReviews = async (req, res) => {
 // POST /browse/reviews
 exports.submitReview = async (req, res) => {
     try {
-        if (!req.session.user) {
-            return res.redirect("/");
-        }
         await Review.create({
             shelter: req.body.shelterId,
             reviewer: req.session.user._id,
@@ -45,9 +39,6 @@ exports.submitReview = async (req, res) => {
 // GET /browse/reviews/:id/edit
 exports.showEditReview = async (req, res) => {
     try {
-        if (!req.session.user) {
-            return res.redirect("/");
-        }
         const review = await Review.findById(req.params.id).populate("shelter");
         // Block if not the reviewer
         if (review.reviewer.toString() !== req.session.user._id.toString()) {
@@ -63,9 +54,6 @@ exports.showEditReview = async (req, res) => {
 // POST /browse/reviews/:id/edit
 exports.submitEditReview = async (req, res) => {
     try {
-        if (!req.session.user) {
-            return res.redirect("/");
-        }
         const review = await Review.findById(req.params.id);
 
         // Block if not the reviewer
@@ -86,9 +74,6 @@ exports.submitEditReview = async (req, res) => {
 // POST /browse/reviews/:id/delete
 exports.deleteReview = async (req, res) => {
     try {
-        if (!req.session.user) {
-            return res.redirect("/");
-        }
         const review = await Review.findById(req.params.id);
 
         // Block if not the reviewer
