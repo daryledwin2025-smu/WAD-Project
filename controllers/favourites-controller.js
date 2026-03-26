@@ -3,14 +3,6 @@ const Pet = require("../models/pet-model");
 
 exports.addFavourite = async (req, res) => {
     try {
-        if (!req.session || !req.session.user) {
-            return res.redirect("/");
-        }
-
-        if (req.session.user.account === "Shelter") {
-            return res.status(403).send("Shelters cannot favourite pets.");
-        }
-
         const userId = req.session.user._id;
         const petId = req.body.petId;
 
@@ -25,7 +17,6 @@ exports.addFavourite = async (req, res) => {
 
         const existing = await Favourite.checkFavourite(userId, petId);
         if (existing) {
-
             return res.redirect("/favourites");
         }
 
@@ -37,18 +28,8 @@ exports.addFavourite = async (req, res) => {
     }
 };
 
-// ========== READ — View all favourites ==========
-// GET /favourites
 exports.viewFavourites = async (req, res) => {
     try {
-        if (!req.session || !req.session.user) {
-            return res.redirect("/");
-        }
-
-        if (req.session.user.account === "Shelter") {
-            return res.redirect("/home-shelter");
-        }
-
         const userId = req.session.user._id;
         const favourites = await Favourite.getFavouritesByUserId(userId);
 
@@ -63,10 +44,6 @@ exports.viewFavourites = async (req, res) => {
 
 exports.showEditNote = async (req, res) => {
     try {
-        if (!req.session || !req.session.user) {
-            return res.redirect("/");
-        }
-
         const favouriteId = req.query.favouriteId;
 
         if (!favouriteId) {
@@ -92,10 +69,6 @@ exports.showEditNote = async (req, res) => {
 
 exports.submitEditNote = async (req, res) => {
     try {
-        if (!req.session || !req.session.user) {
-            return res.redirect("/");
-        }
-
         const favouriteId = req.body.favouriteId;
         const note = req.body.note || "";
 
@@ -123,10 +96,6 @@ exports.submitEditNote = async (req, res) => {
 
 exports.removeFavourite = async (req, res) => {
     try {
-        if (!req.session || !req.session.user) {
-            return res.redirect("/");
-        }
-
         const favouriteId = req.body.favouriteId;
 
         if (!favouriteId) {
