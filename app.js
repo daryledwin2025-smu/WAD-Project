@@ -1,3 +1,6 @@
+const dns = require('dns');
+dns.setServers(['8.8.8.8', '1.1.1.1']);
+
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -30,7 +33,7 @@ const petRoutes = require('./routes/pets-routes');       // Person 2
 const browseRoutes = require('./routes/browse-routes');  // Person 3
 const applicationRoutes = require('./routes/applications'); // Person 4
 const dashboardRoutes = require('./routes/dashboard-routes');      // Person 5
-// const favouriteRoutes = require('./routes/favourites');     // Person 6
+const favouriteRoutes = require('./routes/favourites-routes');     // Person 6
 
 // === MOUNTING ROUTES ===
 app.use('/', usersRoutes);
@@ -38,8 +41,7 @@ app.use('/pets', petRoutes);
 app.use('/browse', browseRoutes);
 app.use('/applications', applicationRoutes);
 app.use('/dashboard', dashboardRoutes);
-// app.use('/favourites', favouriteRoutes);
-// because it conflicts with browseRoutes
+app.use('/favourites', favouriteRoutes);
 
 // === DATABASE CONNECTION ===
 async function connectDB() {
