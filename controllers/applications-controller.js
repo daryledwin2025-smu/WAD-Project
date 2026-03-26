@@ -16,28 +16,21 @@ exports.showMyApplications = async (req, res) => {
 };
 
 exports.displayApplyForm = async (req, res) => {
-  try{
-    let petId = req.query.petId;
-    let petName = req.query.petName;
-    res.render("applyForm",{petId:petId,petName:petName})
-  } catch(error){
+  try {
+    if (!req.session || !req.session.user) {
+      return res.redirect("/user-login");
+    }
 
-  }
-  // try {
-  //   if (!req.session || !req.session.user) {
-  //     return res.redirect("/user-login");
-  //   }
-
-  //   const pet = await Pet.findById(req.params.petId);
-  //   if (!pet) {
-  //     return res.redirect("/browse");
-  //   }
+    const pet = await Pet.findById(req.params.petId);
+    if (!pet) {
+      return res.redirect("/browse");
+    }
     
-  //   return res.render("applyForm", { pet: pet, error: undefined });
-  // } catch (error) {
-  //   console.log(error);
-  //   return res.render("error", { error });
-  // }
+    return res.render("applyForm", { pet: pet, error: undefined });
+  } catch (error) {
+    console.log(error);
+    return res.render("error", { error });
+  }
 };
 
 exports.submitApplication = async (req, res) => {

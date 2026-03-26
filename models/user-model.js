@@ -63,7 +63,3 @@ exports.deleteUserByUsername = async (username) => {
 exports.getAllShelters = () => {
   return User.find({ account: "Shelter" });
 };
-
-exports.getUserById = (id) => {
-    return User.findById(id);
-};
