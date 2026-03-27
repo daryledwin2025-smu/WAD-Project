@@ -30,7 +30,7 @@ exports.displayApplyForm = async (req, res) => {
     console.log(error);
     res.status(500).send("Error loading the application form.");
   }
-};
+
   // try {
   //   if (!req.session || !req.session.user) {
   //     return res.redirect("/user-login");
