@@ -51,6 +51,20 @@ exports.submitApplication = async (req, res) => {
       return res.redirect("/");
     }
 
+    const existingApplication = await Application.findOne({
+      pet: req.params.petId,
+      applicant: req.session.user._id
+    });
+
+    if (existingApplication) {
+      const pet = await Pet.displayPetById(pet); 
+      return res.render("applyForm", {
+        petId: pet,
+        petName: pet.name,
+        error: "You have already started or submitted an application for this pet!"
+      });
+    }
+
     let livingSituation = req.body.livingSituation;
     let experienceDetails = req.body.experienceDetails;
     let action = req.body.action;
