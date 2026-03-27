@@ -7,7 +7,7 @@
 <body>
     <header>
         <nav>
-            <a href="/home-shelter">Home</a>
+            <a href="/home-shelter">Back</a>
             <!-- <a href="/browse">Browse Pets</a> | 
             <a href="/applications/mine">My Applications</a> -->
         </nav>
@@ -18,7 +18,7 @@
         <h1>Adoption Applications for <%=petName%></h1>
 
         <% if (applications.length === 0) { %>
-            <p>There is no applications for .</p>
+            <p>There is currently no applications for <%=petName%></p>
             <a href="/browse">Find a pet to adopt</a>
         <% } else { %>
             <table border="1" cellpadding="10" cellspacing="0" style="width: 100%; text-align: left;">
