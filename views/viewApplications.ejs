@@ -14,10 +14,10 @@
     </header>
 
     <main>
-        <h1>Adoption Applications for </h1>
+        <h1>Adoption Applications for <%= app.pet.name %></h1>
 
         <% if (applications.length === 0) { %>
-            <p>You haven't started any applications yet.</p>
+            <p>There is no applications for .</p>
             <a href="/browse">Find a pet to adopt</a>
         <% } else { %>
             <table border="1" cellpadding="10" cellspacing="0" style="width: 100%; text-align: left;">
