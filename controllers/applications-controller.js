@@ -1,5 +1,5 @@
 const Application = require("../models/Application");
-// const Pet = require("../models/Pet");
+const Pet = require("../models/Pet");
 
 exports.showMyApplications = async (req, res) => {
   try {
@@ -22,10 +22,15 @@ exports.displayApplyForm = async (req, res) => {
   try{
     let petId = req.query.petId;
     let petName = req.query.petName;
+
+    const pet = await Pet.findById(petId);
+
     res.render("applyForm",{petId:petId,petName:petName,shelterId: pet.shelterID})
   } catch(error){
-
+    console.log(error);
+    res.status(500).send("Error loading the application form.");
   }
+};
   // try {
   //   if (!req.session || !req.session.user) {
   //     return res.redirect("/user-login");
