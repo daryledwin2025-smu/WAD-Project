@@ -211,7 +211,7 @@ exports.displayViewApplicationsByPet = async (req,res)=>{
     const validApplications = myApplications.filter(app => app.pet !== null);  
     // handle cases when listing is deleted after application submitted
     console.log(validApplications)
-    return res.render("myApplications", { applications: validApplications});
+    return res.render("viewApplications", { applications: validApplications});
   } catch (error) {
     console.log(error);
     return res.render("error", { error });
