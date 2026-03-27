@@ -207,11 +207,13 @@ exports.displayViewApplicationsByPet = async (req,res)=>{
       return res.redirect("/");
     }
     const petId = req.query.petId;
+    const petName = req.query.petName;
+    console.log(petName)
     const myApplications = await Application.find({ pet: petId }).populate("pet");
     const validApplications = myApplications.filter(app => app.pet !== null);  
     // handle cases when listing is deleted after application submitted
     console.log(validApplications)
-    return res.render("viewApplications", { applications: validApplications});
+    return res.render("viewApplications", { applications: validApplications,petName:petName});
   } catch (error) {
     console.log(error);
     return res.render("error", { error });
