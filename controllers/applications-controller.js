@@ -21,14 +21,11 @@ exports.showMyApplications = async (req, res) => {
 exports.displayApplyForm = async (req, res) => {
   try{
     let petId = req.query.petId;
-    let petName = req.query.petName;
+    let petName = req.query.petName;;
 
-    const pet = await Pet.displayPetById(petId);
-
-    res.render("applyForm",{petId:petId,petName:petName,shelterId: pet.shelterID})
+    res.render("applyForm",{petId:petId,petName:petName})
   } catch(error){
-    console.log(error);
-    res.status(500).send("Error loading the application form.");
+  
   }
 
   // try {
