@@ -25,7 +25,7 @@ exports.displayApplyForm = async (req, res) => {
 
     res.render("applyForm",{petId:petId,petName:petName})
   } catch(error){
-  
+   
   }
 
   // try {
@@ -49,20 +49,6 @@ exports.submitApplication = async (req, res) => {
   try {
     if (!req.session || !req.session.user) {
       return res.redirect("/");
-    }
-
-    const existingApplication = await Application.findOne({
-      pet: req.params.petId,
-      applicant: req.session.user._id
-    });
-
-    if (existingApplication) {
-      const pet = await Pet.displayPetById(pet); 
-      return res.render("applyForm", {
-        petId: pet,
-        petName: pet.name,
-        error: "You have already started or submitted an application for this pet!"
-      });
     }
 
     let livingSituation = req.body.livingSituation;
@@ -90,7 +76,7 @@ exports.submitApplication = async (req, res) => {
     return res.redirect("/applications/mine");
   } catch (error) {
     console.log(error);
-    return res.status(500).send("error" + error.message); 
+    return res.render("error", { error });
   }
 };
 
