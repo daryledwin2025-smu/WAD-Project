@@ -90,7 +90,7 @@ exports.submitApplication = async (req, res) => {
     return res.redirect("/applications/mine");
   } catch (error) {
     console.log(error);
-    return res.render("error", { error });
+    return res.status(500).send("error" + error.message); 
   }
 };
 
