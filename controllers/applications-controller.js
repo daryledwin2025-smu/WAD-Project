@@ -22,8 +22,7 @@ exports.displayApplyForm = async (req, res) => {
   try{
     let petId = req.query.petId;
     let petName = req.query.petName;
-    let shelterId = req.query.shelterId;
-    res.render("applyForm",{petId:petId,petName:petName,shelterId:pet.shelter})
+    res.render("applyForm",{petId:petId,petName:petName})
   } catch(error){
 
   }
