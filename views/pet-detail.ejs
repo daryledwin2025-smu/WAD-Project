@@ -1,0 +1,33 @@
+<h2>Meet <%= pet.name %> 🐶</h2>
+<p><small>Posted on <%= new Date(pet.createdAt).toDateString() %></small></p>
+<p><strong>Name:</strong> <%= pet.name %></p>
+<p><strong>Breed:</strong> <%= pet.breed %></p>
+<p><strong>Age:</strong> <%= pet.age %></p>
+<p><strong>Size:</strong> <%= pet.size %></p>
+
+<p><strong>Description:</strong></p>
+<p><%= pet.description %></p>
+
+<br>
+
+<p><strong>Other Information:</strong></p>
+<p>
+  💉 Vaccinated: <%= pet.vaccinated ? "✅" : "❌" %><br>
+  ✂️ Neutered: <%= pet.neutered ? "✅" : "❌" %><br>
+  🏠 House Trained: <%= pet.houseTrained ? "✅" : "❌" %>
+</p>
+
+<br>
+
+<a href="/applications/applyForm?petId=<%= pet._id %>&petName=<%= pet.name %>">
+  🐾 Click here to adopt <%= pet.name %>!
+</a>
+
+<br><br>
+
+<% if (user && user.account !== "Shelter") { %>
+    <form action="/favourites/add" method="POST" style="display:inline;">
+        <input type="hidden" name="petId" value="<%= pet._id %>">
+        <button type="submit">❤️ Add to Favourites</button>
+    </form>
+<% } %>

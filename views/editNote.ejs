@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Edit Note</title>
+
+</head>
+
+<body>
+
+    <h2>📝 Edit Note</h2>
+
+    <div>
+        <p><strong>Pet:</strong>
+            <%= favourite.petId.name %> (<%= favourite.petId.breed %>, Age: <%= favourite.petId.age %>)
+        </p>
+
+        <form action="/favourites/editNote" method="POST">
+            <input type="hidden" name="favouriteId" value="<%= favourite._id %>">
+
+            <label for="note">Your Personal Note:</label>
+            <textarea id="note" name="note" rows="4" cols="50"
+                placeholder="Write a personal note about this pet..."><%= favourite.note %></textarea>
+
+            <br>
+            <button type="submit">💾 Save Note</button>
+            <a href="/favourites"><button type="button">Cancel</button></a>
+        </form>
+    </div>
+
+</body>
+
+</html>

@@ -2,22 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My Applications</title>
+    <title>Adoption Applications</title>
 </head>
 <body>
     <header>
         <nav>
-            <a href="/home">Home</a>
+            <a href="/pets/myListings">Back</a>
             <!-- <a href="/browse">Browse Pets</a> | 
             <a href="/applications/mine">My Applications</a> -->
         </nav>
     </header>
 
     <main>
-        <h1>My Adoption Applications</h1>
+
+        <h1>Adoption Applications for <%=petName%></h1>
 
         <% if (applications.length === 0) { %>
-            <p>You haven't started any applications yet.</p>
+            <p>There is currently no applications for <%=petName%></p>
             <a href="/browse">Find a pet to adopt</a>
         <% } else { %>
             <table border="1" cellpadding="10" cellspacing="0" style="width: 100%; text-align: left;">
