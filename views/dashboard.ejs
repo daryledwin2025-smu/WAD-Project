@@ -1,23 +1,31 @@
 <!DOCTYPE html>
 <html>
 <title>Shelter Dashboard</title>
+
 <body>
-    <h1 style="color: chartreuse;">Welcome to the Dashboard</h1>
-    <hr>
-    <table border="0">
-        <tr>
-            <th>
-                <h2 style="color: tomato;">Applications</h2>
-            </th>
-        </tr>
+    <h1 style="text-align: center;">Welcome to Shelter Dashboard</h1>
+    <hr style="width: 15cm;">
+
+
+    <h2 >Applications</h2>
+
+    <% let count=1 %>
         <% dashboardList.forEach(application=> { %>
-            <tr>
-                <td>
-                    <%= application %>
-                </td>
-            </tr>
-            <% }); %>
-    </table>
+
+            <p> Application ID: <%= application.id %> </p>
+                <p> Applicant ID: <%= application.applicant %> </p>
+                    <p> Pet: <%= application.pet %> </p>
+                        <p> Living Situation: <%= application.livingSituation %> </p>
+                            <% if(application.experienceDetails.length==0){ %>
+                                <p> Experience Details: Applicant has no experience details! </p>                             
+                                <% }else{ %>
+                                    <p> Experience Details: <%= application.experienceDetails %> </p>
+                                        <% } %>
+                                        <p>Application Status: <a href="/dashboard/applicationDetails/<%= application.id %>"><%= application.status %></a></p> 
+                                            <p> Application DateTime: <%= application.applicationDate %> </p>
+                                                <hr>
+                                                <% }); %>
+
 </body>
 
 </html>

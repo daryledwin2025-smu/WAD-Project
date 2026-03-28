@@ -30,13 +30,23 @@ const descisionLogSchema = new mongoose.Schema({
     },
     shelterId:{
         type: String,
-        required: true
+        required: false
+    },
+    comments:{
+        type: String,
+        required: false
+    },
+    descisionDateTime:{
+        type: Date,
+        default: Date.now
     }
 
 
 });
 
 const Descisionlog = mongoose.model('DescisionLog', descisionLogSchema, 'descisionLogs');
+
+module.exports = Descisionlog
 
 exports.retrievePending = function (shelterName) {
     return Descisionlog.find ( { shelterName: {$in: [ shelterName ]}, status: {$in: ['Pending']} } );
