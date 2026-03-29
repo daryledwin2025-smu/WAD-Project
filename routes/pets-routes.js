@@ -1,16 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const petsController = require("../controllers/pets-controller");
-// not done yet
-router.get("/myListings", petsController.displayMyListings);
-router.get("/addPet",petsController.displayAddPet);
-router.post("/addPet",petsController.addPet);
-router.get("/editPet",petsController.displayEditPet);
-router.post("/editPet",petsController.editPet);
-router.get("/deletePet",petsController.deletePet);
+const authMiddleware = require("../middleware/auth");
 
-
-
+// ROUTES
+router.get("/myListings", authMiddleware.isLoggedIn, authMiddleware.isShelter, petsController.displayMyListings);
+router.get("/addPet", authMiddleware.isLoggedIn, authMiddleware.isShelter, petsController.displayAddPet);
+router.post("/addPet", authMiddleware.isLoggedIn, authMiddleware.isShelter, petsController.addPet);
+router.get("/editPet", authMiddleware.isLoggedIn, authMiddleware.isShelter, petsController.displayEditPet);
+router.post("/editPet", authMiddleware.isLoggedIn, authMiddleware.isShelter, petsController.editPet);
+router.get("/deletePet", authMiddleware.isLoggedIn, authMiddleware.isShelter, petsController.deletePet);
 
 // EXPORT
 module.exports = router;
