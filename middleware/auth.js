@@ -11,3 +11,10 @@ exports.isAdopter = (req, res, next) => {
     }
     next();
 };
+
+exports.isShelter = (req, res, next) => {
+    if (req.session.user.account === "Adopter") {
+        return res.redirect("/home");
+    }
+    next();
+};
