@@ -32,6 +32,6 @@ router.get('/shelter/all', applicationsController.viewAllShelterApplications);
 // 3. Approve or Reject an application
 // router.post("/status/:appId", applicationsController.updateApplicationStatus);
 
-router.get("/viewApplications", applicationsController.displayViewApplicationsByPet);
+// router.get("/viewApplications", applicationsController.displayViewApplicationsByPet);
 
 module.exports = router;
