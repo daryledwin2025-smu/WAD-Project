@@ -27,10 +27,10 @@ router.post("/delete/:appId", applicationsController.deleteApplication);
 router.get('/shelter/all', applicationsController.viewAllShelterApplications);
 
 // 2. View all applications for a specific pet
-router.get("/pet/:petId", applicationsController.viewPetApplications);
+// router.get("/pet/:petId", applicationsController.viewPetApplications);
 
 // 3. Approve or Reject an application
-router.post("/status/:appId", applicationsController.updateApplicationStatus);
+// router.post("/status/:appId", applicationsController.updateApplicationStatus);
 
 router.get("/viewApplications", applicationsController.displayViewApplicationsByPet);
 
