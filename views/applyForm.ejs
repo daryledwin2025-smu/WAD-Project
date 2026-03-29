@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Apply to Adopt <%= pet.name %></title>
+    <title>Apply to Adopt <%= petName %></title>
 </head>
 <body>
     <header>
@@ -14,7 +14,7 @@
     </header>
 
     <main>
-        <h1>Adoption Application for <%= pet.name %></h1>
+        <h1>Adoption Application for <%= petName %></h1>
         
         <% if (typeof error !== 'undefined' && error) { %>
             <div style="color: red; border: 1px solid red; padding: 10px; margin-bottom: 15px;">
@@ -22,7 +22,7 @@
             </div>
         <% } %>
 
-        <form action="/applications/new/<%= pet._id %>" method="POST">
+        <form action="/applications/new/<%= petId %>" method="POST">
             <fieldset>
                 <legend>Applicant Information</legend>
                 
