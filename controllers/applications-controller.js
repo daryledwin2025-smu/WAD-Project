@@ -62,6 +62,7 @@ exports.submitApplication = async (req, res) => {
     let newApplication = new Application({
       applicant: req.session.user._id,
       pet: req.params.petId,
+      shelterId: pet.shelterId,
       livingSituation: livingSituation,
       experienceDetails: experienceDetails,
       status: finalStatus
@@ -149,5 +150,25 @@ exports.deleteApplication = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.render("error", { error });
+  }
+};
+
+exports.viewAllShelterApplications = async (req, res) => {
+  try {
+    if (!req.session || !req.session.user) {
+      return res.redirect("/");
+    }
+
+    const currentShelterId = req.session.user._id;
+
+    const allApps = await Application.find({ shelterId: currentShelterId })
+                                     .populate("pet")
+                                     .populate("applicant");
+
+    return res.render("viewapplications", { applications: allApps });
+
+  } catch (error) {
+    console.log("Error loading shelter applications:", error);
+    return res.status(500).send("Error loading applications.");
   }
 };

@@ -17,4 +17,7 @@ router.post("/edit/:appId", applicationsController.submitDraftEdit);
 // withdraw an application
 router.post("/delete/:appId", applicationsController.deleteApplication);
 
+// [SHELTER] View the master list of ALL applications
+router.get('/shelter/all', applicationsController.viewAllShelterApplications);
+
 module.exports = router;

@@ -11,6 +11,10 @@ const applicationSchema = new mongoose.Schema({
         ref: 'Pet',
         required: true
     },
+    shelterId: {
+        type: String, 
+        required: true
+    },
     livingSituation: {
         type: String,
         required: false // Not required initially so users can save incomplete drafts
