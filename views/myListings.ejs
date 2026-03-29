@@ -45,7 +45,16 @@
 
         <!-- Name -->
         <input type="text" name="name" placeholder="Exact name" value="<%= req.query.name || '' %>">
+<!-- Breed -->
+<input type="text" name="breed" list="breedList" placeholder="Search breed" value="<%= req.query.breed || '' %>">
 
+<datalist id="breedList">
+    <option value="Golden Retriever">
+    <option value="Poodle">
+    <option value="Shiba Inu">
+    <option value="Corgi">
+    <option value="Bulldog">
+</datalist>
         <!-- Size -->
         <select name="size">
             <option value="">All Sizes</option>

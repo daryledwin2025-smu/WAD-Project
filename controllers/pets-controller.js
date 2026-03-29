@@ -5,33 +5,36 @@ const Favourite = require("../models/favourite-model");
 // DISPLAYS
 exports.displayMyListings = async (req, res) => {
     let userId = req.session.user._id;
-
     let query = { shelterId: userId };
-
     // size filter
     if (req.query.size && req.query.size !== "") {
         query.size = req.query.size;
     }
-
     // vaccinated filter
     if (req.query.vaccinated) {
         query.vaccinated = true;
     }
-
     if (req.query.neutered) {
         query.neutered = true;
     }
-
     if (req.query.houseTrained) {
         query.houseTrained = true;
     }
-
     let allPets = await Pet.filterPets(query);
+    // name filter
     if (req.query.name && req.query.name.trim() !== "") {
         allPets = allPets.filter(pet =>
             pet.name.toLowerCase().includes(req.query.name.trim().toLowerCase())
         );
     }
+    // breed filter
+    console.log("QUERY:", req.query.breed);
+console.log("ALL PETS:", allPets);
+    if (req.query.breed && req.query.breed.trim() !== "") {
+    allPets = allPets.filter(pet =>
+        pet.breed.toLowerCase().includes(req.query.breed.trim().toLowerCase())
+    );
+}
     res.render("myListings", { allPets, req });
 };
 
