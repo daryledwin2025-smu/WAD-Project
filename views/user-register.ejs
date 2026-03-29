@@ -9,66 +9,63 @@
 
 <body>
     <h1>Register</h1>
-    <% if (user) { %>
-        <p>Hello <%= user.username %>, you have successfully registered!</p>
-        <% } else { %>
-            <form method="post">
-                <label for="account">Account:</label>
-                <select id="account" name="account">
-                    <option value="" selected></option>
-                    <option value="Adopter">Adopter</option>
-                    <option value="Shelter">Shelter</option>
-                </select><br><br>
+    <form method="post">
+        <label for="account">Account:</label>
+        <select id="account" name="account">
+            <option value="" selected></option>
+            <option value="Adopter">Adopter</option>
+            <option value="Shelter">Shelter</option>
+        </select><br><br>
 
-                Username : <br>
-                <input type="text" name="username">
-                <br><br>
+        Username : <br>
+        <input type="text" name="username">
+        <br><br>
 
-                Password : <br>
-                <input type="password" name="pass">
-                <br><br>
+        Password : <br>
+        <input type="password" name="pass">
+        <br><br>
 
-                Email : <br>
-                <input type="email" name="email">
-                <br><br>
+        Email : <br>
+        <input type="email" name="email">
+        <br><br>
 
-                Phone : <br>
-                <input type="text" name="phone">
-                <br><br>
+        Phone : <br>
+        <input type="text" name="phone">
+        <br><br>
 
-                Gender:
-                <input type="radio" id="male" name="gender" value="male">
-                <label for="male">Male</label>
-                <input type="radio" id="female" name="gender" value="female">
-                <label for="female">Female</label><br><br>
-                
-                <!-- Access Code : <br>
+        Gender:
+        <input type="radio" id="male" name="gender" value="male">
+        <label for="male">Male</label>
+        <input type="radio" id="female" name="gender" value="female">
+        <label for="female">Female</label><br><br>
+
+        <!-- Access Code : <br>
                 <input type="code" name="code">
                 <br><br> -->
 
 
-                <div id="shelterFields" style="display: none;">
-                    Shelter Name : <br>
-                    <input type="text" name="shelterName">
-                    <br><br>
+        <div id="shelterFields" style="display: none;">
+            Shelter Name : <br>
+            <input type="text" name="shelterName">
+            <br><br>
 
-                    Shelter Email : <br>
-                    <input type="text" name="shelterEmail">
-                    <br><br>
+            Shelter Email : <br>
+            <input type="text" name="shelterEmail">
+            <br><br>
 
-                    Contact Number : <br>
-                    <input type="text" name="shelterNumber">
-                    <br><br>
+            Contact Number : <br>
+            <input type="text" name="shelterNumber">
+            <br><br>
 
-                    Shelter Address : <br>
-                    <input type="text" name="shelterAddress">
-                    <br><br>
+            Shelter Address : <br>
+            <input type="text" name="shelterAddress">
+            <br><br>
 
-                </div>
-                
-                <button type="submit">Register</button>
-            </form>
-            <% }%>
+        </div>
+        <button type="button" onclick="location.href='/'">
+            Back</button> &nbsp;&nbsp;
+        <button type="submit">Register</button>
+    </form>
 
 </body>
 
