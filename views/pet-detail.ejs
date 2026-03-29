@@ -1,5 +1,4 @@
 <h2>Meet <%= pet.name %> 🐶</h2>
-<<<<<<< HEAD
 <p><small>Posted on <%= new Date(pet.createdAt).toDateString() %></small></p>
 <p><strong>Name:</strong> <%= pet.name %></p>
 <p><strong>Breed:</strong> <%= pet.breed %></p>
@@ -32,12 +31,3 @@
         <button type="submit">❤️ Add to Favourites</button>
     </form>
 <% } %>
-=======
-
-<p><strong>Name:</strong> <%= pet.name %></p>
-<p><strong>Breed:</strong> <%= pet.breed %></p>
-<p><strong>Age:</strong> <%= pet.age %></p>
-<p><strong>Description:</strong> <%= pet.description %></p>
-
-<a href="/applications/applyForm?petId=<%= pet._id %>&petName=<%= pet.name %>">Click here to adopt <%= pet.name %>!</a> 
->>>>>>> parent of ed0f3fb (Revert "Merge branch 'main' of https://github.com/daryledwin2025-smu/WAD-Project")

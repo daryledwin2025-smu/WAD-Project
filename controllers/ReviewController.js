@@ -9,15 +9,11 @@ exports.showAllReviews = async (req, res) => {
         const reviews = await Review.find({ shelter: shelterId }) // find reviews for specific shelterID, returns a list
             .populate("reviewer", "username")
             .sort({ createdAt: -1 });
-<<<<<<< HEAD
 
         const validReviews = reviews.filter(review => review.reviewer !== null); // keep element if condition is true
         // filter out any reviews whose userID may be deleted 
 
         res.render("reviews", { shelter, reviews: validReviews, shelterId, user: req.session.user });
-=======
-        res.render("reviews", { shelter, reviews, shelterId, user: req.session.user });
->>>>>>> parent of ed0f3fb (Revert "Merge branch 'main' of https://github.com/daryledwin2025-smu/WAD-Project")
     } catch (error) {
         console.error(error);
         res.status(500).send("Server error");
