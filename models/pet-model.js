@@ -55,7 +55,9 @@ exports.editPet = (pet)=>{
   }
 );
 }
-
+exports.filterPets = (query) => {
+    return Pet.find(query);
+};
 exports.deletePet = (petId)=>{
     return Pet.deleteOne({_id:petId})
 }
