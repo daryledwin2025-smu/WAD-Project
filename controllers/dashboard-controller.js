@@ -51,3 +51,14 @@ exports.updateApplicationDetails = async (req, res) => {
         console.log("error");
     
     }}
+
+exports.showDescisionLogs = async (req, res) => {
+    try{
+        let descisionlogs = await Dashboard.find();
+        if(!Array.isArray(descisionlogs)){
+            descisionlogs = [descisionlogs];
+        };
+        res.render("descisionlogs", {descisionlogs});
+    }catch(error){
+
+    }};
