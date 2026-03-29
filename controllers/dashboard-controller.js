@@ -1,22 +1,22 @@
 
 const Dashboard = require('../models/descisionlog');
-const Application = require('../models/Application')
+const Application = require('../models/Application');
 
 
 exports.showApplications = async (req, res) => {
-        const applicationID = req.params.id
-        let applications = await Application.findById(applicationID)
-        applications = [applications]
-        res.render("applicationDetails", {applications})
+        const applicationID = req.params.id;
+        let applications = await Application.findById(applicationID);
+        applications = [applications];
+        res.render("applicationDetails", {applications});
 };
 
 exports.showDashboard = async (req, res) => {
     try {
-    let dashboardList = await Application.find ( { status: {$in: ['Pending']} } );;    
+    let dashboardList = await Application.find ( { status: {$in: ['Pending']} } );    
     console.log(dashboardList);
     if(dashboardList.length == 0){
-        dashboardList = ['There are no Applications.']
-        res.render("dashboard", { dashboardList })
+        dashboardList = ['There are no Applications.'];
+        res.render("dashboard", { dashboardList });
     }else{
         res.render("dashboard", { dashboardList }) };
     } catch (error) {
@@ -26,15 +26,16 @@ exports.showDashboard = async (req, res) => {
 };
 
 exports.updateApplicationDetails = async (req, res) => {
-    const applicantID = req.body.applicantId
-    const petID = req.body.petId
-    const livingSituation = req.body.livingSituation
-    const experienceDetails = req.body.exp
-    const applicationDate = req.body.appDT
-    const descision = req.body.descision
-    const comment = req.body.comment
+    const applicationID = req.body.applicationId;
+    const applicantID = req.body.applicantId;
+    const petID = req.body.petId;
+    const livingSituation = req.body.livingSituation;
+    const experienceDetails = req.body.exp;
+    const applicationDate = req.body.appDT;
+    const descision = req.body.descision;
+    const comment = req.body.comment;
     try{
-        Dashboard.create({
+        await Dashboard.create({
             applicant: applicantID,
             pet: petID,
             livingSituation: livingSituation,
@@ -43,9 +44,11 @@ exports.updateApplicationDetails = async (req, res) => {
             applicationDate: applicationDate,
             comments: comment
         })
-        console.log("Entry Created!")
-        res.redirect("/dashboard")
+        await Application.updateOne({_id: applicationID}, {$set: { status: descision }});
+        console.log("Entry Updated!");
+        console.log("Entry Created!");
+        res.redirect("/dashboard");
     }catch(error){
-        console.log("error")
+        console.log("error");
     
     }}
