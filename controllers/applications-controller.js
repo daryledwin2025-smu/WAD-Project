@@ -220,4 +220,30 @@ exports.displayViewApplicationsByPet = async (req,res)=>{
     console.log(error);
     return res.render("error", { error });
   }
-}
+};
+
+// [SHELTER - READ] View a master list of ALL applications for their shelter
+exports.viewAllShelterApplications = async (req, res) => {
+  try {
+    // 1. Security Check
+    if (!req.session || !req.session.user) {
+      return res.redirect("/");
+    }
+
+    // Grab the logged-in shelter's ID
+    const currentShelterId = req.session.user._id;
+
+    // 2. THE MAGIC SEARCH: Find all apps matching this shelter
+    // We use .populate() to pull in the Pet's name and the Applicant's name!
+    const allApps = await Application.find({ shelterId: currentShelterId })
+                                     .populate("pet")
+                                     .populate("applicant");
+
+    // 3. Render a new master dashboard for the shelter
+    return res.render("shelterMasterApplications", { applications: allApps });
+
+  } catch (error) {
+    console.log("Error loading shelter dashboard:", error);
+    return res.status(500).send("Error loading applications: " + error.message);
+  }
+};
