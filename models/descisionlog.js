@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 
 const descisionLogSchema = new mongoose.Schema({
     applicant: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'User',
         required: true
     },
     pet: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'Pet',
         required: true
     },
@@ -26,17 +26,27 @@ const descisionLogSchema = new mongoose.Schema({
     },
     applicationDate: {
         type: Date,
-        default: Date.now
-    },
-    shelterName:{
-        type: String,
         required: true
+    },
+    shelterId:{
+        type: String,
+        required: false
+    },
+    comments:{
+        type: String,
+        required: false
+    },
+    descisionDateTime:{
+        type: Date,
+        default: Date.now
     }
 
 
 });
 
 const Descisionlog = mongoose.model('DescisionLog', descisionLogSchema, 'descisionLogs');
+
+module.exports = Descisionlog
 
 exports.retrievePending = function (shelterName) {
     return Descisionlog.find ( { shelterName: {$in: [ shelterName ]}, status: {$in: ['Pending']} } );
