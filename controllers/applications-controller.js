@@ -178,7 +178,8 @@ exports.submitDraftEdit = async (req, res) => {
         livingSituation: livingSituation,
         experienceDetails: experienceDetails,
         status: finalStatus,
-        applicationDate: Date.now()
+        applicationDate: Date.now(),
+        applicantName: req.session.user.username 
       }
     );
 
