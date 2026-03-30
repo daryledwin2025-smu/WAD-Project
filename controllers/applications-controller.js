@@ -61,7 +61,9 @@ exports.submitApplication = async (req, res) => {
         petId: petId,
         petName: pet.name,
         shelterId: pet.shelterId,
-        error: "You have already started or submitted an application for this pet!"
+        error: "You have already started or submitted an application for this pet!",
+        livingSituation: req.body.livingSituation || "",
+        experienceDetails: req.body.experienceDetails || ""
       });
     }
 
@@ -133,7 +135,7 @@ exports.submitDraftEdit = async (req, res) => {
       const application = await Application.findById(req.params.appId).populate("pet");
       application.livingSituation = livingSituation;
       application.experienceDetails = experienceDetails;
-      
+
       return res.render("editApplyForm", {
         app: application,
         error: "All fields must be filled out to submit your draft."
