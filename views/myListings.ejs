@@ -55,6 +55,18 @@
         <option value="<%= breed %>">
     <% }) %>
 </datalist>
+<select name="ageGroup">
+  <option value="">All Ages</option>
+  <option value="young" <%= req.query.ageGroup === "young" ? "selected" : "" %>>
+    Young (0–2)
+  </option>
+  <option value="adult" <%= req.query.ageGroup === "adult" ? "selected" : "" %>>
+    Adult (3–7)
+  </option>
+  <option value="senior" <%= req.query.ageGroup === "senior" ? "selected" : "" %>>
+    Senior (8+)
+  </option>
+</select>
         <!-- Size -->
         <select name="size">
             <option value="">All Sizes</option>
@@ -91,12 +103,7 @@
             >
             House Trained
         </label>
-<select name="ageGroup">
-  <option value="">All Ages</option>
-  <option value="young">Young (0–2)</option>
-  <option value="adult">Adult (3–7)</option>
-  <option value="senior">Senior (8+)</option>
-</select>
+
         <!-- Submit -->
         <button type="submit">Filter</button>
 
@@ -125,7 +132,7 @@
                     <% allPets.forEach(pet=> { %>
                         <tr>
                             <td>
-                                <%= pet.name %> <br>👀<%=pet.viewCount%> <br> <% if (pet.viewCount > 2) { %>🔥 Popular<% } %>
+                                <%= pet.name %> <br>👀<%=pet.viewCount%> <br> <% if (pet.viewCount > 3) { %>🔥 Popular<% } %>
                             </td>
                             <td>
                                 <%= pet.breed %>
