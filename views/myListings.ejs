@@ -59,16 +59,16 @@
         <select name="size">
             <option value="">All Sizes</option>
 
-            <option value="Small 🟢" <%=req.query.size==="Small 🟢" ? "selected" : "" %>>
-                Small 🟢
+            <option value="Small" <%=req.query.size==="Small" ? "selected" : "" %>>
+                Small
             </option>
 
-            <option value="Medium 🟠" <%=req.query.size==="Medium 🟠" ? "selected" : "" %>>
-                Medium 🟠
+            <option value="Medium" <%=req.query.size==="Medium" ? "selected" : "" %>>
+                Medium
             </option>
 
-            <option value="Large 🔴" <%=req.query.size==="Large 🔴" ? "selected" : "" %>>
-                Large 🔴
+            <option value="Large" <%=req.query.size==="Large" ? "selected" : "" %>>
+                Large
             </option>
         </select>
 
@@ -111,7 +111,7 @@
                         <th>Description</th>
                         <th>Size</th>
                         <th>More Information</th>
-                        <th>Edit Pet Listing</th>
+                        <th>Manage Pet</th>
                         <th>Delete Pet Listing</th>
                         <th>View Applications</th>
 
@@ -142,7 +142,7 @@
                                         🏠: <%= pet.houseTrained ? "✅" : "❌" %>
                             </td>
                             <td>
-                                <a href="/pets/editPet?petId=<%= pet._id %>">Edit</a>
+                                <a href="/pets/editPet?petId=<%= pet._id %>">Manage Pet</a>
                             </td>
                             <td>
                                 <a href="/pets/deletePet?petId=<%=pet._id%>"

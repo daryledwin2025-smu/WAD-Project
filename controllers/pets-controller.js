@@ -36,10 +36,7 @@ exports.displayMyListings = async (req, res) => {
 
     allPets[i].viewCount = count;
 }
-// views sort
-if (req.query.sort === "views") {
-    allPets.sort((a, b) => b.viewCount - a.viewCount);
-}
+
     // name filter
     if (req.query.name && req.query.name.trim() !== "") {
         allPets = allPets.filter(pet =>
@@ -53,6 +50,10 @@ console.log("ALL PETS:", allPets);
     allPets = allPets.filter(pet =>
         pet.breed.toLowerCase().includes(req.query.breed.trim().toLowerCase())
     );
+}
+// views sort
+if (req.query.sort === "views") {
+    allPets.sort((a, b) => b.viewCount - a.viewCount);
 }
     res.render("myListings", { allPets, req, breeds });
 };

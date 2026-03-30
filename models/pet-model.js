@@ -21,9 +21,23 @@ const petSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    size: {
+        type: String
+    },
+    vaccinated: {
+        type: Boolean
+    },
+    neutered: {
+        type: Boolean
+    },
+    houseTrained: {
+        type: Boolean
+    },
+
     createdAt: { 
         type: Date, 
-        default: Date.now }
+        default: Date.now 
+    }
 });
 
 const Pet = mongoose.model('Pet', petSchema, 'pets');
