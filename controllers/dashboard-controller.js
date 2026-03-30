@@ -11,7 +11,8 @@ exports.showApplications = async (req, res) => {
 
 exports.showDashboard = async (req, res) => {
     try {
-    let dashboardList = await Application.find ( { status: {$in: ['Pending']} } );    
+    let shelterName = req.session._id
+    let dashboardList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']} } );    
     console.log(dashboardList);
     if(dashboardList.length == 0){
         dashboardList = ['There are no Applications.'];
@@ -54,7 +55,8 @@ exports.updateApplicationDetails = async (req, res) => {
 
 exports.showDescisionLogs = async (req, res) => {
     try{
-        let descisionlogs = await Dashboard.find();
+        let shelterName = req.session.id
+        let descisionlogs = await Dashboard.find({shelterId: {$in: [ shelterName ]}});
         if(!Array.isArray(descisionlogs)){
             descisionlogs = [descisionlogs];
         };
