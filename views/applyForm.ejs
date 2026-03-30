@@ -30,22 +30,22 @@
                 
                 <div style="margin-bottom: 15px;">
                     <label for="livingSituation"><strong>What is your current living situation?</strong></label><br>
-                    <select name="livingSituation" id="livingSituation">
+                    <select name="livingSituation" id="livingSituation" required>
                         <option value="">-- Select an option --</option>
-                        <option value="HDB">HDB</option>
-                        <option value="Condo">Condo</option>
-                        <option value="Landed">Landed Property</option>
+                        <option value="HDB" <%= livingSituation === 'HDB' ? 'selected' : '' %>>HDB</option>
+                        <option value="Condo" <%= livingSituation === 'Condo' ? 'selected' : '' %>>Condo</option>
+                        <option value="Landed" <%= livingSituation === 'Landed' ? 'selected' : '' %>>Landed Property</option>
                     </select>
                 </div>
                 
                 <div style="margin-bottom: 15px;">
                     <label for="experienceDetails"><strong>Describe your experience with pets:</strong></label><br>
-                    <textarea name="experienceDetails" id="experienceDetails" rows="5" cols="50" placeholder="Have you owned a pet before?"></textarea>
+                    <textarea name="experienceDetails" id="experienceDetails" rows="5" cols="50" placeholder="Have you owned a pet before?" required><%= experienceDetails %></textarea></textarea>
                 </div>
             </fieldset>
 
             <br>
-            <button type="submit" name="action" value="draft">Save as Draft</button>
+            <button type="submit" name="action" value="draft" formnovalidate>Save as Draft</button>
             <button type="submit" name="action" value="submit">Submit Application</button>
         </form>
     </main>

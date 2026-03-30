@@ -8,7 +8,7 @@
     <p><%= errorMessage %></p>
 <% } %>
 
-<form action="/" method="post">
+<form action="/user-login" method="post">
     Username : <br>
     <input type="text" name="username">
     <br>
@@ -17,6 +17,10 @@
     <br><br>
     <button type="submit">Log In</button>
 </form>
+<br>
+<button type="button" onclick="location.href='/'">
+            Back</button>
+            
     <p>No account? Click <a href="user-register">here</a> to Register</p>
  
 

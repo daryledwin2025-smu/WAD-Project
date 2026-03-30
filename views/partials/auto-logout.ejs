@@ -1,0 +1,16 @@
+<script>
+  let inactivityTimer;
+
+  function resetInactivityTimer() {
+    clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(() => {
+      alert("You have been logged out due to inactivity.");
+      window.location.href = "/logout";
+    }, 100000);
+  }
+
+  ["load", "mousemove", "mousedown", "click", "keypress", "scroll", "touchstart"]
+    .forEach(event => window.addEventListener(event, resetInactivityTimer));
+
+  resetInactivityTimer();
+</script>
