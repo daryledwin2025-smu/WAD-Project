@@ -25,6 +25,10 @@
         <input type="password" name="pass">
         <br><br>
 
+        Confirm Password : <br>
+        <input type="password" name="confirmPass" required>
+        <br><br>
+
         Email : <br>
         <input type="email" name="email">
         <br><br>
@@ -66,6 +70,11 @@
             Back</button> &nbsp;&nbsp;
         <button type="submit">Register</button>
     </form>
+    <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+    <script>
+        alert("<%= errorMessage %>");
+    </script>
+<% } %>
 
 </body>
 
