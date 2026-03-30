@@ -2,14 +2,15 @@ const express = require("express");
 const router = express.Router();
 const petsController = require("../controllers/pets-controller");
 const ReviewController = require("../controllers/ReviewController");
+const authMiddleware = require("../middleware/auth");
 
-router.get("/",   petsController.displayAllPets);
+router.get("/",  authMiddleware.isLoggedIn, authMiddleware.isAdopter, petsController.displayAllPets);
 
-router.get("/reviews/all", ReviewController.showAllReviews);
-router.post("/reviews", ReviewController.submitReview);
-router.get("/reviews/:id/edit", ReviewController.showEditReview);
-router.post("/reviews/:id/edit", ReviewController.submitEditReview);
-router.post("/reviews/:id/delete", ReviewController.deleteReview);
-router.get("/petDetail",petsController.displayPetDetail);
+router.get("/reviews/all", authMiddleware.isLoggedIn, authMiddleware.isAdopter, ReviewController.showAllReviews);
+router.post("/reviews", authMiddleware.isLoggedIn, authMiddleware.isAdopter, ReviewController.submitReview);
+router.get("/reviews/:id/edit", authMiddleware.isLoggedIn, authMiddleware.isAdopter, ReviewController.showEditReview);
+router.post("/reviews/:id/edit", authMiddleware.isLoggedIn, authMiddleware.isAdopter, ReviewController.submitEditReview);
+router.post("/reviews/:id/delete", authMiddleware.isLoggedIn, authMiddleware.isAdopter, ReviewController.deleteReview);
+router.get("/petDetail", authMiddleware.isLoggedIn, authMiddleware.isAdopter, petsController.displayPetDetail);
 
 module.exports = router;
