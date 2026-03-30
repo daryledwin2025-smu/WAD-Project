@@ -3,9 +3,6 @@ const Pet = require("../models/pet-model");
 
 exports.showMyApplications = async (req, res) => {
   try {
-    if (!req.session || !req.session.user) {
-      return res.redirect("/user-login");
-    }
 
     const myApplications = await Application.find({ applicant: req.session.user._id }).populate("pet").populate("shelterId");
     return res.render("myApplications", { applications: myApplications });
@@ -17,9 +14,6 @@ exports.showMyApplications = async (req, res) => {
 
 exports.displayApplyForm = async (req, res) => {
   try {
-    if (!req.session || !req.session.user) {
-      return res.redirect("/user-login");
-    }
 
     let petId = req.query.petId;
     let petName = req.query.petName;
@@ -69,9 +63,6 @@ exports.displayApplyForm = async (req, res) => {
 
 exports.submitApplication = async (req, res) => {
   try {
-    if (!req.session || !req.session.user) {
-      return res.redirect("/user-login");
-    }
 
     const petId = req.params.petId;
     const userId = req.session.user._id;
@@ -132,9 +123,6 @@ exports.submitApplication = async (req, res) => {
 
 exports.displayEditDraftForm = async (req, res) => {
   try {
-    if (!req.session || !req.session.user) {
-      return res.redirect("/user-login");
-    }
 
     const application = await Application.findOne({
       _id: req.params.appId,
@@ -155,9 +143,6 @@ exports.displayEditDraftForm = async (req, res) => {
 
 exports.submitDraftEdit = async (req, res) => {
   try {
-    if (!req.session || !req.session.user) {
-      return res.redirect("/user-login");
-    }
 
     let livingSituation = req.body.livingSituation;
     let experienceDetails = req.body.experienceDetails;
@@ -192,9 +177,6 @@ exports.submitDraftEdit = async (req, res) => {
 
 exports.deleteApplication = async (req, res) => {
   try {
-    if (!req.session || !req.session.user) {
-      return res.redirect("/user-login");
-    }
 
     await Application.findOneAndDelete({
       _id: req.params.appId,
@@ -210,9 +192,6 @@ exports.deleteApplication = async (req, res) => {
 
 exports.viewAllShelterApplications = async (req, res) => {
   try {
-    if (!req.session || !req.session.user) {
-      return res.redirect("/");
-    }
 
     const currentShelterId = req.session.user._id;
 
