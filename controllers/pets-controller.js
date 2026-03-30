@@ -256,16 +256,19 @@ exports.editPet = async (req, res) => {
 exports.deletePet = async (req, res) => {
     const petId = req.query.petId;
     try {
-        success = await Pet.deletePet(petId);
+        // delete all views FIRST
+        await View.deleteByPetId(petId);
+        // then delete pet
+        let success = await Pet.deletePet(petId);
         if (success.deletedCount === 1) {
-            res.redirect("/pets/myListings");
-            console.log('Deleted Pet');
+            console.log('Deleted Pet + Views');
         }
+        res.redirect("/pets/myListings");
     } catch (error) {
         console.log(error);
         res.redirect("/pets/myListings");
     }
-}
+};
 
 // exports.deletePetByShelterId = async(req,res)=>{
 //     const shelterId = req.session.user._id;

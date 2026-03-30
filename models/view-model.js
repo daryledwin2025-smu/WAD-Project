@@ -35,3 +35,7 @@ exports.retrieveAll = function() {
 exports.countByPetId = function(petId) {
     return View.countDocuments({ petId: petId });
 };
+
+exports.deleteByPetId = function(petId) {
+    return View.deleteMany({ petId: petId });
+};
