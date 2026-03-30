@@ -14,7 +14,7 @@ exports.showDashboard = async (req, res) => {
     let shelterName = req.session.user._id;
     let dashboardList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']} } );    
     if(dashboardList.length == 0){
-        dashboardList = ['There are no Applications.'];
+        dashboardList = [];
         res.render("dashboard", { dashboardList });
     }else{
         res.render("dashboard", { dashboardList }) };
