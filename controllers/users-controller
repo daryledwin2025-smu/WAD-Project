@@ -188,7 +188,7 @@ exports.showAllShelters = async (req, res) => {
 exports.submitLogout = (req, res) => {
   // destroy function has async behavior!!!
   req.session.destroy(() => {
-    return res.redirect('/?reason=inactive');
+    return res.redirect('/');
   });
 }
 
