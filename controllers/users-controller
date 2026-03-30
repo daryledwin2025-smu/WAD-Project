@@ -88,7 +88,7 @@ exports.submitRegister = async (req, res) => {
     shelterAddress = req.body.shelterAddress;
     shelterNumber = req.body.shelterNumber;
   }
-  
+
   if (pass !== confirmPass) {
     return res.render("user-register", {
       user: undefined,
@@ -222,46 +222,54 @@ exports.submitEditProfile = async (req, res) => {
 };
 
 exports.changePassword = async (req, res) => {
-    try {
-        if (!req.session || !req.session.user) {
-            return res.redirect("/");
-        }
-
-        const user = await User.getUserByUsername(req.session.user.username);
-        const { currentPass, newPass, confirmNewPass } = req.body;
-
-        const match = await bcrypt.compare(currentPass, user.pass);
-
-        if (!match) {
-            return res.render("user-edit", {
-                user: req.session.user,
-                errorMessage: "Current password is wrong",
-                successMessage: null
-            });
-        }
-
-        if (newPass !== confirmNewPass) {
-            return res.render("user-edit", {
-                user: req.session.user,
-                errorMessage: "New passwords do not match",
-                successMessage: null
-            });
-        }
-
-        const hashedPassword = await bcrypt.hash(newPass, 10);
-        await User.updatePassword(user.username, hashedPassword);
-
-        return res.render("user-edit", {
-            user: req.session.user,
-            errorMessage: null,
-            successMessage: "Password changed successfully"
-        });
-    } catch (error) {
-        console.log(error);
-        return res.render("user-edit", {
-            user: req.session.user,
-            errorMessage: "Unable to change password",
-            successMessage: null
-        });
+  try {
+    if (!req.session || !req.session.user) {
+      return res.redirect("/");
     }
+
+    const userId = req.session.user._id;
+    const { currentPass, newPass, confirmNewPass } = req.body;
+
+    const user = await User.getUserById(userId);
+
+    if (!user) {
+      return res.redirect("/");
+    }
+
+    const match = await bcrypt.compare(currentPass, user.pass);
+
+    if (!match) {
+      return res.render("user-edit", {
+        user,
+        errorMessage: "Current password is wrong",
+        successMessage: null
+      });
+    }
+
+    if (newPass !== confirmNewPass) {
+      return res.render("user-edit", {
+        user,
+        errorMessage: "New passwords do not match",
+        successMessage: null
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPass, 10);
+    const updatedUser = await User.updatePasswordById(userId, hashedPassword);
+
+    req.session.user = updatedUser;
+
+    return res.render("user-edit", {
+      user: updatedUser,
+      errorMessage: null,
+      successMessage: "Password changed successfully"
+    });
+  } catch (error) {
+    console.log(error);
+    return res.render("user-edit", {
+      user: req.session.user,
+      errorMessage: "Unable to change password",
+      successMessage: null
+    });
+  }
 };
