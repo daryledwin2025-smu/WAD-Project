@@ -117,7 +117,6 @@
                         <th>More Information</th>
                         <th>Manage Pet</th>
                         <th>Delete Pet Listing</th>
-                        <th>View Applications</th>
 
 
                     </tr>
@@ -152,10 +151,6 @@
                                 <a href="/pets/deletePet?petId=<%=pet._id%>"
                                     onclick="return confirm('Are you sure you want to delete <%=pet.name%>?')">🗑️</a>
                             </td>
-                            <td>
-                                <!-- link to view applications for this pet -->
-                                <a href="/applications/viewApplications?petId=<%= pet._id %>&petName=<%=pet.name%>"">View Applications</a>
-                    </td>
                 </tr>
             <% }) %>
         </tbody>

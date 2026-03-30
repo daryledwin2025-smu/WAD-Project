@@ -11,11 +11,10 @@ exports.showApplications = async (req, res) => {
 
 exports.showDashboard = async (req, res) => {
     try {
-    let shelterName = req.session._id
+    let shelterName = req.session.user._id;
     let dashboardList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']} } );    
-    console.log(dashboardList);
     if(dashboardList.length == 0){
-        dashboardList = ['There are no Applications.'];
+        dashboardList = [];
         res.render("dashboard", { dashboardList });
     }else{
         res.render("dashboard", { dashboardList }) };
@@ -29,11 +28,14 @@ exports.updateApplicationDetails = async (req, res) => {
     const applicationID = req.body.applicationId;
     const applicantID = req.body.applicantId;
     const petID = req.body.petId;
-    const livingSituation = req.body.livingSituation;
+    const livingSituation = req.body.living;
     const experienceDetails = req.body.exp;
     const applicationDate = req.body.appDT;
     const descision = req.body.descision;
     const comment = req.body.comment;
+    const shelterId = req.body.shelterId;
+    const appName = req.body.appName;
+    const petName = req.body.petName;
     try{
         await Dashboard.create({
             applicant: applicantID,
@@ -42,20 +44,23 @@ exports.updateApplicationDetails = async (req, res) => {
             experienceDetails: experienceDetails,
             status: descision,
             applicationDate: applicationDate,
-            comments: comment
+            comments: comment,
+            shelterId: shelterId,
+            applicantName: appName,
+            petName: petName
         })
         await Application.updateOne({_id: applicationID}, {$set: { status: descision }});
         console.log("Entry Updated!");
         console.log("Entry Created!");
         res.redirect("/dashboard");
     }catch(error){
-        console.log("error");
+        console.log(error);
     
     }}
 
 exports.showDescisionLogs = async (req, res) => {
     try{
-        let shelterName = req.session.id
+        let shelterName = req.session.user._id;
         let descisionlogs = await Dashboard.find({shelterId: {$in: [ shelterName ]}});
         if(!Array.isArray(descisionlogs)){
             descisionlogs = [descisionlogs];

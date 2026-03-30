@@ -3,16 +3,20 @@
 
 <body>
     <h1>Log in</h1>
-    <form action="/" method="post">
-        Username : <br>
-        <input type="text" name="username">
-        <br>
-        Password : <br>
-        <input type="password" name="pass">
-        <br><br>
 
-        <button type="submit">Log In</button>
-    </form>
+<% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+    <p><%= errorMessage %></p>
+<% } %>
+
+<form action="/" method="post">
+    Username : <br>
+    <input type="text" name="username">
+    <br>
+    Password : <br>
+    <input type="password" name="pass">
+    <br><br>
+    <button type="submit">Log In</button>
+</form>
     <p>No account? Click <a href="user-register">here</a> to Register</p>
  
 

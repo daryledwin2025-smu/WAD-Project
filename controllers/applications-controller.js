@@ -112,6 +112,7 @@ exports.submitApplication = async (req, res) => {
 
     let newApplication = new Application({
       applicant: userId,
+      applicantName: req.session.user.username,
       pet: petId,
       shelterId: pet.shelterId, 
       petName: pet.name,
@@ -177,7 +178,8 @@ exports.submitDraftEdit = async (req, res) => {
         livingSituation: livingSituation,
         experienceDetails: experienceDetails,
         status: finalStatus,
-        applicationDate: Date.now()
+        applicationDate: Date.now(),
+        applicantName: req.session.user.username 
       }
     );
 

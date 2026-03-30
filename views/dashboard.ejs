@@ -7,17 +7,19 @@
     <hr style="width: 15cm;">
 
     <h2>Descision Logs: </h2> <p><a href="/dashboard/descisionlogs">Descision Logs</a></p>
+    <h2>Shelter Home: </h2><p><a href="/home-shelter">Home</a></p>
     <h2 >Pending Applications:</h2>
     <br>
     
     
 
-    <% let count=1 %>
+    <% if(dashboardList.length == 0){ %>
+        <p>You got no pending applications!</p> <% }else{ %>
         <% dashboardList.forEach(application=> { %>
 
             <p> Application ID: <%= application.id %> </p>
-                <p> Applicant ID: <%= application.applicant %> </p>
-                    <p> Pet: <%= application.pet %> </p>
+                <p> Applicant ID: <%= application.applicantName %> </p>
+                    <p> Pet: <%= application.petName %> </p>
                         <p> Living Situation: <%= application.livingSituation %> </p>
                             <% if(application.experienceDetails.length==0){ %>
                                 <p> Experience Details: Applicant has no experience details! </p>                             
@@ -28,7 +30,7 @@
                                             <p> Application DateTime: <%= application.applicationDate %> </p>
                                                 <hr>
                                                 <% }); %>
-
+                                            <% } %>
 </body>
 
 </html>

@@ -17,5 +17,8 @@ router.get('/home', authMiddleware.isLoggedIn, authMiddleware.isAdopter,usersCon
 router.get('/home-shelter', authMiddleware.isLoggedIn, authMiddleware.isShelter, usersController.showHomeShelter);
 
 router.get('/logout', usersController.submitLogout);
+router.get('/index.html', (req, res) => {
+    res.render('user-login'); 
+});
 
 module.exports = router;

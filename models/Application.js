@@ -6,6 +6,10 @@ const applicationSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
+    applicantName: {
+        type: String,
+        required: true
+    },
     pet: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Pet',
