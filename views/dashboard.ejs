@@ -13,7 +13,8 @@
     
     
 
-    <% let count=1 %>
+    <% if(dashboardList.length == 0){ %>
+        <p>You got no pending applications!</p> <% }else{ %>
         <% dashboardList.forEach(application=> { %>
 
             <p> Application ID: <%= application.id %> </p>
@@ -29,7 +30,7 @@
                                             <p> Application DateTime: <%= application.applicationDate %> </p>
                                                 <hr>
                                                 <% }); %>
-
+                                            <% } %>
 </body>
 
 </html>
