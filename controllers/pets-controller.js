@@ -21,6 +21,23 @@ exports.displayMyListings = async (req, res) => {
         query.houseTrained = true;
     }
     let allPets = await Pet.filterPets(query);
+    // VIEWS
+    let allViews = await View.retrieveAll();
+    for (let i = 0; i < allPets.length; i++) {
+    let count = 0;
+
+    for (let j = 0; j < allViews.length; j++) {
+        if (allViews[j].petId.toString() === allPets[i]._id.toString()) {
+            count++;
+        }
+    }
+
+    allPets[i].viewCount = count;
+}
+// views sort
+if (req.query.sort === "views") {
+    allPets.sort((a, b) => b.viewCount - a.viewCount);
+}
     // name filter
     if (req.query.name && req.query.name.trim() !== "") {
         allPets = allPets.filter(pet =>
