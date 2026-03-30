@@ -37,10 +37,12 @@
 
 <div style="width:80%; margin:auto; display:flex; gap:15px; margin-bottom:20px;">
   <% popularPets.forEach(pet => { %>
-    <div style="border:1px solid #ccc; padding:10px; border-radius:8px; width:150px;">
-      <strong><%= pet.name %></strong><br>
-      👀 <%= pet.views %>
-    </div>
+    <a href="#pet-<%= pet._id %>" style="text-decoration:none; color:black;">
+      <div style="border:1px solid #ccc; padding:10px; border-radius:8px; width:150px;">
+        <strong><%= pet.name %></strong><br>
+        👀 <%= pet.viewCount %>
+      </div>
+    </a>
   <% }) %>
 </div>
     <form method="GET" action="/browse" style="width:80%; margin:auto; margin-bottom:20px;">
@@ -129,7 +131,7 @@
                 </thead>
                 <tbody>
                     <% allPets.forEach(pet=> { %>
-                        <tr>
+                        <tr id="pet-<%= pet._id %>">
                             <td>
                                 <%= pet.name %> <br>👀<%=pet.viewCount%> <br> <% if (pet.viewCount > 3) { %>🔥 Popular<% } %>
                             </td>
