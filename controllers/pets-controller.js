@@ -63,7 +63,10 @@ console.log("ALL PETS:", allPets);
         pet.breed.toLowerCase().includes(req.query.breed.trim().toLowerCase())
     );
 }
-
+// popular pets (e.g. top views)
+let popularPets = [...allPets]
+    .sort((a, b) => b.views - a.views)
+    .slice(0, 3);
 // views sort
 if (req.query.sort === "views") {
     allPets.sort((a, b) => b.viewCount - a.viewCount);
@@ -129,6 +132,7 @@ exports.displayAllPets = async (req, res) => {
             query.age = { $gte: 8 };
         }
         let allPets = await Pet.filterPets(query);        // console.log(allPets);
+        
         //VIEWS
         const View = require("../models/view-model"); // adjust name if needed
         let allViews = await View.retrieveAll();
@@ -143,7 +147,10 @@ exports.displayAllPets = async (req, res) => {
     allPets = allPets.filter(pet =>
         pet.breed.toLowerCase().includes(req.query.breed.trim().toLowerCase())
     );
-}
+}// popular pets (e.g. top views)
+let popularPets = [...allPets]
+    .sort((a, b) => b.views - a.views)
+    .slice(0, 3);
 
         // VIEWS LOOP
         for (let i = 0; i < allPets.length; i++) {
@@ -183,7 +190,7 @@ if (req.query.sort === "views") {
             favouritedPetIds = userFavs.filter(f => f.petId !== null).map(f => f.petId._id.toString());
         }
 
-        res.render("browse", { allPets, reviews: validReviews, avgRating, shelterId, shelter, user: req.session.user, req, favouritedPetIds, breeds });
+        res.render("browse", { allPets, reviews: validReviews, avgRating, shelterId, shelter, user: req.session.user, req, favouritedPetIds, breeds,popularPets });
     } catch (error) {
         console.error(error);
         res.send("Error reading database"); // Send error message if fetching fails
