@@ -7,7 +7,7 @@ exports.showMyApplications = async (req, res) => {
       return res.redirect("/user-login");
     }
 
-    const myApplications = await Application.find({ applicant: req.session.user._id }).populate("pet");
+    const myApplications = await Application.find({ applicant: req.session.user._id }).populate("pet").populate("shelterId:");
     return res.render("myApplications", { applications: myApplications });
   } catch (error) {
     console.log(error);
