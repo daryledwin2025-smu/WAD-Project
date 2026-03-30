@@ -9,7 +9,9 @@
         <% }else{ %> 
             <% descisionlogs.forEach(descisionLog => { %>
             <p>Applicant ID: <%= descisionLog.applicant %> </p>
-            <p>Pet: <%= descisionLog.pet %></p>
+            <p>Applicant Name: <%= descisionLog.applicantName %></p>
+            <p>PetID: <%= descisionLog.pet %></p>
+            <p>PetName: <%= descisionLog.petName %></p>
             <% if(descisionLog.experienceDetails.length==0){ %>
                 <p> Experience Details: Applicant has no experience details! </p>                             
             <% }else{ %>

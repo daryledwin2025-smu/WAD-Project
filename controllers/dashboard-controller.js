@@ -34,6 +34,8 @@ exports.updateApplicationDetails = async (req, res) => {
     const descision = req.body.descision;
     const comment = req.body.comment;
     const shelterId = req.body.shelterId;
+    const appName = req.body.appName;
+    const petName = req.body.petName;
     try{
         await Dashboard.create({
             applicant: applicantID,
@@ -43,7 +45,9 @@ exports.updateApplicationDetails = async (req, res) => {
             status: descision,
             applicationDate: applicationDate,
             comments: comment,
-            shelterId: shelterId
+            shelterId: shelterId,
+            applicantName: appName,
+            petName: petName
         })
         await Application.updateOne({_id: applicationID}, {$set: { status: descision }});
         console.log("Entry Updated!");

@@ -16,7 +16,7 @@
         <% dashboardList.forEach(application=> { %>
 
             <p> Application ID: <%= application.id %> </p>
-                <p> Applicant ID: <%= application.applicant %> </p>
+                <p> Applicant ID: <%= application.applicantName %> </p>
                     <p> Pet: <%= application.petName %> </p>
                         <p> Living Situation: <%= application.livingSituation %> </p>
                             <% if(application.experienceDetails.length==0){ %>
