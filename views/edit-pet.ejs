@@ -62,6 +62,17 @@ Dog size:
     </form>
 
     <br>
+    <h3>👀 Viewers</h3>
+
+<% if (viewers.length > 0) { %>
+    <p>
+        <% viewers.forEach(v => { %>
+    <p><%= v.username %> - <%= v.email %></p>
+<% }) %>
+    </p>
+<% } else { %>
+    <p>No one has viewed this pet yet.</p>
+<% } %>
 
     <a href="/pets/myListings">Back to My Listings</a>
 

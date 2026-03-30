@@ -2,6 +2,7 @@ const Pet = require("../models/pet-model");
 const UserModel = require("../models/user-model");
 const Favourite = require("../models/favourite-model");
 const View = require("../models/view-model");
+
 // DISPLAYS
 exports.displayMyListings = async (req, res) => {
     let userId = req.session.user._id;
@@ -177,10 +178,37 @@ exports.displayPetDetail = async (req, res) => {
 
 exports.displayEditPet = async (req, res) => {
     let petId = req.query.petId;
-    console.log(petId);
+
+    let views = await View.retrieveAll();
+    let users = await UserModel.getAllUsers();
+
+    let viewers = [];
+
+    for (let i = 0; i < views.length; i++) {
+
+        // only check views for this pet
+        if (views[i].petId.toString() === petId.toString()) {
+
+            for (let j = 0; j < users.length; j++) {
+
+                if (users[j]._id.toString() === views[i].userId) {
+
+                    if (!viewers.includes(users[j].username)) {
+                        viewers.push({
+                            username: users[j].username,
+                            email: users[j].email
+                        });
+}
+
+                }
+            }
+
+        }
+    }
+
     let pet = await Pet.displayPetById(petId);
-    console.log(pet);
-    res.render("edit-pet", { pet });
+
+    res.render("edit-pet", { pet, viewers });
 }
 
 exports.editPet = async (req, res) => {
