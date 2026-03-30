@@ -37,30 +37,6 @@ exports.displayApplyForm = async (req, res) => {
   }
 };
 
-  // try{
-  //   let petId = req.query.petId;
-  //   let petName = req.query.petName;
-  //   res.render("applyForm",{petId:petId,petName:petName,shelterId:pet.shelterId})
-  // } catch(error){
-
-  // }
-  // try {
-  //   if (!req.session || !req.session.user) {
-  //     return res.redirect("/user-login");
-  //   }
-
-  //   const pet = await Pet.findById(req.params.petId);
-  //   if (!pet) {
-  //     return res.redirect("/browse");
-  //   }
-    
-  //   return res.render("applyForm", { pet: pet, error: undefined });
-  // } catch (error) {
-  //   console.log(error);
-  //   return res.render("error", { error });
-  // }
-
-
 exports.submitApplication = async (req, res) => {
   try {
 
@@ -194,10 +170,7 @@ exports.viewAllShelterApplications = async (req, res) => {
   try {
 
     const currentShelterId = req.session.user._id;
-
-    const allApps = await Application.find({ shelterId: currentShelterId })
-                                     .populate("pet")
-                                     .populate("applicant");
+    const allApps = await Application.find({ shelterId: currentShelterId }).populate("pet").populate("applicant");
 
     return res.render("viewapplications", { applications: allApps });
 
