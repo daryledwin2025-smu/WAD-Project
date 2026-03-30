@@ -6,8 +6,8 @@
 <form method="post" action="/dashboard/updatedApplicationDetails">
     <% applications.forEach(application => { %>
         <p> Application ID: <%= application.id %> </p> <input type="hidden" name="applicationId" value="<%= application.id %>">
-                <p> Applicant ID: <%= application.applicantName %> </p> <input type="hidden" name="applicantId" value="<%= application.applicant %>">
-                    <p> Pet: <%= application.petName %> </p> <input type="hidden" name="petId" value="<%= application.pet %>">
+                <p> Applicant Name: <%= application.applicantName %> </p> <input type="hidden" name="applicantId" value="<%= application.applicant %>">
+                    <p> Pet Name: <%= application.petName %> </p> <input type="hidden" name="petId" value="<%= application.pet %>">
                         <p> Living Situation: <%= application.livingSituation %> </p> <input type="hidden" name="living" value="<%= application.livingSituation %>">
                             <% if(application.experienceDetails.length==0){ %>
                                 <p> Experience Details: Applicant has no experience details! </p>                              
@@ -18,7 +18,7 @@
                                             <p> Application DateTime: <%= application.applicationDate %> </p> <input type="hidden" name="appDT" value="<%= application.applicationDate %>">
                                             <input type="hidden" name="shelterId" value="<%= application.shelterId %>">
                                             <input type="hidden" name="appName" value="<%= application.applicantName %>">
-                                            <input type="hidden" name="petName" value="<% application.petName %>">
+                                            <input type="hidden" name="petName" value="<%= application.petName %>">
                                             
                                             <input type="radio" name="descision" value="Approved">Accept Application
                                             <input type="radio" name="descision" value="Rejected">Reject Application<br><br>
