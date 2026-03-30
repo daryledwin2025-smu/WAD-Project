@@ -46,6 +46,14 @@
         <select name="size">
             <option value="">All Sizes</option>
 
+            <option value="Small 🟢" <%=req.query.size==="Small 🟢" ? "selected" : "" %>>
+                Small 🟢
+            </option>
+
+            <option value="Medium 🟠" <%=req.query.size==="Medium 🟠" ? "selected" : "" %>>
+                Medium 🟠
+            </option>
+
             <option value="Large 🔴" <%=req.query.size==="Large 🔴" ? "selected" : "" %>>
                 Large 🔴
             </option>
@@ -168,6 +176,7 @@
 
                                                     <a href="/browse/reviews/all?shelterId=<%= shelterId %>">See all
                                                         reviews →</a>
+
 
 </body>
 

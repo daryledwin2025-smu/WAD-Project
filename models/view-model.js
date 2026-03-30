@@ -16,10 +16,18 @@ const viewSchema = new mongoose.Schema({
 
 const View = mongoose.model('View', viewSchema, 'views');
 
-exports.addView = function(newView) {
-    return View.create(newView);
+exports.addView = async function(newView) {
+    // check if same user already viewed this pet
+    let existing = await View.findOne({
+        petId: newView.petId,
+        userId: newView.userId
+    });
+    // if not found, create
+    if (!existing) {
+        return View.create(newView);
+    }
+    return null;
 };
-
 exports.retrieveAll = function() {
     return View.find();
 };
