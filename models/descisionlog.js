@@ -6,9 +6,17 @@ const descisionLogSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
+    applicantName: {
+        type: String,
+        required: true
+    },
     pet: {
         type: String,
         ref: 'Pet',
+        required: true
+    },
+    petName: {
+        type: String,
         required: true
     },
     livingSituation: {

@@ -3,37 +3,46 @@ const Pet = require("../models/pet-model");
 const bcrypt = require("bcrypt");
 
 exports.displayLogin = (req, res) => {
-  return res.render("user-login", { user: undefined });
-}
+    res.render("user-login", { user: undefined, errorMessage: null });
+};
 
 exports.submitLogin = async (req, res) => {
-  const username = req.body.username;
-  const pass = req.body.pass;
-  try {
-    const user = await User.getUserByUsername(username);
-    // user contrains infor stored from MongoDB
-    if (!user) {
-      return res.redirect("/")
-    } else {
-      const match = await bcrypt.compare(pass, user.pass);
-      if (match) {
-        req.session.user = user;
-        console.log(user)
-        if (user.account === "Shelter") {
-          console.log("GOING TO HOME-SHELTER");
-          return res.redirect("/home-shelter");
-        } else {
-          console.log("GOING TO HOME");
-          return res.redirect("/home")
+    const username = req.body.username;
+    const pass = req.body.pass;
+
+    try {
+        const user = await User.getUserByUsername(username);
+
+        if (!user) {
+            return res.render("user-login", {
+                user: undefined,
+                errorMessage: "Wrong username or password"
+            });
         }
-      } else {
-        return res.redirect("/")
-      }
+
+        const match = await bcrypt.compare(pass, user.pass);
+
+        if (!match) {
+            return res.render("user-login", {
+                user: undefined,
+                errorMessage: "Wrong username or password"
+            });
+        }
+
+        req.session.user = user;
+
+        if (user.account === "Shelter") {
+            return res.redirect("/home-shelter");
+        } else {
+            return res.redirect("/home");
+        }
+    } catch (error) {
+        return res.render("user-login", {
+            user: undefined,
+            errorMessage: "Wrong username or password"
+        });
     }
-  } catch (error) {
-    return res.redirect("/")
   }
-}
 //     try {
 //         const user = await User.getUserByUsername(username)
 //         req.session.user = user;
@@ -63,7 +72,7 @@ exports.displayRegister = (req, res) => {
 exports.submitRegister = async (req, res) => {
   let username = req.body.username;
   let pass = req.body.pass;
-  pass = await bcrypt.hash(pass, 10);
+  let confirmPass = req.body.confirmPass;
   let email = req.body.email;
   let phone = req.body.phone;
   let gender = req.body.gender;
@@ -81,6 +90,14 @@ exports.submitRegister = async (req, res) => {
   }
   let newUser = { username, pass, email, phone, gender, account, shelterName, shelterEmail, shelterNumber, shelterAddress };
 
+  if (pass !== confirmPass) {
+    return res.render("user-register", {
+      user: undefined,
+      errorMessage: "Passwords do not match."
+    });
+  }
+
+  pass = await bcrypt.hash(pass, 10);
   // if (username && pass && account) {
   //     user = { username, pass, account };
   try {
@@ -158,10 +175,10 @@ exports.showAllShelters = async (req, res) => {
 };
 
 exports.submitLogout = (req, res) => {
-    // destroy function has async behavior!!!
-    req.session.destroy( () => {
-        return res.redirect('/?reason=inactive');
-    });
+  // destroy function has async behavior!!!
+  req.session.destroy(() => {
+    return res.redirect('/?reason=inactive');
+  });
 }
 
 
