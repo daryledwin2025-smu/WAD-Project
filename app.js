@@ -24,7 +24,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
     secret: process.env.SECRET,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    //     rolling: true, // for auto-logout (don't enable yet)
+    //   cookie: {
+    //     maxAge: 10000  // 10 seconds of idle = log out
+    //   }
 }));
 
 // === ROUTE IMPORTS ===
