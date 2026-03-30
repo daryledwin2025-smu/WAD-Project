@@ -28,55 +28,146 @@
 
 <body>
 
-    <h2 style="text-align:center;">Pets In <%=shelter.shelterName%></h2>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Breed</th>
-                <th>Age</th>
-                <th>Description</th>
-                <th>View More</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% allPets.forEach(pet => { %>
-                <tr>
-                    <td><%= pet.name %></td>
-                    <td><%= pet.breed %></td>
-                    <td><%= pet.age %></td>
-                    <td><%= pet.description %></td>
-                    <td> <a href="/browse/petDetail?petId=<%=pet._id%>">View More</a> </td>
-                </tr>
-            <% }) %>
-        </tbody>
-    </table>
+    <h2 style="text-align:center;">
+        <%=allPets.length%> Pets Available In <%=shelter.shelterName%>!
+    </h2>
+    <form method="GET" action="/browse" style="width:80%; margin:auto; margin-bottom:20px;">
+<a href="/browse?shelterId=<%= shelterId %>&sort=views&name=<%= req.query.name || '' %>&breed=<%= req.query.breed || '' %>&size=<%= req.query.size || '' %><%= req.query.vaccinated ? '&vaccinated=true' : '' %><%= req.query.neutered ? '&neutered=true' : '' %><%= req.query.houseTrained ? '&houseTrained=true' : '' %>">Sort by Views</a>        <input type="hidden" name="shelterId" value="<%= shelterId %>">
+        <!-- Name -->
+        <input type="text" name="name" placeholder="Exact name" value="<%= req.query.name || '' %>">
+<input type="text" name="breed" list="breedList" placeholder="Search breed" value="<%= req.query.breed || '' %>">
 
-<hr>
-<h3>Reviews <%= avgRating ? '⭐ ' + avgRating + '/5' : '' %></h3>
-
-<% if (reviews.length === 0) { %>
-    <p>No reviews yet.</p>
-<% } else { %>
-    <% reviews.forEach(review => { %>
-        <p><strong><%= review.reviewer.username %></strong> — ⭐ <%= review.rating %>/5</p>
-        <p><%= review.comment %></p>
-        <p><small><%= new Date(review.createdAt).toDateString() %></small></p>
-
-        <% if (user && review.reviewer._id.toString() === user._id.toString()) { %>
-            <a href="/browse/reviews/<%= review._id %>/edit">Edit</a>
-            <form action="/browse/reviews/<%= review._id %>/delete" method="POST" style="display:inline;">
-                <input type="hidden" name="shelterId" value="<%= shelterId %>">
-                <button type="submit">Delete</button>
-            </form>
-        <% } %>
-        <hr>
+<datalist id="breedList">
+    <% breeds.forEach(breed => { %>
+        <option value="<%= breed %>">
     <% }) %>
-<% } %>
+</datalist>
+        <!-- Size -->
+        <select name="size">
+            <option value="">All Sizes</option>
 
-<a href="/browse/reviews/all?shelterId=<%= shelterId %>">See all reviews →</a>
+            <option value="Large 🔴" <%=req.query.size==="Large 🔴" ? "selected" : "" %>>
+                Large 🔴
+            </option>
+        </select>
 
+        <!-- Vaccinated -->
+        <label>
+            <input type="checkbox" name="vaccinated" <%=req.query.vaccinated ? "checked" : "" %>
+            >
+            Vaccinated
+        </label>
+        <!-- Neutered -->
+        <label>
+            <input type="checkbox" name="neutered" <%=req.query.neutered ? "checked" : "" %>
+            >
+            Neutered
+        </label>
+
+        <!-- House Trained -->
+        <label>
+            <input type="checkbox" name="houseTrained" <%=req.query.houseTrained ? "checked" : "" %>
+            >
+            House Trained
+        </label>
+
+        <!-- Submit -->
+        <button type="submit">Filter</button>
+
+        <!-- Reset -->
+        <a href="/browse?shelterId=<%=shelterId%>" style="margin-left:10px;">Reset</a>
+
+    </form>
+    <%if(allPets.length==0){%>
+        <h2 style="text-align:center">No Pets Available :( Sorry!</h2>
+        <%} else{%>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Breed</th>
+                        <th>Age</th>
+                        <th>Description</th>
+                        <th>Size</th>
+                        <th>View More</th>
+                        <% if (user && user.account !=="Shelter" ) { %>
+                            <th>Favourite</th>
+                            <% } %>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% allPets.forEach(pet=> { %>
+                        <tr>
+                            <td>
+                                <%= pet.name %> <br>👀<%=pet.viewCount%> <br> <% if (pet.viewCount > 5) { %>🔥 Popular<% } %>
+                            </td>
+                            <td>
+                                <%= pet.breed %>
+                            </td>
+                            <td>
+                                <%= pet.age %>
+                            </td>
+                            <td>
+                                <%= pet.description.slice(0,100) %>
+                                    <%= pet.description.length> 50 ? "..." : "" %>
+                            </td>
+                            <td>
+                                <%=pet.size%>
+                            </td>
+                            <td> <a href="/browse/petDetail?petId=<%=pet._id%>">View More</a> </td>
+                            <% if (user && user.account !=="Shelter" ) { %>
+                                <td>
+                                    <% if (favouritedPetIds.includes(pet._id.toString())) { %>
+                                        <span>❤️ Favourited</span>
+                                    <% } else { %>
+                                        <form action="/favourites/add" method="POST" style="display:inline;">
+                                            <input type="hidden" name="petId" value="<%= pet._id %>">
+                                            <button type="submit">🤍 Favourite</button>
+                                        </form>
+                                    <% } %>
+                                </td>
+                                <% } %>
+                        </tr>
+                        <% }) %>
+                </tbody>
+            </table>
+            <%}%>
+                <!-- DARRYL's SHELTER REVIEWS -->
+
+                <hr>
+                <h3>Reviews <%= avgRating ? '⭐ ' + avgRating + '/5' : '' %>
+                </h3>
+
+                <% if (reviews.length===0) { %>
+                    <p>No reviews yet.</p>
+                    <% } else { %>
+                        <% reviews.forEach(review=> { %>
+                            <% if (review.reviewer) { %>
+                                <p><strong>
+                                        <%= review.reviewer.username %>
+                                    </strong> — ⭐ <%= review.rating %>/5</p>
+                                <p>
+                                    <%= review.comment %>
+                                </p>
+                                <p><small>
+                                        <%= new Date(review.createdAt).toDateString() %>
+                                    </small></p>
+
+                                <% if (user && review.reviewer._id.toString()===user._id.toString()) { %>
+                                    <a href="/browse/reviews/<%= review._id %>/edit">Edit</a>
+                                    <form action="/browse/reviews/<%= review._id %>/delete" method="POST"
+                                        style="display:inline;">
+                                        <input type="hidden" name="shelterId" value="<%= shelterId %>">
+                                        <button type="submit">Delete</button>
+                                    </form>
+                                    <% } %>
+                                        <% } %>
+                                            <hr>
+                                            <% }) %>
+                                                <% } %>
+
+                                                    <a href="/browse/reviews/all?shelterId=<%= shelterId %>">See all
+                                                        reviews →</a>
 
 </body>
 

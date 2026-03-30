@@ -1,11 +1,12 @@
-const Pet = require("../models/pet-model")
+const Pet = require("../models/pet-model");
 const UserModel = require("../models/user-model");
 const Favourite = require("../models/favourite-model");
-
+const View = require("../models/view-model");
 // DISPLAYS
 exports.displayMyListings = async (req, res) => {
     let userId = req.session.user._id;
     let query = { shelterId: userId };
+    let breeds = await Pet.getBreedsByShelter(userId);
     // size filter
     if (req.query.size && req.query.size !== "") {
         query.size = req.query.size;
@@ -21,6 +22,23 @@ exports.displayMyListings = async (req, res) => {
         query.houseTrained = true;
     }
     let allPets = await Pet.filterPets(query);
+    // VIEWS
+    let allViews = await View.retrieveAll();
+    for (let i = 0; i < allPets.length; i++) {
+    let count = 0;
+
+    for (let j = 0; j < allViews.length; j++) {
+        if (allViews[j].petId.toString() === allPets[i]._id.toString()) {
+            count++;
+        }
+    }
+
+    allPets[i].viewCount = count;
+}
+// views sort
+if (req.query.sort === "views") {
+    allPets.sort((a, b) => b.viewCount - a.viewCount);
+}
     // name filter
     if (req.query.name && req.query.name.trim() !== "") {
         allPets = allPets.filter(pet =>
@@ -35,7 +53,7 @@ console.log("ALL PETS:", allPets);
         pet.breed.toLowerCase().includes(req.query.breed.trim().toLowerCase())
     );
 }
-    res.render("myListings", { allPets, req });
+    res.render("myListings", { allPets, req, breeds });
 };
 
 exports.displayAddPet = (req, res) => {
@@ -61,45 +79,58 @@ exports.displayAllPets = async (req, res) => {
     try {
         const shelterId = req.query.shelterId;
         const shelter = await UserModel.getUserById(shelterId);
+        let breeds = await Pet.getBreedsByShelter(shelterId);
         if (shelterId === undefined) {
             return res.redirect("/home");
         }
         let query = { shelterId: shelterId };
 
-        // name
-        // if (req.query.name && req.query.name !== "") {
-        //     query.name = req.query.name;
-        // }
-
         // size
         if (req.query.size && req.query.size !== "") {
             query.size = req.query.size;
         }
-
         // vaccinated
         if (req.query.vaccinated) {
             query.vaccinated = true;
         }
-
         // neutered
         if (req.query.neutered) {
             query.neutered = true;
         }
-
         // house trained
         if (req.query.houseTrained) {
             query.houseTrained = true;
         }
-
         let allPets = await Pet.filterPets(query);        // console.log(allPets);
+        //VIEWS
+        const View = require("../models/view-model"); // adjust name if needed
+        let allViews = await View.retrieveAll();
         // name filter in JavaScript only
         if (req.query.name && req.query.name.trim() !== "") {
             allPets = allPets.filter(pet =>
                 pet.name.toLowerCase().includes(req.query.name.trim().toLowerCase())
             );
         }
-        // console.log(`query: ${shelterId}`);
+        // BREED filter
+        if (req.query.breed && req.query.breed.trim() !== "") {
+    allPets = allPets.filter(pet =>
+        pet.breed.toLowerCase().includes(req.query.breed.trim().toLowerCase())
+    );
+}
+        // VIEWS LOOP
+        for (let i = 0; i < allPets.length; i++) {
+            let count = 0;
 
+            for (let j = 0; j < allViews.length; j++) {
+                if (allViews[j].petId.toString() === allPets[i]._id.toString()) {
+                    count++;
+                }
+            }
+            allPets[i].viewCount = count; // attach to each pet
+}
+if (req.query.sort === "views") {
+    allPets.sort((a, b) => b.viewCount - a.viewCount);
+}
         // Darryl's reviews logic
         const Review = require("../models/Review");
         const reviews = await Review.find({ shelter: shelterId }) // read from reviews collection, .find comes in the model automatically (find reviews for the specific shelter and create a list)
@@ -124,7 +155,7 @@ exports.displayAllPets = async (req, res) => {
             favouritedPetIds = userFavs.filter(f => f.petId !== null).map(f => f.petId._id.toString());
         }
 
-        res.render("browse", { allPets, reviews: validReviews, avgRating, shelterId, shelter, user: req.session.user, req, favouritedPetIds });
+        res.render("browse", { allPets, reviews: validReviews, avgRating, shelterId, shelter, user: req.session.user, req, favouritedPetIds, breeds });
     } catch (error) {
         console.error(error);
         res.send("Error reading database"); // Send error message if fetching fails
@@ -133,9 +164,14 @@ exports.displayAllPets = async (req, res) => {
 
 exports.displayPetDetail = async (req, res) => {
     let petId = req.query.petId;
-    console.log(petId);
     let pet = await Pet.displayPetById(petId);
-    console.log(pet);
+    // CREATE VIEW RECORD
+    await View.addView({
+        petId: petId,
+        userId: req.session.user ? req.session.user._id : null
+    });
+
+    let viewCount = await View.countByPetId(petId);
     res.render("pet-detail", { pet, user: req.session.user });
 }
 

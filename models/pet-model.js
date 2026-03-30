@@ -65,3 +65,20 @@ exports.deletePet = (petId)=>{
 exports.deletePetsByShelterId = (shelterId)=>{
     return Pet.deleteMany({shelterId});
 }
+
+exports.getBreedsByShelter = async function (shelterId) {
+    let pets = await Pet.find({ shelterId: shelterId });
+
+    let breeds = [];
+
+    for (let i = 0; i < pets.length; i++) {
+        let breed = pets[i].breed;
+
+        // avoid duplicates
+        if (!breeds.includes(breed)) {
+            breeds.push(breed);
+        }
+    }
+
+    return breeds;
+};
