@@ -72,6 +72,14 @@ exports.updateUserById = (id, updatedData) => {
   return User.findByIdAndUpdate(id, updatedData, { new: true });
 };
 
+exports.updatePasswordById = (id, hashedPassword) => {
+  return User.findByIdAndUpdate(
+    id,
+    { pass: hashedPassword },
+    { new: true }
+  );
+};
+
 exports.getAllUsers = () => {
     return User.find();
 };

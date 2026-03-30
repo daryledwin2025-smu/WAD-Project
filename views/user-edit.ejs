@@ -1,40 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Profile</title>
 </head>
+
 <body>
-    <h1>Edit Profile</h1>
-    <form action="/user-edit" method="post">
-  Username:<br>
-  <input type="text" name="username" value="<%= user.username || '' %>">
-  <br><br>
+  <h1>Edit Profile</h1>
 
-  Email:<br>
-  <input type="email" name="email" value="<%= user.email || '' %>">
-  <br><br>
+  <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+    <p><%= errorMessage %></p>
+<% } %>
 
-  Phone:<br>
-  <input type="text" name="phone" value="<%= user.phone || '' %>">
-  <br><br>
+<% if (typeof successMessage !== 'undefined' && successMessage) { %>
+    <p><%= successMessage %></p>
+<% } %>
+  <form action="/user-edit" method="post">
+    Username:<br>
+    <input type="text" name="username" value="<%= user.username || '' %>">
+    <br><br>
 
-  Gender:
-  <input type="radio" name="gender" value="male" <%= user.gender === 'male' ? 'checked' : '' %>> Male
-  <input type="radio" name="gender" value="female" <%= user.gender === 'female' ? 'checked' : '' %>> Female
-  <br><br>
+    Email:<br>
+    <input type="email" name="email" value="<%= user.email || '' %>">
+    <br><br>
 
-  <button type="submit">Save Changes</button>
-</form>
+    Phone:<br>
+    <input type="text" name="phone" value="<%= user.phone || '' %>">
+    <br><br>
+
+    Gender:
+    <input type="radio" name="gender" value="male" <%=user.gender==='male' ? 'checked' : '' %>> Male
+    <input type="radio" name="gender" value="female" <%=user.gender==='female' ? 'checked' : '' %>> Female
+    <br><br>
+
+    <button type="submit">Save Changes</button>
+  </form>
+
+  <h3>Change Password</h3>
+  <form action="/change-password" method="post">
+    Current Password:<br>
+    <input type="password" name="currentPass">
+    <br>
+    New Password:<br>
+    <input type="password" name="newPass">
+    <br>
+    Confirm New Password:<br>
+    <input type="password" name="confirmNewPass">
+    <br><br>
+    <button type="submit">Change Password</button>
+  </form>
+
   &nbsp;&nbsp;<form action="/delete-account" method="post"
-      onsubmit="return confirm('Are you sure you want to delete your account?')">
-  <button type="submit">Delete Account</button>
-</form>
-<br><br>
-<button type="button" onclick="location.href='/home-shelter'">
-                Back to Home
-            </button>
-    
+    onsubmit="return confirm('Are you sure you want to delete your account?')">
+    <button type="submit">Delete Account</button>
+  </form>
+  <br><br>
+  <button type="button" onclick="location.href='/home-shelter'">
+    Back to Home
+  </button>
+
 </body>
+
 </html>

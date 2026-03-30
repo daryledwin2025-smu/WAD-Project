@@ -25,7 +25,7 @@ const applicationSchema = new mongoose.Schema({
     },
     livingSituation: {
         type: String,
-        required: false // Not required initially so users can save incomplete drafts
+        required: false 
     },
     experienceDetails: {
         type: String,

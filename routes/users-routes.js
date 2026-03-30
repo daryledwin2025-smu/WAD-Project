@@ -21,4 +21,7 @@ router.get('/logout', usersController.submitLogout);
 //     res.render('user-login'); 
 // });
 
+router.post("/change-password", usersController.changePassword);
+router.post("/edit-profile", usersController.submitEditProfile);
+
 module.exports = router;
