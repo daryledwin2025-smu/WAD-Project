@@ -12,4 +12,6 @@ router.post("/updatedApplicationDetails",authMiddleware.isLoggedIn, authMiddlewa
 
 router.get("/descisionlogs", authMiddleware.isLoggedIn, authMiddleware.isShelter, dashboardController.showDescisionLogs);
 
+router.get("/withdrawdescisionlog", authMiddleware.isLoggedIn, authMiddleware.isShelter, dashboardController.withdrawDescisionLog);
+
 module.exports = router;

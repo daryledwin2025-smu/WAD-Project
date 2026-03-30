@@ -21,6 +21,8 @@
             <p>Application Date: <%= descisionLog.applicationDate %></p>
             <p>Comments: <%= descisionLog.comments %></p>
             <p>Descision DateTime: <%= descisionLog.descisionDateTime %></p>
+            <form ></form>
+            <a href="/dashboard/withdrawdescisionlog?petId=<%=descisionLog.pet%>&shelterId=<%=descisionLog.shelterId%>&applicationId=<%=descisionLog._id%>">Withdraw</a>
             <hr>
             <% }) %>
         <% } %>

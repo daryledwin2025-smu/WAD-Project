@@ -49,7 +49,11 @@ exports.updateApplicationDetails = async (req, res) => {
             applicantName: appName,
             petName: petName
         })
+        if(descision == "Approved"){
+            await Application.updateMany({pet: {$in: [petID]}, _id: {$nin: [applicationID]}}, {$set: {status: "Rejected"}})
+        }
         await Application.updateOne({_id: applicationID}, {$set: { status: descision }});
+        
         console.log("Entry Updated!");
         console.log("Entry Created!");
         res.redirect("/dashboard");
@@ -69,3 +73,19 @@ exports.showDescisionLogs = async (req, res) => {
     }catch(error){
 
     }};
+
+exports.withdrawDescisionLog = async (req, res) => {
+    try{
+        const applicationId = req.query.applicationId;
+        console.log(applicationId);
+        const petId = req.query.petId;
+        const shelterId = req.query.shelterId;
+        
+        await Dashboard.deleteOne({_id: {$in: [applicationId]} });
+        await Application.updateMany({pet: {$in: [petId]}, shelterId: {$in: [shelterId]}}, {$set: {status: "Pending"}});
+        res.redirect("/dashboard")
+        
+    }catch(error){
+        console.log(error)
+    }
+}
