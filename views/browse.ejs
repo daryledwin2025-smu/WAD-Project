@@ -32,10 +32,18 @@
         <%=allPets.length%> Pets Available In <%=shelter.shelterName%>!
     </h2>
     <form method="GET" action="/browse" style="width:80%; margin:auto; margin-bottom:20px;">
-        <input type="hidden" name="shelterId" value="<%= shelterId %>">
+<a href="/browse?shelterId=<%= shelterId %>&sort=views&name=<%= req.query.name || '' %>&breed=<%= req.query.breed || '' %>&size=<%= req.query.size || '' %><%= req.query.vaccinated ? '&vaccinated=true' : '' %><%= req.query.neutered ? '&neutered=true' : '' %><%= req.query.houseTrained ? '&houseTrained=true' : '' %>">Sort by Views</a>        <input type="hidden" name="shelterId" value="<%= shelterId %>">
         <!-- Name -->
         <input type="text" name="name" placeholder="Exact name" value="<%= req.query.name || '' %>">
+<input type="text" name="breed" list="breedList" placeholder="Search breed" value="<%= req.query.breed || '' %>">
 
+<datalist id="breedList">
+    <option value="Golden Retriever">
+    <option value="Poodle">
+    <option value="Shiba Inu">
+    <option value="Corgi">
+    <option value="Bulldog">
+</datalist>
         <!-- Size -->
         <select name="size">
             <option value="">All Sizes</option>
@@ -101,7 +109,7 @@
                     <% allPets.forEach(pet=> { %>
                         <tr>
                             <td>
-                                <%= pet.name %>
+                                <%= pet.name %> <br>👀<%=pet.viewCount%> <br> <% if (pet.viewCount > 5) { %>🔥 Popular<% } %>
                             </td>
                             <td>
                                 <%= pet.breed %>
