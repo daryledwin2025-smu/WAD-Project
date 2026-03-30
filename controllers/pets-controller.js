@@ -6,6 +6,7 @@ const View = require("../models/view-model");
 exports.displayMyListings = async (req, res) => {
     let userId = req.session.user._id;
     let query = { shelterId: userId };
+    let breeds = await Pet.getBreedsByShelter(userId);
     // size filter
     if (req.query.size && req.query.size !== "") {
         query.size = req.query.size;
@@ -52,7 +53,7 @@ console.log("ALL PETS:", allPets);
         pet.breed.toLowerCase().includes(req.query.breed.trim().toLowerCase())
     );
 }
-    res.render("myListings", { allPets, req });
+    res.render("myListings", { allPets, req, breeds });
 };
 
 exports.displayAddPet = (req, res) => {
@@ -78,6 +79,7 @@ exports.displayAllPets = async (req, res) => {
     try {
         const shelterId = req.query.shelterId;
         const shelter = await UserModel.getUserById(shelterId);
+        let breeds = await Pet.getBreedsByShelter(shelterId);
         if (shelterId === undefined) {
             return res.redirect("/home");
         }
@@ -153,7 +155,7 @@ if (req.query.sort === "views") {
             favouritedPetIds = userFavs.filter(f => f.petId !== null).map(f => f.petId._id.toString());
         }
 
-        res.render("browse", { allPets, reviews: validReviews, avgRating, shelterId, shelter, user: req.session.user, req, favouritedPetIds });
+        res.render("browse", { allPets, reviews: validReviews, avgRating, shelterId, shelter, user: req.session.user, req, favouritedPetIds, breeds });
     } catch (error) {
         console.error(error);
         res.send("Error reading database"); // Send error message if fetching fails
