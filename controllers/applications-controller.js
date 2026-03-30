@@ -112,7 +112,7 @@ exports.submitApplication = async (req, res) => {
 
     let newApplication = new Application({
       applicant: userId,
-      applicantName: req.session.user.name,
+      applicantName: req.session.username,
       pet: petId,
       shelterId: pet.shelterId, 
       petName: pet.name,
