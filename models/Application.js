@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 
 const applicationSchema = new mongoose.Schema({
     applicant: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.String,
         ref: 'User',
         required: true
     },
     pet: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.String,
         ref: 'Pet',
         required: true
     },
