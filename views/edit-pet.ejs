@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Edit Pet</title>
+    <title>Manage Pet</title>
 </head>
 <body>
 
-    <h1>Edit Pet</h1>
+    <h1>Manage Pet ✏️</h1>
+<h2>Pet Details 🐶</h2>
 
     <form action="/pets/editPet" method="POST">
 
@@ -37,7 +38,7 @@ Dog size:
         <label>Description:</label><br>
         <textarea name="description" rows="4" cols="40"><%= pet.description %></textarea>
 <br>
-<h3>Other Information</h3>
+<h2>Other Information 📊</h2>
 
 <label>
   <input type="checkbox" name="vaccinated" <%= pet.vaccinated ? "checked" : "" %>>
@@ -62,14 +63,25 @@ Dog size:
     </form>
 
     <br>
-    <h3>👀 Viewers</h3>
+    <h2>Viewers 👀</h2>
 
 <% if (viewers.length > 0) { %>
-    <p>
-        <% viewers.forEach(v => { %>
-    <p><%= v.username %> - <%= v.email %></p>
-<% }) %>
-    </p>
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% viewers.forEach(v => { %>
+                <tr>
+                    <td><%= v.username %></td>
+                    <td><%= v.email %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
 <% } else { %>
     <p>No one has viewed this pet yet.</p>
 <% } %>
