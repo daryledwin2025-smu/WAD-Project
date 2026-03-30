@@ -1,5 +1,5 @@
 const Application = require("../models/Application");
-// const Pet = require("../models/Pet");
+const Pet = require("../models/pet-model");
 
 exports.showMyApplications = async (req, res) => {
   try {
@@ -16,13 +16,40 @@ exports.showMyApplications = async (req, res) => {
 };
 
 exports.displayApplyForm = async (req, res) => {
-  try{
+  try {
+    if (!req.session || !req.session.user) {
+      return res.redirect("/user-login");
+    }
+
     let petId = req.query.petId;
     let petName = req.query.petName;
-    res.render("applyForm",{petId:petId,petName:petName})
-  } catch(error){
 
+    const pet = await Pet.displayPetById(petId);
+    
+    if (!pet) {
+      return res.status(404).send("Sorry, this pet is no longer available.");
+    }
+    
+    return res.render("applyForm", { 
+        petId: petId, 
+        petName: petName, 
+        shelterId: pet.shelterId, 
+        error: undefined 
+    });
+
+  } catch (error) {
+    console.log("Error loading apply form:", error);
+    return res.status(500).send("The actual error is: " + error.message);
   }
+};
+
+  // try{
+  //   let petId = req.query.petId;
+  //   let petName = req.query.petName;
+  //   res.render("applyForm",{petId:petId,petName:petName,shelterId:pet.shelterId})
+  // } catch(error){
+
+  // }
   // try {
   //   if (!req.session || !req.session.user) {
   //     return res.redirect("/user-login");
@@ -38,12 +65,35 @@ exports.displayApplyForm = async (req, res) => {
   //   console.log(error);
   //   return res.render("error", { error });
   // }
-};
+
 
 exports.submitApplication = async (req, res) => {
   try {
     if (!req.session || !req.session.user) {
       return res.redirect("/user-login");
+    }
+
+    const petId = req.params.petId;
+    const userId = req.session.user._id;
+
+    const pet = await Pet.displayPetById(petId);
+    
+    if (!pet) {
+        return res.status(404).send("Sorry, this pet could not be found.");
+    }
+
+    const existingApplication = await Application.findOne({
+      pet: petId,
+      applicant: userId
+    });
+
+    if (existingApplication) {
+      return res.render("applyForm", {
+        petId: petId,
+        petName: pet.name,
+        shelterId: pet.shelterId,
+        error: "You have already started or submitted an application for this pet!"
+      });
     }
 
     let livingSituation = req.body.livingSituation;
@@ -52,17 +102,19 @@ exports.submitApplication = async (req, res) => {
     let finalStatus = action === "submit" ? "Pending" : "Draft";
 
     if (action === "submit" && (!livingSituation || !experienceDetails.trim())) {
-      const pet = await Pet.findById(req.params.petId);
       return res.render("applyForm", {
-        pet: pet,
+        petId: petId,
+        petName: pet.name,
+        shelterId: pet.shelterId,
         error: "Both Living Situation and Experience Details are required to submit."
       });
     }
 
     let newApplication = new Application({
-      applicant: req.session.user._id,
-      pet: req.params.petId,
-      shelterId: pet.shelterId,
+      applicant: userId,
+      pet: petId,
+      shelterId: pet.shelterId, 
+      petName: pet.name,
       livingSituation: livingSituation,
       experienceDetails: experienceDetails,
       status: finalStatus
@@ -70,9 +122,10 @@ exports.submitApplication = async (req, res) => {
 
     await newApplication.save();
     return res.redirect("/applications/mine");
+    
   } catch (error) {
-    console.log(error);
-    return res.render("error", { error });
+    console.log("Error in submitApplication:", error);
+    return res.status(500).send("The actual error is: " + error.message);
   }
 };
 

@@ -67,3 +67,11 @@ exports.getAllShelters = () => {
 exports.getUserById = (id) => {
     return User.findById(id);
 };
+
+exports.updateUserById = (id, updatedData) => {
+  return User.findByIdAndUpdate(id, updatedData, { new: true });
+};
+
+exports.getAllUsers = () => {
+    return User.find();
+};

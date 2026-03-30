@@ -2,31 +2,45 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
 </head>
 
 <body>
-    <h1>Home</h1>
-<p>Welcome <%= user.username %>!</p>
-<h2>View my applications</h2>
-<a href="/applications/mine">My Applications</a>
-<h2>View my favourites</h2>
-<a href="/favourites">❤️ My Favourites</a>
-<h2>Shelters</h2>
+  <h1>Home</h1>
+  <p>Welcome <%= user.username %>!</p>
+  <button type="button" onclick="location.href='/user-edit'">
+    Edit Profile
+  </button>
+  <button type="button" onclick="location.href='/logout'">
+    Log Out
+  </button>
+  <h2>View my applications</h2>
+  <a href="/applications/mine">My Applications</a>
+  <h2>View my favourites</h2>
+  <a href="/favourites">❤️ My Favourites</a>
+  <h2>Shelters</h2>
 
-<% shelters.forEach((shelter, index) => { %>
-  <div>
-    <p><h2><%= index + 1 %>. </h2>
-      Shelter Name: <a href="/browse?shelterId=<%= shelter._id %>"><%= shelter.shelterName %></a>
-    </p>
-    <p>Shelter Email: <%= shelter.shelterEmail %></p>
-    <p>Shelter Number: <%= shelter.shelterNumber %></p>
-    <p>Shelter Address: <%= shelter.shelterAddress %></p>
-    <hr>
-  </div>
-<% }) %>
+  <% shelters.forEach((shelter, index)=> { %>
+    <div>
+      <p>
+      <h2>
+        <%= index + 1 %>.
+      </h2>
+      Shelter Name: <a href="/browse?shelterId=<%= shelter._id %>">
+        <%= shelter.shelterName %>
+      </a>
+      </p>
+      <p>Shelter Email: <%= shelter.shelterEmail %>
+      </p>
+      <p>Shelter Number: <%= shelter.shelterNumber %>
+      </p>
+      <p>Shelter Address: <%= shelter.shelterAddress %>
+      </p>
+      <hr>
+    </div>
+    <% }) %>
 
 </body>
 

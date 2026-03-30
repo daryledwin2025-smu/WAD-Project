@@ -21,9 +21,23 @@ const petSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    size: {
+        type: String
+    },
+    vaccinated: {
+        type: Boolean
+    },
+    neutered: {
+        type: Boolean
+    },
+    houseTrained: {
+        type: Boolean
+    },
+
     createdAt: { 
         type: Date, 
-        default: Date.now }
+        default: Date.now 
+    }
 });
 
 const Pet = mongoose.model('Pet', petSchema, 'pets');
@@ -65,3 +79,20 @@ exports.deletePet = (petId)=>{
 exports.deletePetsByShelterId = (shelterId)=>{
     return Pet.deleteMany({shelterId});
 }
+
+exports.getBreedsByShelter = async function (shelterId) {
+    let pets = await Pet.find({ shelterId: shelterId });
+
+    let breeds = [];
+
+    for (let i = 0; i < pets.length; i++) {
+        let breed = pets[i].breed;
+
+        // avoid duplicates
+        if (!breeds.includes(breed)) {
+            breeds.push(breed);
+        }
+    }
+
+    return breeds;
+};

@@ -2,17 +2,21 @@ const mongoose = require('mongoose');
 
 const applicationSchema = new mongoose.Schema({
     applicant: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.String,
         ref: 'User',
         required: true
     },
     pet: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.String,
         ref: 'Pet',
         required: true
     },
     shelterId: {
         type: String, 
+        required: true
+    },
+    petName: {
+        type: String,
         required: true
     },
     livingSituation: {
