@@ -91,13 +91,17 @@
             >
             House Trained
         </label>
-
+<select name="ageGroup">
+  <option value="">All Ages</option>
+  <option value="young">Young (0–2)</option>
+  <option value="adult">Adult (3–7)</option>
+  <option value="senior">Senior (8+)</option>
+</select>
         <!-- Submit -->
         <button type="submit">Filter</button>
 
         <!-- Reset -->
         <a href="/pets/myListings" style="margin-left:10px;">Reset</a>
-
     </form>
     <%if(allPets.length==0){%>
         <h2 style="text-align:center"> Nothing here yet! Go ahead and add your first pet 🐶</h2>

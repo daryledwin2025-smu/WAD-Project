@@ -22,6 +22,18 @@ exports.displayMyListings = async (req, res) => {
     if (req.query.houseTrained) {
         query.houseTrained = true;
     }
+    // AGE FILTER
+    if (req.query.ageGroup === "young") {
+        query.age = { $lte: 2 };
+    }
+
+    if (req.query.ageGroup === "adult") {
+        query.age = { $gte: 3, $lte: 7 };
+    }
+
+    if (req.query.ageGroup === "senior") {
+        query.age = { $gte: 8 };
+    }
     let allPets = await Pet.filterPets(query);
     // VIEWS
     let allViews = await View.retrieveAll();
@@ -51,6 +63,7 @@ console.log("ALL PETS:", allPets);
         pet.breed.toLowerCase().includes(req.query.breed.trim().toLowerCase())
     );
 }
+
 // views sort
 if (req.query.sort === "views") {
     allPets.sort((a, b) => b.viewCount - a.viewCount);
@@ -103,6 +116,18 @@ exports.displayAllPets = async (req, res) => {
         if (req.query.houseTrained) {
             query.houseTrained = true;
         }
+        // AGE FILTER
+        if (req.query.ageGroup === "young") {
+            query.age = { $lte: 2 };
+        }
+
+        if (req.query.ageGroup === "adult") {
+            query.age = { $gte: 3, $lte: 7 };
+        }
+
+        if (req.query.ageGroup === "senior") {
+            query.age = { $gte: 8 };
+        }
         let allPets = await Pet.filterPets(query);        // console.log(allPets);
         //VIEWS
         const View = require("../models/view-model"); // adjust name if needed
@@ -119,6 +144,7 @@ exports.displayAllPets = async (req, res) => {
         pet.breed.toLowerCase().includes(req.query.breed.trim().toLowerCase())
     );
 }
+
         // VIEWS LOOP
         for (let i = 0; i < allPets.length; i++) {
             let count = 0;
