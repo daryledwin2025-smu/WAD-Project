@@ -16,5 +16,8 @@ router.get('/home', usersController.showHome);
 router.get('/home-shelter', usersController.showHomeShelter);
 
 router.get('/logout', usersController.submitLogout);
+router.get('/index.html', (req, res) => {
+    res.render('user-login'); 
+});
 
 module.exports = router;
