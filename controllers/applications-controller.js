@@ -28,7 +28,9 @@ exports.displayApplyForm = async (req, res) => {
         petId: petId, 
         petName: petName, 
         shelterId: pet.shelterId, 
-        error: undefined 
+        error: undefined,
+        livingSituation: "",
+        experienceDetails: ""
     });
 
   } catch (error) {
@@ -73,7 +75,9 @@ exports.submitApplication = async (req, res) => {
         petId: petId,
         petName: pet.name,
         shelterId: pet.shelterId,
-        error: "Both Living Situation and Experience Details are required to submit."
+        error: "Both Living Situation and Experience Details are required to submit.",
+        livingSituation: livingSituation,
+        experienceDetails: experienceDetails
       });
     }
 
@@ -127,6 +131,9 @@ exports.submitDraftEdit = async (req, res) => {
 
     if (action === "submit" && (!livingSituation || !experienceDetails.trim())) {
       const application = await Application.findById(req.params.appId).populate("pet");
+      application.livingSituation = livingSituation;
+      application.experienceDetails = experienceDetails;
+      
       return res.render("editApplyForm", {
         app: application,
         error: "All fields must be filled out to submit your draft."
