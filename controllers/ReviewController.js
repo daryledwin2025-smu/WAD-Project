@@ -7,9 +7,10 @@ exports.showAllReviews = async (req, res) => {
         const shelterId = req.query.shelterId;
         const shelter = await UserModel.getUserById(shelterId); // retrieve shelter data based on shelter ID
         const reviews = await Review.find({ shelter: shelterId }) // find reviews for specific shelterID, returns a list
-            .populate("reviewer", "username")
+            .populate("reviewer", "username") //  for reviewer column, add username (as string) from User model
+            // reviewer: { _id: new ObjectId('69c397231ea15a74f63b697a'), username: 'tom' },
             .sort({ createdAt: -1 });
-
+        console.log(reviews);
         const validReviews = reviews.filter(review => review.reviewer !== null); // keep element if condition is true
         // filter out any reviews whose userID may be deleted 
 
