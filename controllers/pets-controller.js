@@ -222,39 +222,31 @@ exports.displayPetDetail = async (req, res) => {
 exports.displayEditPet = async (req, res) => {
     let petId = req.query.petId;
 
-    let views = await View.retrieveAll();
-    let users = await UserModel.getAllUsers();
+    // get only views for this pet
+// VIEWERS (reuse logic)
+let views = await View.findByPetId(petId);
+let viewers = [];
 
-    let viewers = [];
+for (let i = 0; i < views.length; i++) {
 
-    for (let i = 0; i < views.length; i++) {
+    if (!views[i].userId) continue;
 
-        // only check views for this pet
-        if (views[i].petId.toString() === petId.toString()) {
+    let user = await UserModel.getUserById(views[i].userId);
 
-            for (let j = 0; j < users.length; j++) {
-
-if (
-    views[i].userId &&
-    users[j]._id.toString() === views[i].userId.toString()
-) {
-    if (!viewers.find(v => v.username === users[j].username)) {
+    if (user) {
         viewers.push({
-            username: users[j].username,
-            email: users[j].email,
-            viewedAt: views[i].viewedAt
+            username: user.username,
+            email: user.email,
+            viewedAt: views[i].viewedAt,
+            viewCount: views[i].viewCount
         });
     }
 }
-            }
-
-        }
-    }
 
     let pet = await Pet.displayPetById(petId);
 
-    res.render("edit-pet", { pet, viewers,error:null });
-}
+    res.render("edit-pet", { pet, viewers, error: null });
+};
 
 exports.editPet = async (req, res) => {
     let pet = req.body;
@@ -292,7 +284,8 @@ for (let i = 0; i < views.length; i++) {
                     viewers.push({
                         username: users[j].username,
                         email: users[j].email,
-                        viewedAt: views[i].viewedAt
+                        viewedAt: views[i].viewedAt,
+                        viewCount:views[i].viewCount
                     });
                 } else {
                     // keep latest view time

@@ -6,11 +6,16 @@ const viewSchema = new mongoose.Schema({
         required: true
     },
     userId: {
-        type: String
+        type: String,
+        required: true
     },
     viewedAt: {
         type: Date,
         default: Date.now
+    },
+    viewCount: {
+        type: Number,
+        default: 1
     }
 });
 
@@ -22,11 +27,20 @@ exports.addView = async function(newView) {
         petId: newView.petId,
         userId: newView.userId
     });
-    // if not found, create
-    if (!existing) {
-        return View.create(newView);
+
+    // if found, update viewCount and viewedAt
+    if (existing) {
+        return View.updateOne(
+            { petId: newView.petId, userId: newView.userId },
+            {
+                $inc: { viewCount: 1 },
+                $set: { viewedAt: Date.now() }
+            }
+        );
     }
-    return null;
+
+    // if not found, create new view record
+    return View.create(newView);
 };
 exports.retrieveAll = function() {
     return View.find();
@@ -38,4 +52,7 @@ exports.countByPetId = function(petId) {
 
 exports.deleteByPetId = function(petId) {
     return View.deleteMany({ petId: petId });
+};
+exports.findByPetId = function(petId) {
+    return View.find({ petId: petId });
 };
