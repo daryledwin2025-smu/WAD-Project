@@ -14,7 +14,7 @@ exports.showAllReviews = async (req, res) => {
         const validReviews = reviews.filter(review => review.reviewer !== null); // keep element if condition is true
         // filter out any reviews whose userID may be deleted 
 
-        res.render("reviews", { shelter, reviews: validReviews, shelterId, user: req.session.user });
+        res.render("reviews", { shelter, reviews: validReviews, shelterId, user: req.session.user, check_error: [], submittedRating: null, submittedComment: ''});
     } catch (error) {
         console.error(error);
         res.status(500).send("Server error");
@@ -24,13 +24,35 @@ exports.showAllReviews = async (req, res) => {
 // POST /browse/reviews
 exports.submitReview = async (req, res) => {
     try {
+        const shelterId = req.body.shelterId; // passed from ejs as hidden
+        const shelter = await UserModel.getUserById(shelterId); // retrieve shelter data based on shelter ID
+        const reviews = await Review.find({ shelter: shelterId })
+            .populate("reviewer", "username")
+            .sort({ createdAt: -1 });
+        const validReviews = reviews.filter(review => review.reviewer !== null);
+
+        const rating = req.body.rating; 
+        const comment = req.body.comment; 
+        const check_error = []; 
+
+        // server side validation
+        if (rating === 'null') {
+            check_error.push("Please select a rating.");
+        }
+        if (!comment || comment.trim() === "") {
+            check_error.push("Please fill in your comments.");
+        }
+        console.log(check_error);
+        if (check_error.length > 0) {
+            return res.render("reviews", { shelter, shelterId, reviews: validReviews, user: req.session.user, check_error, submittedRating: rating, submittedComment: comment });
+        }
         await Review.create({
             shelter: req.body.shelterId,
             reviewer: req.session.user._id,
             rating: req.body.rating,
             comment: req.body.comment
         });
-        res.redirect(`/browse?shelterId=${req.body.shelterId}`);
+        res.redirect(`/browse?shelterId=${shelterId}`);
     } catch (error) {
         console.error(error);
         res.status(500).send("Server error");

@@ -176,7 +176,11 @@ if (req.query.sort === "views") {
         // Darryl's reviews logic
         const Review = require("../models/Review");
         const reviews = await Review.find({ shelter: shelterId }) // read from reviews collection, .find comes in the model automatically (find reviews for the specific shelter and create a list)
-            .populate("reviewer", "username") // reviewer is an objectId pointing to user collection (based on schema), reviewer becomes object with id and username (from User collection) as its keys
+            .populate("reviewer", "username") // reviewer is an objectId pointing to user collection (based on schema), populates reviewer with that ObjectId and the username
+            //   reviewer: {
+            //   _id: new ObjectId('69c4db65615b4d548e5c643c'),
+            //    username: 'darryl'
+            // }
             .sort({ createdAt: -1 }) // sort in descending order of date
             .limit(3); // display first 3 items in list only
 
@@ -186,10 +190,11 @@ if (req.query.sort === "views") {
         let totalRating = 0
         validReviews.forEach(review => {
             totalRating += review.rating
-        });
+        }); // calculate totalRating to find average later
+
         const avgRating = validReviews.length > 0
             ? (totalRating / validReviews.length).toFixed(1)
-            : null;
+            : null; // calc the avgRating, if no reviews, leave it as null
 
         let favouritedPetIds = [];
         if (req.session.user && req.session.user.account !== "Shelter") {
@@ -197,7 +202,7 @@ if (req.query.sort === "views") {
             favouritedPetIds = userFavs.filter(f => f.petId !== null).map(f => f.petId._id.toString());
         }
 
-        res.render("browse", { allPets, reviews: validReviews, avgRating, shelterId, shelter, user: req.session.user, req, favouritedPetIds, breeds,popularPets });
+        res.render("browse", { allPets, reviews: validReviews, avgRating, shelterId, shelter, user: req.session.user, req, favouritedPetIds, breeds, popularPets });
     } catch (error) {
         console.error(error);
         res.send("Error reading database"); // Send error message if fetching fails

@@ -171,14 +171,14 @@
                 <!-- DARRYL's SHELTER REVIEWS -->
 
                 <hr>
-                <h3>Product Ratings <%= avgRating ? '⭐ ' + avgRating + '/5' : '' %> (<%= reviews.length %>)
+                <h3>Shelter Ratings <%= avgRating ? '⭐ ' + avgRating + '/5.0' : '' %> (<%= reviews.length %>)
                 </h3>
 
                 <% if (reviews.length===0) { %>
                     <p>No reviews yet.</p>
                     <% } else { %>
                         <% reviews.forEach(review=> { %>
-                            <% if (review.reviewer) { %>
+                            <% if (review.reviewer) { %> <!--if reviewer exists and not deleted, extra layer of check aside from validReviews -->
                                 <p><strong>
                                         <%= review.reviewer.username %>
                                     </strong> — ⭐ <%= review.rating %>/5</p>
