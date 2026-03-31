@@ -31,20 +31,22 @@
     <h2 style="text-align:center;">
         <%=allPets.length%> Pets Available In <%=shelter.shelterName%>!
     </h2>
-<h3 style="width:80%; margin:auto; margin-top:20px;">
-    🔥 Top 3 Trending Pets (Based On Current Filter)
-</h3>
+<% if (allPets.length > 0) { %>
+    <h3 style="width:80%; margin:auto; margin-top:20px;">
+        🔥 Top 3 Trending Pets (Based On Current Filter)
+    </h3>
 
-<div style="width:80%; margin:auto; display:flex; gap:15px; margin-bottom:20px;">
-  <% popularPets.forEach(pet => { %>
-    <a href="#pet-<%= pet._id %>" style="text-decoration:none; color:black;">
-      <div style="border:1px solid #ccc; padding:10px; border-radius:8px; width:150px;">
-        <strong><%= pet.name %></strong><br>
-        👀 <%= pet.viewCount %>
-      </div>
-    </a>
-  <% }) %>
-</div>
+    <div style="width:80%; margin:auto; display:flex; gap:15px; margin-bottom:20px;">
+        <% popularPets.forEach(pet => { %>
+            <a href="#pet-<%= pet._id %>" style="text-decoration:none; color:black;">
+                <div style="border:1px solid #ccc; padding:10px; border-radius:8px; width:150px;">
+                    <strong><%= pet.name %></strong><br>
+                    👀 <%= pet.viewCount %>
+                </div>
+            </a>
+        <% }) %>
+    </div>
+<% } %>
     <form method="GET" action="/browse" style="width:80%; margin:auto; margin-bottom:20px;">
 <a href="/browse?shelterId=<%= shelterId %>&sort=views&name=<%= req.query.name || '' %>&breed=<%= req.query.breed || '' %>&size=<%= req.query.size || '' %><%= req.query.vaccinated ? '&vaccinated=true' : '' %><%= req.query.neutered ? '&neutered=true' : '' %><%= req.query.houseTrained ? '&houseTrained=true' : '' %>">Sort by Views</a>        <input type="hidden" name="shelterId" value="<%= shelterId %>">
         <!-- Name -->
