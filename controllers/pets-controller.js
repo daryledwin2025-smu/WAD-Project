@@ -212,50 +212,54 @@ if (req.query.sort === "views") {
 exports.displayPetDetail = async (req, res) => {
     let petId = req.query.petId;
     let pet = await Pet.displayPetById(petId);
+    let userViewCount = 0;
+
     // CREATE VIEW RECORD
+    if (req.session.user) {
     await View.addView({
-        petId: petId,
-        userId: req.session.user ? req.session.user._id : null
+        petId,
+        userId: req.session.user._id
     });
+    // get THIS user's view record
+        let view = await View.findByPetAndUser(petId, req.session.user._id);
+
+        if (view) {
+            userViewCount = view.viewCount;
+        }
+}
 
     let viewCount = await View.countByPetId(petId);
-    res.render("pet-detail", { pet, user: req.session.user });
+    res.render("pet-detail", { pet, user: req.session.user,userViewCount });
 }
 
 exports.displayEditPet = async (req, res) => {
     let petId = req.query.petId;
 
-    let views = await View.retrieveAll();
-    let users = await UserModel.getAllUsers();
+    // get only views for this pet
+// VIEWERS (reuse logic)
+let views = await View.findByPetId(petId);
+let viewers = [];
 
-    let viewers = [];
+for (let i = 0; i < views.length; i++) {
 
-    for (let i = 0; i < views.length; i++) {
+    if (!views[i].userId) continue;
 
-        // only check views for this pet
-        if (views[i].petId.toString() === petId.toString()) {
+    let user = await UserModel.getUserById(views[i].userId);
 
-            for (let j = 0; j < users.length; j++) {
-
-                if (users[j]._id.toString() === views[i].userId) {
-
-                    if (!viewers.includes(users[j].username)) {
-                        viewers.push({
-                            username: users[j].username,
-                            email: users[j].email
-                        });
-}
-
-                }
-            }
-
-        }
+    if (user) {
+        viewers.push({
+            username: user.username,
+            email: user.email,
+            viewedAt: views[i].viewedAt,
+            viewCount: views[i].viewCount
+        });
     }
+}
 
     let pet = await Pet.displayPetById(petId);
 
-    res.render("edit-pet", { pet, viewers,error:null });
-}
+    res.render("edit-pet", { pet, viewers, error: null });
+};
 
 exports.editPet = async (req, res) => {
     let pet = req.body;
@@ -269,26 +273,44 @@ exports.editPet = async (req, res) => {
         // ✅ validation
         if (pet.description && pet.description.length > 200) {
             
-            // VIEWERS
-            let views = await View.retrieveAll();
-            let users = await UserModel.getAllUsers();
+// VIEWERS
+let views = await View.retrieveAll();
+let users = await UserModel.getAllUsers();
 
-            let viewers = [];
+let viewers = [];
 
-            for (let i = 0; i < views.length; i++) {
-                if (views[i].petId.toString() === pet._id.toString()) {
-                    for (let j = 0; j < users.length; j++) {
-                        if (users[j]._id.toString() === views[i].userId) {
-                            if (!viewers.find(v => v.username === users[j].username)) {
-                                viewers.push({
-                                    username: users[j].username,
-                                    email: users[j].email
-                                });
-                            }
-                        }
+for (let i = 0; i < views.length; i++) {
+
+    // only for this pet + skip null users
+    if (
+        views[i].petId.toString() === pet._id.toString() &&
+        views[i].userId
+    ) {
+
+        for (let j = 0; j < users.length; j++) {
+
+            if (users[j]._id.toString() === views[i].userId.toString()) {
+
+                let existing = viewers.find(v => v.username === users[j].username);
+
+                if (!existing) {
+                    viewers.push({
+                        username: users[j].username,
+                        email: users[j].email,
+                        viewedAt: views[i].viewedAt,
+                        viewCount:views[i].viewCount
+                    });
+                } else {
+                    // keep latest view time
+                    if (views[i].viewedAt > existing.viewedAt) {
+                        existing.viewedAt = views[i].viewedAt;
                     }
                 }
+
             }
+        }
+    }
+}
 
             return res.render("edit-pet", {
                 error: "Description cannot exceed 200 characters",
