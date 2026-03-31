@@ -58,17 +58,21 @@ exports.displayPetById = (petId)=>{
     return Pet.findOne({_id:petId})
 }
 
-exports.editPet = (pet)=>{
+exports.editPet = (pet) => {
     return Pet.updateOne(
-  { _id: pet._id },
-  {
-    name: pet.name,
-    breed: pet.breed,
-    age: pet.age,
-    description: pet.description
-  }
-);
-}
+        { _id: pet._id },
+        {
+            name: pet.name,
+            breed: pet.breed,
+            age: pet.age,
+            size: pet.size,
+            description: pet.description,
+            vaccinated: pet.vaccinated,
+            neutered: pet.neutered,
+            houseTrained: pet.houseTrained
+        }
+    );
+};
 exports.filterPets = (query) => {
     return Pet.find(query);
 };
