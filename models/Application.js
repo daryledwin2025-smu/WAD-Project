@@ -25,11 +25,11 @@ const applicationSchema = new mongoose.Schema({
     },
     livingSituation: {
         type: String,
-        required: false 
+        required: true
     },
     experienceDetails: {
         type: String,
-        required: false 
+        required: true
     },
     status: {
         type: String,
