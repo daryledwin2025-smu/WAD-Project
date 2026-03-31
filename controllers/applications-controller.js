@@ -71,7 +71,7 @@ exports.submitApplication = async (req, res) => {
     let action = req.body.action;
     let finalStatus = action === "submit" ? "Pending" : "Draft";
 
-    if (action === "submit" && (!livingSituation || !experienceDetails.trim())) {
+    if (action === "submit" && (!livingSituation || !experienceDetails || !experienceDetails.trim())) {
       return res.render("applyForm", {
         petId: petId,
         petName: pet.name,
@@ -129,7 +129,7 @@ exports.submitDraftEdit = async (req, res) => {
     let action = req.body.action;
     let finalStatus = action === "submit" ? "Pending" : "Draft";
 
-    if (action === "submit" && (!livingSituation || !experienceDetails.trim())) {
+    if (action === "submit" && (!livingSituation || !experienceDetails || !experienceDetails.trim())) {
       const application = await Application.findById(req.params.appId).populate("pet");
       application.livingSituation = livingSituation;
       application.experienceDetails = experienceDetails;
