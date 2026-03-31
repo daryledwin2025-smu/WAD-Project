@@ -12,7 +12,7 @@ exports.showApplications = async (req, res) => {
 exports.showDashboard = async (req, res) => {
     try {
     let shelterName = req.session.user._id;
-    let dashboardList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']} } );    
+    let dashboardList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']} } ).populate('pet');;    
     if(dashboardList.length == 0){
         dashboardList = [];
         res.render("dashboard", { dashboardList });

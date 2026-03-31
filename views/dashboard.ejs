@@ -19,14 +19,34 @@
 
             <p> Application ID: <%= application.id %> </p>
                 <p> Applicant ID: <%= application.applicantName %> </p>
-                    <p> Pet: <%= application.petName %> </p>
+                    <p>
+    Pet:
+    <% if (application.pet) { %>
+        <%= application.pet.name %>
+    <% } else { %>
+        <span style="color:red;">Pet Listing Deleted</span>
+        <br>
+        <small>(Original: <%= application.petName %>)</small>
+    <% } %>
+</p>
                         <p> Living Situation: <%= application.livingSituation %> </p>
                             <% if(application.experienceDetails.length==0){ %>
                                 <p> Experience Details: Applicant has no experience details! </p>                             
                                 <% }else{ %>
                                     <p> Experience Details: <%= application.experienceDetails %> </p>
                                         <% } %>
-                                        <p>Application Status: <a href="/dashboard/applicationDetails/<%= application.id %>"><%= application.status %></a></p> 
+                                        <p>
+    Application Status:
+    <% if (application.pet) { %>
+        <a href="/dashboard/applicationDetails/<%= application.id %>">
+            <%= application.status %>
+        </a>
+    <% } else { %>
+        <span style="color:gray;">
+            <%= application.status %> (Listing Deleted)
+        </span>
+    <% } %>
+</p>
                                             <p> Application DateTime: <%= application.applicationDate %> </p>
                                                 <hr>
                                                 <% }); %>

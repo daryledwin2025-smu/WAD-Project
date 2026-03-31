@@ -59,7 +59,8 @@ Dog size:
         <input type="hidden" name="_id" value="<%= pet._id %>">
 
         <button type="submit">Save Changes</button>
-
+        <br><br>
+<a href="/pets/deletePet?petId=<%=pet._id%>" onclick="return confirm('Are you sure you want to delete <%=pet.name%>?')"><button type="button">Delete</button></a>
     </form>
 
     <br>
