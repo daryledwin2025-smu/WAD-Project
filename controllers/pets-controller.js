@@ -208,10 +208,12 @@ exports.displayPetDetail = async (req, res) => {
     let petId = req.query.petId;
     let pet = await Pet.displayPetById(petId);
     // CREATE VIEW RECORD
+    if (req.session.user) {
     await View.addView({
-        petId: petId,
-        userId: req.session.user ? req.session.user._id : null
+        petId,
+        userId: req.session.user._id
     });
+}
 
     let viewCount = await View.countByPetId(petId);
     res.render("pet-detail", { pet, user: req.session.user });
@@ -232,16 +234,18 @@ exports.displayEditPet = async (req, res) => {
 
             for (let j = 0; j < users.length; j++) {
 
-                if (users[j]._id.toString() === views[i].userId) {
-
-                    if (!viewers.includes(users[j].username)) {
-                        viewers.push({
-                            username: users[j].username,
-                            email: users[j].email
-                        });
+if (
+    views[i].userId &&
+    users[j]._id.toString() === views[i].userId.toString()
+) {
+    if (!viewers.find(v => v.username === users[j].username)) {
+        viewers.push({
+            username: users[j].username,
+            email: users[j].email,
+            viewedAt: views[i].viewedAt
+        });
+    }
 }
-
-                }
             }
 
         }
@@ -264,26 +268,43 @@ exports.editPet = async (req, res) => {
         // ✅ validation
         if (pet.description && pet.description.length > 200) {
             
-            // VIEWERS
-            let views = await View.retrieveAll();
-            let users = await UserModel.getAllUsers();
+// VIEWERS
+let views = await View.retrieveAll();
+let users = await UserModel.getAllUsers();
 
-            let viewers = [];
+let viewers = [];
 
-            for (let i = 0; i < views.length; i++) {
-                if (views[i].petId.toString() === pet._id.toString()) {
-                    for (let j = 0; j < users.length; j++) {
-                        if (users[j]._id.toString() === views[i].userId) {
-                            if (!viewers.find(v => v.username === users[j].username)) {
-                                viewers.push({
-                                    username: users[j].username,
-                                    email: users[j].email
-                                });
-                            }
-                        }
+for (let i = 0; i < views.length; i++) {
+
+    // only for this pet + skip null users
+    if (
+        views[i].petId.toString() === pet._id.toString() &&
+        views[i].userId
+    ) {
+
+        for (let j = 0; j < users.length; j++) {
+
+            if (users[j]._id.toString() === views[i].userId.toString()) {
+
+                let existing = viewers.find(v => v.username === users[j].username);
+
+                if (!existing) {
+                    viewers.push({
+                        username: users[j].username,
+                        email: users[j].email,
+                        viewedAt: views[i].viewedAt
+                    });
+                } else {
+                    // keep latest view time
+                    if (views[i].viewedAt > existing.viewedAt) {
+                        existing.viewedAt = views[i].viewedAt;
                     }
                 }
+
             }
+        }
+    }
+}
 
             return res.render("edit-pet", {
                 error: "Description cannot exceed 200 characters",

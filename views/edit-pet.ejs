@@ -76,6 +76,7 @@ Dog size:
             <tr>
                 <th>Username</th>
                 <th>Email</th>
+                <th>Viewed At</th>
             </tr>
         </thead>
         <tbody>
@@ -83,6 +84,7 @@ Dog size:
                 <tr>
                     <td><%= v.username %></td>
                     <td><%= v.email %></td>
+                    <td><%= v.viewedAt.toDateString() %></td>
                 </tr>
             <% }) %>
         </tbody>
