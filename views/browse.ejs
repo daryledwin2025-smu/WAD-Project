@@ -48,7 +48,7 @@
     <form method="GET" action="/browse" style="width:80%; margin:auto; margin-bottom:20px;">
 <a href="/browse?shelterId=<%= shelterId %>&sort=views&name=<%= req.query.name || '' %>&breed=<%= req.query.breed || '' %>&size=<%= req.query.size || '' %><%= req.query.vaccinated ? '&vaccinated=true' : '' %><%= req.query.neutered ? '&neutered=true' : '' %><%= req.query.houseTrained ? '&houseTrained=true' : '' %>">Sort by Views</a>        <input type="hidden" name="shelterId" value="<%= shelterId %>">
         <!-- Name -->
-        <input type="text" name="name" placeholder="Exact name" value="<%= req.query.name || '' %>">
+        <input type="text" name="name" placeholder="Search pet name" value="<%= req.query.name || '' %>">
 <input type="text" name="breed" list="breedList" placeholder="Search breed" value="<%= req.query.breed || '' %>">
 
 <datalist id="breedList">
