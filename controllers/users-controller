@@ -162,7 +162,6 @@ exports.showHome = async (req, res) => {
     return res.render("home", { user, shelters });
   } catch (error) {
     console.log(error);
-    return res.render("error", { error });
   }
 };
 
@@ -181,7 +180,6 @@ exports.showAllShelters = async (req, res) => {
     res.render("all-shelters", { shelters });
   } catch (error) {
     console.log(error);
-    res.render("error", { error });
   }
 };
 
