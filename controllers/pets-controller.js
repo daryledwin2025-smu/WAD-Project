@@ -264,7 +264,7 @@ exports.editPet = async (req, res) => {
         // ✅ validation
         if (pet.description && pet.description.length > 200) {
             
-            // ⚠️ need viewers again because page needs it
+            // VIEWERS
             let views = await View.retrieveAll();
             let users = await UserModel.getAllUsers();
 
