@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const petsController = require("../controllers/pets-controller");
-const ReviewController = require("../controllers/ReviewController");
+const ReviewController = require("../controllers/review-controller");
 const authMiddleware = require("../middleware/auth");
 
 router.get("/",  authMiddleware.isLoggedIn, authMiddleware.isAdopter, petsController.displayAllPets);

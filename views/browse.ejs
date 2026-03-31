@@ -169,7 +169,7 @@
                 <!-- DARRYL's SHELTER REVIEWS -->
 
                 <hr>
-                <h3>Reviews <%= avgRating ? '⭐ ' + avgRating + '/5' : '' %>
+                <h3>Product Ratings <%= avgRating ? '⭐ ' + avgRating + '/5' : '' %> (<%= reviews.length %>)
                 </h3>
 
                 <% if (reviews.length===0) { %>
@@ -184,7 +184,7 @@
                                     <%= review.comment %>
                                 </p>
                                 <p><small>
-                                        <%= new Date(review.createdAt).toDateString() %>
+                                        <%= new Date(review.createdAt).toLocaleString('en-SG', { dateStyle: 'medium', timeStyle: 'short' }) %>
                                     </small></p>
 
                                 <% if (user && review.reviewer._id.toString()===user._id.toString()) { %>
