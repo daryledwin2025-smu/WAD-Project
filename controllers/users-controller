@@ -162,7 +162,6 @@ exports.showHome = async (req, res) => {
     return res.render("home", { user, shelters });
   } catch (error) {
     console.log(error);
-    return res.render("error", { error });
   }
 };
 
@@ -181,7 +180,6 @@ exports.showAllShelters = async (req, res) => {
     res.render("all-shelters", { shelters });
   } catch (error) {
     console.log(error);
-    res.render("error", { error });
   }
 };
 
@@ -200,32 +198,34 @@ exports.submitEditProfile = async (req, res) => {
     }
 
     const userId = req.session.user._id;
+    const newUsername = req.body.username;
+
+    const existingUser = await User.getUserByUsername(newUsername);
+
+    if (existingUser) {
+      return res.render('user-edit', {
+        user: req.session.user,
+        errorMessage: 'Username already exists',
+        successMessage: null
+      });
+    }
 
     const updatedData = {
       username: req.body.username,
       email: req.body.email,
       phone: req.body.phone,
-      gender: req.body.gender,
-      account: req.body.account
+      gender: req.body.gender
     };
-
-    if (req.body.account === "Shelter") {
-      updatedData.shelterName = req.body.shelterName || null;
-      updatedData.shelterEmail = req.body.shelterEmail || null;
-      updatedData.shelterPhone = req.body.shelterPhone || null;
-      updatedData.shelterAddress = req.body.shelterAddress || null;
-    } else {
-      updatedData.shelterName = null;
-      updatedData.shelterEmail = null;
-      updatedData.shelterPhone = null;
-      updatedData.shelterAddress = null;
-    }
 
     const updatedUser = await User.updateUserById(userId, updatedData);
 
     req.session.user = updatedUser;
 
-    return res.redirect('/user-edit');
+    return res.render('user-edit', {
+      user: updatedUser,
+      errorMessage: null,
+      successMessage: 'Profile updated successfully'
+    });
   } catch (error) {
     console.log(error);
     return res.render('error', { error });

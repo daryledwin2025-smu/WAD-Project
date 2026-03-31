@@ -25,10 +25,10 @@ app.use(session({
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
-    //     rolling: true, // for auto-logout (don't enable yet)
-    //   cookie: {
-    //     maxAge: 10000  // 10 seconds of idle = log out
-    //   }
+        rolling: true, // for auto-logout (don't enable yet)
+      cookie: {
+        maxAge: 300000  // 5 mins of idle = log out
+      }
 }));
 
 // === ROUTE IMPORTS ===

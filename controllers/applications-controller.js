@@ -8,7 +8,6 @@ exports.showMyApplications = async (req, res) => {
     return res.render("myApplications", { applications: myApplications });
   } catch (error) {
     console.log(error);
-    return res.render("error", { error });
   }
 };
 
@@ -119,7 +118,6 @@ exports.displayEditDraftForm = async (req, res) => {
     return res.render("editApplyForm", { app: application, error: undefined });
   } catch (error) {
     console.log(error);
-    return res.render("error", { error });
   }
 };
 
@@ -156,7 +154,6 @@ exports.submitDraftEdit = async (req, res) => {
     return res.redirect("/applications/mine");
   } catch (error) {
     console.log(error);
-    return res.render("error", { error });
   }
 };
 
@@ -171,7 +168,6 @@ exports.deleteApplication = async (req, res) => {
     return res.redirect("/applications/mine");
   } catch (error) {
     console.log(error);
-    return res.render("error", { error });
   }
 };
 

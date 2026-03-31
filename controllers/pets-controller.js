@@ -75,7 +75,7 @@ if (req.query.sort === "views") {
 };
 
 exports.displayAddPet = (req, res) => {
-    res.render("add-pet");
+    res.render("add-pet",{error:null,pet:{}});
 }
 // FUNCTIONS
 exports.addPet = async (req, res) => {
@@ -86,6 +86,13 @@ exports.addPet = async (req, res) => {
     pet.houseTrained = pet.houseTrained ? true : false;
     pet.shelterId = req.session.user._id;
     try {
+        // description
+        if (pet.description && pet.description.length > 200) {
+            return res.render("add-pet", {
+                error: "Description cannot exceed 200 characters",
+                pet: pet
+            });
+        }
         let result = await Pet.addPet(pet);
         res.redirect('/pets/myListings');
     } catch (error) {
@@ -242,21 +249,60 @@ exports.displayEditPet = async (req, res) => {
 
     let pet = await Pet.displayPetById(petId);
 
-    res.render("edit-pet", { pet, viewers });
+    res.render("edit-pet", { pet, viewers,error:null });
 }
 
 exports.editPet = async (req, res) => {
     let pet = req.body;
+
     // handle checkboxes
     pet.vaccinated = pet.vaccinated ? true : false;
     pet.neutered = pet.neutered ? true : false;
     pet.houseTrained = pet.houseTrained ? true : false;
 
     try {
+        // ✅ validation
+        if (pet.description && pet.description.length > 200) {
+            
+            // VIEWERS
+            let views = await View.retrieveAll();
+            let users = await UserModel.getAllUsers();
+
+            let viewers = [];
+
+            for (let i = 0; i < views.length; i++) {
+                if (views[i].petId.toString() === pet._id.toString()) {
+                    for (let j = 0; j < users.length; j++) {
+                        if (users[j]._id.toString() === views[i].userId) {
+                            if (!viewers.find(v => v.username === users[j].username)) {
+                                viewers.push({
+                                    username: users[j].username,
+                                    email: users[j].email
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            return res.render("edit-pet", {
+                error: "Description cannot exceed 200 characters",
+                pet,
+                viewers
+            });
+        }
+
         let result = await Pet.editPet(pet);
         res.redirect('/pets/myListings');
+
     } catch (error) {
         console.log(error);
+
+        res.render("edit-pet", {
+            error: "Error updating pet",
+            pet,
+            viewers: []
+        });
     }
 };
 
