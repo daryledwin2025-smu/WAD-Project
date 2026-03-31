@@ -11,8 +11,10 @@
         <% reviews.forEach(review => { %>
             <p><strong><%= review.reviewer.username %></strong> — ⭐ <%= review.rating %>/5</p>
             <p><%= review.comment %></p>
-            <p><small><%= new Date(review.createdAt).toLocaleString('en-SG', { dateStyle: 'medium', timeStyle: 'short' }) %>
-            </small></p>
+            <p><small>Posted on: <%= new Date(review.createdAt).toLocaleString('en-SG', { dateStyle: 'medium', timeStyle: 'short' }) %></small></p>
+            <% if (review.updatedAt) { %>
+                <p><small>Updated on: <%= new Date(review.updatedAt).toLocaleString('en-SG', { dateStyle: 'medium', timeStyle: 'short' }) %></small></p>
+            <% } %>
 
             <% if (user && review.reviewer._id.toString() === user._id.toString()) { %> <!-- if the displayed review's reviewer id matches the current session user id-->
                 <a href="/browse/reviews/<%= review._id %>/edit">Edit</a>

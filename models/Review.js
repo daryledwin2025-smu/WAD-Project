@@ -5,7 +5,8 @@ const reviewSchema = new mongoose.Schema({
     reviewer: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // points to the _id field in User collection
     rating: { type: Number, min: 1, max: 5, required: true },
     comment: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: null }
 });
 
 const Review = mongoose.model("Review", reviewSchema, "reviews");

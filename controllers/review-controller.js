@@ -16,8 +16,7 @@ exports.showAllReviews = async (req, res) => {
 
         res.render("reviews", { shelter, reviews: validReviews, shelterId, user: req.session.user, check_error: [], submittedRating: null, submittedComment: ''});
     } catch (error) {
-        console.error(error);
-        res.status(500).send("Server error");
+        console.log(error);
     }
 };
 
@@ -54,8 +53,7 @@ exports.submitReview = async (req, res) => {
         });
         res.redirect(`/browse?shelterId=${shelterId}`);
     } catch (error) {
-        console.error(error);
-        res.status(500).send("Server error");
+        console.log(error);
     }
 };
 
@@ -69,28 +67,34 @@ exports.showEditReview = async (req, res) => {
         }
         res.render("editReview", { review, shelterId: review.shelter._id, user: req.session.user });
     } catch (error) {
-        console.error(error);
-        res.status(500).send("Server error");
+        console.log(error);
     }
 };
 
 // POST /browse/reviews/:id/edit
 exports.submitEditReview = async (req, res) => {
     try {
-        const review = await Review.findById(req.params.id);
+        // req.params.id refer to the :id in /browse/reviews/:id/edit
+        const review = await Review.findById(req.params.id); // built in method to find review ID 
+        const newRating = req.body.rating;
+        const newComment = req.body.comment;
+
+        const hasChanged = review.rating !== parseInt(newRating) || review.comment !== newComment;
+        // hasChanged is a boolean, if either one of new rating or new comment is not equal to old rating or comment, becomes true
 
         // Block if not the reviewer
         if (review.reviewer.toString() !== req.session.user._id.toString()) {
             return res.status(403).send("You are not allowed to do that");
         }
-        await Review.findByIdAndUpdate(req.params.id, {
-            rating: req.body.rating,
-            comment: req.body.comment
-        });
+        const updateData = { rating: newRating, comment: newComment };
+        if (hasChanged) {
+            updateData.updatedAt = new Date(); // add in updated date if hasChanged is true
+        }
+        await Review.findByIdAndUpdate(req.params.id, updateData);
+        
         res.redirect(`/browse?shelterId=${req.body.shelterId}`);
     } catch (error) {
-        console.error(error);
-        res.status(500).send("Server error");
+        console.log(error);
     }
 };
 
@@ -106,7 +110,6 @@ exports.deleteReview = async (req, res) => {
         await Review.findByIdAndDelete(req.params.id);
         res.redirect(`/browse?shelterId=${req.body.shelterId}`);
     } catch (error) {
-        console.error(error);
-        res.status(500).send("Server error");
+        console.log(error);
     }
 };
