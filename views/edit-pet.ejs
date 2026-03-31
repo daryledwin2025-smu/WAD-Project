@@ -36,7 +36,9 @@ Dog size:
 </select>
 <br><br>
         <label>Description:</label><br>
-        <textarea name="description" rows="4" cols="40"><%= pet.description %></textarea>
+        <textarea name="description" rows="4" cols="40"><%= pet.description %></textarea><% if (error) { %>
+    <p style="color:red;"><%= error %></p>
+<% } %>
 <br>
 <h2>Other Information 📊</h2>
 
