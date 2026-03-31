@@ -3,7 +3,7 @@
 <head><title>All Reviews</title></head>
 <body>
     <a href="/browse?shelterId=<%= shelterId %>">Back to shelter</a>
-    <h2>All Reviews for <%= shelter.shelterName %></h2>
+    <h2>All Reviews for <%= shelter.shelterName %> (<%= reviews.length %>) </h2>
 
     <% if (reviews.length === 0) { %>
         <p>No reviews yet. Be the first!</p>
@@ -11,7 +11,8 @@
         <% reviews.forEach(review => { %>
             <p><strong><%= review.reviewer.username %></strong> — ⭐ <%= review.rating %>/5</p>
             <p><%= review.comment %></p>
-            <p><small><%= new Date(review.createdAt).toDateString() %></small></p>
+            <p><small><%= new Date(review.createdAt).toLocaleString('en-SG', { dateStyle: 'medium', timeStyle: 'short' }) %>
+            </small></p>
 
             <% if (user && review.reviewer._id.toString() === user._id.toString()) { %>
                 <a href="/browse/reviews/<%= review._id %>/edit">Edit</a>
