@@ -207,16 +207,24 @@ if (req.query.sort === "views") {
 exports.displayPetDetail = async (req, res) => {
     let petId = req.query.petId;
     let pet = await Pet.displayPetById(petId);
+    let userViewCount = 0;
+
     // CREATE VIEW RECORD
     if (req.session.user) {
     await View.addView({
         petId,
         userId: req.session.user._id
     });
+    // get THIS user's view record
+        let view = await View.findByPetAndUser(petId, req.session.user._id);
+
+        if (view) {
+            userViewCount = view.viewCount;
+        }
 }
 
     let viewCount = await View.countByPetId(petId);
-    res.render("pet-detail", { pet, user: req.session.user });
+    res.render("pet-detail", { pet, user: req.session.user,userViewCount });
 }
 
 exports.displayEditPet = async (req, res) => {

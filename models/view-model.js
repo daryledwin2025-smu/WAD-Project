@@ -56,3 +56,6 @@ exports.deleteByPetId = function(petId) {
 exports.findByPetId = function(petId) {
     return View.find({ petId: petId });
 };
+exports.findByPetAndUser = function(petId, userId) {
+    return View.findOne({ petId: petId, userId: userId });
+};
