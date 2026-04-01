@@ -9,48 +9,43 @@
     <h2>Descision Logs: </h2> <p><a href="/dashboard/descisionlogs">Descision Logs</a></p>
     <h2>Shelter Home: </h2><p><a href="/home-shelter">Home</a></p>
     <h2 >Pending Applications:</h2>
+    <form action="/dashboard" method="get">
+        Filter by Pet: <select name="pet">
+            <% let filterName = [] %>
+            <option value="">--Select a Pet--</option>
+            <% filterList.forEach(application => { %>               
+                <% if(application.pet && !(filterName.includes(application.petName))){ %>
+                <option value="<%= application.petName %>"><%= application.petName %></option>
+                <% filterName.push(application.petName) %>
+                <% } %>
+            <% }) %>            
+        </select>
+        <button type="submit">Filter/Reset Filter</button>
+    </form>
     <br>
-    
+    <hr>
     
 
     <% if(dashboardList.length == 0){ %>
-        <p>You got no pending applications!</p> <% }else{ %>
+        <p>You got no pending applications!</p> 
+        <% }else{ %>
         <% dashboardList.forEach(application=> { %>
-
+        <% if (application.pet) { %>
             <p> Application ID: <%= application.id %> </p>
                 <p> Applicant ID: <%= application.applicantName %> </p>
-                    <p>
-    Pet:
-    <% if (application.pet) { %>
-        <%= application.pet.name %>
-    <% } else { %>
-        <span style="color:red;">Pet Listing Deleted</span>
-        <br>
-        <small>(Original: <%= application.petName %>)</small>
-    <% } %>
-</p>
+                    <p> Pet: <%= application.petName %> </p>
                         <p> Living Situation: <%= application.livingSituation %> </p>
                             <% if(application.experienceDetails.length==0){ %>
                                 <p> Experience Details: Applicant has no experience details! </p>                             
                                 <% }else{ %>
                                     <p> Experience Details: <%= application.experienceDetails %> </p>
                                         <% } %>
-                                        <p>
-    Application Status:
-    <% if (application.pet) { %>
-        <a href="/dashboard/applicationDetails/<%= application.id %>">
-            <%= application.status %>
-        </a>
-    <% } else { %>
-        <span style="color:gray;">
-            <%= application.status %> (Listing Deleted)
-        </span>
-    <% } %>
-</p>
+                                        <p>Application Status: <a href="/dashboard/applicationDetails/<%= application.id %>"><%= application.status %></a></p>
                                             <p> Application DateTime: <%= application.applicationDate %> </p>
                                                 <hr>
-                                                <% }); %>
-                                            <% } %>
+                                                <% }; %>
+                                            <% })}; %>
+                                            
 </body>
 
 </html>
