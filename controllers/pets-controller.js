@@ -229,7 +229,15 @@ exports.displayPetDetail = async (req, res) => {
 }
 
     let viewCount = await View.countByPetId(petId);
-    res.render("pet-detail", { pet, user: req.session.user,userViewCount });
+
+    // Check if this pet is already favourited by the user
+    let isFavourited = false;
+    if (req.session.user && req.session.user.account !== "Shelter") {
+        const existing = await Favourite.checkFavourite(req.session.user._id, petId);
+        isFavourited = !!existing;
+    }
+
+    res.render("pet-detail", { pet, user: req.session.user, userViewCount, isFavourited });
 }
 
 exports.displayEditPet = async (req, res) => {

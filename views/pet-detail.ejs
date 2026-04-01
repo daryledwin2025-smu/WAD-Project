@@ -30,8 +30,12 @@
 <br><br>
 
 <% if (user && user.account !== "Shelter") { %>
-    <form action="/favourites/add" method="POST" style="display:inline;">
-        <input type="hidden" name="petId" value="<%= pet._id %>">
-        <button type="submit">❤️ Add to Favourites</button>
-    </form>
+    <% if (isFavourited) { %>
+        <span>❤️ Already in your Favourites</span>
+    <% } else { %>
+        <form action="/favourites/add" method="POST" style="display:inline;">
+            <input type="hidden" name="petId" value="<%= pet._id %>">
+            <button type="submit">🤍 Add to Favourites</button>
+        </form>
+    <% } %>
 <% } %>
