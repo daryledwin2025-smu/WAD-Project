@@ -37,7 +37,7 @@ Dog size:
 <br><br>
         <label>Description:</label><br><small style="color:gray;">Maximum 200 characters</small><br>
         
-        <textarea name="description" rows="4" cols="40"><%= pet.description %></textarea><% if (error) { %>
+        <textarea name="description" rows="4" cols="40" required><%= pet.description %></textarea><% if (error) { %>
             
     <p style="color:red;"><%= error %></p>
 <% } %>
