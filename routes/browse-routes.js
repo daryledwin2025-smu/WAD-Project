@@ -7,7 +7,9 @@ const authMiddleware = require("../middleware/auth");
 router.get("/",  authMiddleware.isLoggedIn, authMiddleware.isAdopter, petsController.displayAllPets);
 
 router.get("/reviews/all", authMiddleware.isLoggedIn, authMiddleware.isAdopter, ReviewController.showAllReviews);
-router.post("/reviews", authMiddleware.isLoggedIn, authMiddleware.isAdopter, ReviewController.submitReview);
+router.get("/reviews/new", authMiddleware.isLoggedIn, authMiddleware.isAdopter, ReviewController.showNewReviewForm);
+router.post("/reviews/new", authMiddleware.isLoggedIn, authMiddleware.isAdopter, ReviewController.submitNewReview);
+
 router.get("/reviews/:id/edit", authMiddleware.isLoggedIn, authMiddleware.isAdopter, ReviewController.showEditReview);
 router.post("/reviews/:id/edit", authMiddleware.isLoggedIn, authMiddleware.isAdopter, ReviewController.submitEditReview);
 router.post("/reviews/:id/delete", authMiddleware.isLoggedIn, authMiddleware.isAdopter, ReviewController.deleteReview);

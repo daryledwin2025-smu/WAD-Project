@@ -4,72 +4,121 @@ const UserModel = require("../models/user-model");
 // GET /browse/reviews/all?shelterId=xxx
 exports.showAllReviews = async (req, res) => {
     try {
-    const shelterId = req.query.shelterId;
-    const filterRating = req.query.filterRating || '';
-    const sortOrder = req.query.sortOrder || 'desc';
+        const shelterId = req.query.shelterId;
+        const filterRating = req.query.filterRating || '';
+        const sortOrder = req.query.sortOrder || 'desc';
 
-    const shelter = await UserModel.getUserById(shelterId);
+        const shelter = await UserModel.getUserById(shelterId);
 
-    const query = { shelter: shelterId };
-    if (filterRating) {
-        query.rating = parseInt(filterRating);
-    }
-    let sortQuery;
-    if (sortOrder === 'asc') sortQuery = { createdAt: 1 }; // sort by oldest to latest
-    else if (sortOrder === 'ratingDesc') sortQuery = { rating: -1 }; // sort by high to low
-    else if (sortOrder === 'ratingAsc') sortQuery = { rating: 1 }; // sort by low to high
-    else sortQuery = { createdAt: -1 }; // default (latest to oldest) desc by default
+        const query = { shelter: shelterId };
+        if (filterRating) {
+            query.rating = parseInt(filterRating);
+        }
+        let sortQuery;
+        if (sortOrder === 'asc') sortQuery = { createdAt: 1 }; // sort by oldest to latest
+        else if (sortOrder === 'ratingDesc') sortQuery = { rating: -1 }; // sort by high to low
+        else if (sortOrder === 'ratingAsc') sortQuery = { rating: 1 }; // sort by low to high
+        else sortQuery = { createdAt: -1 }; // default (latest to oldest) desc by default
 
-    const reviews = await Review.find(query) // find by shelterId and filterRating if there is 
-        .populate("reviewer", "username") // .populate fetches reviewer document but only returns specified fields, which is username
-        // reviewer: { _id: new ObjectId('69c4db65615b4d548e5c643c'), username: 'darryl'},
-        .sort(sortQuery);
+        const reviews = await Review.find(query) // find by shelterId and filterRating if there is 
+            .populate("reviewer", "username") // .populate fetches reviewer document but only returns specified fields, which is username
+            // reviewer: { _id: new ObjectId('69c4db65615b4d548e5c643c'), username: 'darryl'},
+            .populate("applicationId", "petName")
+            .sort(sortQuery);
 
-    const validReviews = reviews.filter(review => review.reviewer !== null);
+        const validReviews = reviews.filter(review => review.reviewer !== null);
 
-    res.render("reviews", { shelter, reviews: validReviews, shelterId, user: req.session.user, check_error: [], submittedRating: null, submittedComment: '', filterRating, sortOrder });
+        res.render("reviews", { shelter, reviews: validReviews, shelterId, user: req.session.user, check_error: [], submittedRating: null, submittedComment: '', filterRating, sortOrder });
     } catch (error) {
         console.log(error);
     }
 };
 
-// POST /browse/reviews
-exports.submitReview = async (req, res) => {
+// GET /browse/reviews/new
+exports.showNewReviewForm = async (req, res) => {
     try {
-        const shelterId = req.body.shelterId; // passed from ejs as hidden
-        const shelter = await UserModel.getUserById(shelterId); // retrieve shelter data based on shelter ID
-        const reviews = await Review.find({ shelter: shelterId })
-            .populate("reviewer", "username")
-            .sort({ createdAt: -1 });
-        const validReviews = reviews.filter(review => review.reviewer !== null);
+        const shelterId = req.query.shelterId;
+        const shelterName = req.query.shelterName;
+        const applicationId = req.query.applicationId; // pass applicationId 
+        res.render("new-review", { shelterId, shelterName, applicationId, user: req.session.user, check_error: [], submittedRating: null, submittedComment: '' });
+    } catch (error) {
+        console.log(error);
+    }
+    
+};
 
-        const rating = req.body.rating; 
-        const comment = req.body.comment; 
-        const check_error = []; 
+// POST /browse/reviews/new
+exports.submitNewReview = async (req, res) => {
+    try {
+        const shelterId = req.body.shelterId;
+        const shelterName = req.body.shelterName; 
+        const applicationId = req.body.applicationId; // pass applicationId 
+        const rating = req.body.rating;
+        const comment = req.body.comment;
+        const check_error = [];
 
-        // server side validation
+        // SERVER SIDE VALIDATION TO CHECK ALL REVIEWS ARE VALID
         if (rating === 'null') {
             check_error.push("Please select a rating.");
         }
-        if (!comment || comment.trim() === "") {
+        if (!comment || comment.trim() === "") { 
             check_error.push("Please fill in your comments.");
         }
-        console.log(check_error);
         if (check_error.length > 0) {
-            return res.render("reviews", { shelter, shelterId, reviews: validReviews, user: req.session.user, check_error, submittedRating: rating, submittedComment: comment, filterRating: '', sortOrder: 'desc' });
+            return res.render("new-review", { shelterId, shelterName, applicationId, user: req.session.user, check_error, submittedRating: rating, submittedComment: comment });
         }
+
         await Review.create({
-            shelter: req.body.shelterId,
+            shelter: shelterId,
             reviewer: req.session.user._id,
-            rating: req.body.rating,
-            comment: req.body.comment
+            rating,
+            comment, 
+            applicationId: req.body.applicationId
             // Review.create called without passing createdAt, default value is filled, Date.now gets called at the moment of creation 
         });
-        res.redirect(`/browse?shelterId=${shelterId}`);
+        res.redirect("/applications/mine");
     } catch (error) {
-        console.log(error);
+        console.log(error); 
     }
 };
+
+// // POST /browse/reviews
+// exports.submitReview = async (req, res) => {
+//     try {
+//         const shelterId = req.body.shelterId; // passed from ejs as hidden
+//         const shelter = await UserModel.getUserById(shelterId); // retrieve shelter data based on shelter ID
+//         const reviews = await Review.find({ shelter: shelterId })
+//             .populate("reviewer", "username")
+//             .sort({ createdAt: -1 });
+//         const validReviews = reviews.filter(review => review.reviewer !== null);
+
+//         const rating = req.body.rating; 
+//         const comment = req.body.comment; 
+//         const check_error = []; 
+
+//         // server side validation
+//         if (rating === 'null') {
+//             check_error.push("Please select a rating.");
+//         }
+//         if (!comment || comment.trim() === "") {
+//             check_error.push("Please fill in your comments.");
+//         }
+//         console.log(check_error);
+//         if (check_error.length > 0) {
+//             return res.render("reviews", { shelter, shelterId, reviews: validReviews, user: req.session.user, check_error, submittedRating: rating, submittedComment: comment, filterRating: '', sortOrder: 'desc' });
+//         }
+//         await Review.create({
+//             shelter: req.body.shelterId,
+//             reviewer: req.session.user._id,
+//             rating: req.body.rating,
+//             comment: req.body.comment
+//             // Review.create called without passing createdAt, default value is filled, Date.now gets called at the moment of creation 
+//         });
+//         res.redirect(`/browse?shelterId=${shelterId}`);
+//     } catch (error) {
+//         console.log(error);
+//     }
+// };
 
 // GET /browse/reviews/:id/edit
 exports.showEditReview = async (req, res) => {
@@ -108,7 +157,7 @@ exports.submitEditReview = async (req, res) => {
         }
         await Review.findByIdAndUpdate(req.params.id, updateData);
         
-        res.redirect(`/browse?shelterId=${req.body.shelterId}`);
+        res.redirect(`/applications/mine`);
     } catch (error) {
         console.log(error);
     }
@@ -124,7 +173,7 @@ exports.deleteReview = async (req, res) => {
             return res.redirect(`/browse/reviews/all?shelterId=${req.body.shelterId}`);
         }
         await Review.findByIdAndDelete(req.params.id);
-        res.redirect(`/browse?shelterId=${req.body.shelterId}`);
+        res.redirect(`/applications/mine`);
     } catch (error) {
         console.log(error);
     }

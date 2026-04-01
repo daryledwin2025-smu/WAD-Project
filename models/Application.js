@@ -19,6 +19,9 @@ const applicationSchema = new mongoose.Schema({
         type: String, 
         required: true
     },
+    shelterName: { 
+        type: String // not required to prevent old applications from crashing
+    }, 
     petName: {
         type: String,
         required: true

@@ -181,6 +181,7 @@ if (req.query.sort === "views") {
             //   _id: new ObjectId('69c4db65615b4d548e5c643c'),
             //    username: 'darryl'
             // }
+            .populate("applicationId", "petName")
             .sort({ createdAt: -1 }) // sort in descending order of date
             .limit(3); // display first 3 items in list only
 

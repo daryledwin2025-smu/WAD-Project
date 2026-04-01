@@ -27,6 +27,7 @@
     </select>
 
     <button type="submit">Apply</button>
+    <button type="button" onclick="window.location.href='/browse/reviews/all?shelterId=<%= shelterId %>'">Reset</button>
     </form>
 
     <% if (reviews.length === 0) { %>
@@ -34,47 +35,16 @@
     <% } else { %>
         <% reviews.forEach(review => { %>
             <p><strong><%= review.reviewer.username %></strong> — ⭐ <%= review.rating %>/5</p>
+            <p>
+                <strong>Pet applied for: <%= review.applicationId ? review.applicationId.petName : '' %></strong>
+            </p>
             <p><%= review.comment %></p>
             <p><small>Posted on: <%= new Date(review.createdAt).toLocaleString('en-SG', { dateStyle: 'medium', timeStyle: 'short' }) %></small></p>
             <% if (review.updatedAt) { %>
                 <p><small>Updated on: <%= new Date(review.updatedAt).toLocaleString('en-SG', { dateStyle: 'medium', timeStyle: 'short' }) %></small></p>
             <% } %>
-
-            <% if (user && review.reviewer._id.toString() === user._id.toString()) { %> <!-- if the displayed review's reviewer id matches the current session user id-->
-                <a href="/browse/reviews/<%= review._id %>/edit">Edit</a>
-                <form action="/browse/reviews/<%= review._id %>/delete" method="POST" style="display:inline;">
-                    <input type="hidden" name="shelterId" value="<%= shelterId %>">
-                    <button type="submit">Delete</button>
-                </form>
-            <% } %>
             <hr>
         <% }) %>
     <% } %>
-
-    <h3>Leave a Review</h3>
-    <form action="/browse/reviews" method="POST">
-        <input type="hidden" name="shelterId" value="<%= shelterId %>">
-        <label>Rating:</label>
-        <select name="rating">
-            <option value="null" <%= (!submittedRating || submittedRating === 'null') ? 'selected' : '' %>>Please select a rating</option>
-            <option value="5" <%= submittedRating === '5' ? 'selected' : '' %>>⭐⭐⭐⭐⭐ 5</option>
-            <option value="4" <%= submittedRating === '4' ? 'selected' : '' %>>⭐⭐⭐⭐ 4</option>
-            <option value="3" <%= submittedRating === '3' ? 'selected' : '' %>>⭐⭐⭐ 3</option>
-            <option value="2" <%= submittedRating === '2' ? 'selected' : '' %>>⭐⭐ 2</option>
-            <option value="1" <%= submittedRating === '1' ? 'selected' : '' %>>⭐ 1</option>
-        </select>
-        <br><br>
-        <label>Comment:</label><br>
-        <textarea name="comment" rows="4" cols="50" placeholder="Write your review"><%= submittedComment || '' %></textarea>
-        <br>
-        <% if (check_error && check_error.length > 0) { %>
-            <ul>
-                <% check_error.forEach(error => { %>
-                    <li style="color: red;"><%= error %></li>
-                <% }) %>
-            </ul>
-        <% } %>
-        <button type="submit">Submit Review</button>
-    </form>
 </body>
 </html>

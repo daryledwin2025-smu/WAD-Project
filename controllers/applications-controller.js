@@ -1,11 +1,21 @@
 const Application = require("../models/Application");
 const Pet = require("../models/pet-model");
+const Review = require("../models/Review");
+const UserModel = require("../models/user-model");
 
 exports.showMyApplications = async (req, res) => {
   try {
+    const userReviews = await Review.find({ reviewer: req.session.user._id }); 
+    // find reviews with the reviewer id that matches the current session user ID
+
+    const reviewMap = {};
+    userReviews.forEach(r => reviewMap[r.applicationId.toString()] = r);
+    // for each review in reviews by current user, add a key (application ID) and the whole review document as the value.
+    console.log("ReviewMap", reviewMap); 
 
     const myApplications = await Application.find({ applicant: req.session.user._id }).populate("pet").populate("shelterId");
-    return res.render("myApplications", { applications: myApplications });
+    console.log(myApplications);
+    return res.render("myApplications", { applications: myApplications, reviewMap });
   } catch (error) {
     console.log(error);
   }
@@ -45,6 +55,7 @@ exports.submitApplication = async (req, res) => {
     const userId = req.session.user._id;
 
     const pet = await Pet.displayPetById(petId);
+    const shelter = await UserModel.getUserById(pet.shelterId); // retrieves the shelter document
     
     if (!pet) {
         return res.status(404).send("Sorry, this pet could not be found.");
@@ -87,6 +98,7 @@ exports.submitApplication = async (req, res) => {
       applicantName: req.session.user.username,
       pet: petId,
       shelterId: pet.shelterId, 
+      shelterName: shelter.shelterName, // pass the sheltername when submitted
       petName: pet.name,
       livingSituation: livingSituation,
       experienceDetails: experienceDetails,
