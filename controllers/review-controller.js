@@ -1,3 +1,4 @@
+const { application } = require("express");
 const Review = require("../models/Review");
 const UserModel = require("../models/user-model");
 
@@ -40,6 +41,11 @@ exports.showNewReviewForm = async (req, res) => {
         const shelterId = req.query.shelterId;
         const shelterName = req.query.shelterName;
         const applicationId = req.query.applicationId; // pass applicationId 
+        
+        if (!shelterId || !shelterName || !applicationId) {
+            return res.redirect("/home"); // when user has not submitted an application yet and wants to submit review
+        }
+
         res.render("new-review", { shelterId, shelterName, applicationId, user: req.session.user, check_error: [], submittedRating: null, submittedComment: '' });
     } catch (error) {
         console.log(error);
@@ -81,44 +87,6 @@ exports.submitNewReview = async (req, res) => {
         console.log(error); 
     }
 };
-
-// // POST /browse/reviews
-// exports.submitReview = async (req, res) => {
-//     try {
-//         const shelterId = req.body.shelterId; // passed from ejs as hidden
-//         const shelter = await UserModel.getUserById(shelterId); // retrieve shelter data based on shelter ID
-//         const reviews = await Review.find({ shelter: shelterId })
-//             .populate("reviewer", "username")
-//             .sort({ createdAt: -1 });
-//         const validReviews = reviews.filter(review => review.reviewer !== null);
-
-//         const rating = req.body.rating; 
-//         const comment = req.body.comment; 
-//         const check_error = []; 
-
-//         // server side validation
-//         if (rating === 'null') {
-//             check_error.push("Please select a rating.");
-//         }
-//         if (!comment || comment.trim() === "") {
-//             check_error.push("Please fill in your comments.");
-//         }
-//         console.log(check_error);
-//         if (check_error.length > 0) {
-//             return res.render("reviews", { shelter, shelterId, reviews: validReviews, user: req.session.user, check_error, submittedRating: rating, submittedComment: comment, filterRating: '', sortOrder: 'desc' });
-//         }
-//         await Review.create({
-//             shelter: req.body.shelterId,
-//             reviewer: req.session.user._id,
-//             rating: req.body.rating,
-//             comment: req.body.comment
-//             // Review.create called without passing createdAt, default value is filled, Date.now gets called at the moment of creation 
-//         });
-//         res.redirect(`/browse?shelterId=${shelterId}`);
-//     } catch (error) {
-//         console.log(error);
-//     }
-// };
 
 // GET /browse/reviews/:id/edit
 exports.showEditReview = async (req, res) => {

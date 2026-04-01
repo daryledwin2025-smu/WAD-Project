@@ -6,7 +6,7 @@ const authMiddleware = require("../middleware/auth");
 
 router.get("/",  authMiddleware.isLoggedIn, authMiddleware.isAdopter, petsController.displayAllPets);
 
-router.get("/reviews/all", authMiddleware.isLoggedIn, authMiddleware.isAdopter, ReviewController.showAllReviews);
+router.get("/reviews/all", authMiddleware.isLoggedIn, ReviewController.showAllReviews); // allow both shelter and adopter to see reviews    
 router.get("/reviews/new", authMiddleware.isLoggedIn, authMiddleware.isAdopter, ReviewController.showNewReviewForm);
 router.post("/reviews/new", authMiddleware.isLoggedIn, authMiddleware.isAdopter, ReviewController.submitNewReview);
 
