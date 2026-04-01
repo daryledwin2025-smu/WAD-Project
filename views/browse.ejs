@@ -40,13 +40,15 @@
         <% popularPets.forEach(pet => { %>
             <a href="#pet-<%= pet._id %>" style="text-decoration:none; color:black;">
                 <div style="border:1px solid #ccc; padding:10px; border-radius:8px; width:150px;">
-                    <strong><%= pet.name %></strong><br>
-                    👀 <%= pet.viewCount %>
-                </div>
-            </a>
-        <% }) %>
-    </div>
-<% } %>
+                    <strong>
+                        <%= pet.name %>
+                    </strong><br>
+                    <small>👀 <%= pet.viewCount %> <%= pet.viewCount === 1 ? "viewer" : "viewers" %></small>
+                                </div>
+                                </a>
+                                <% }) %>
+                                    </div>
+                                    <% } %>
     <form method="GET" action="/browse" style="width:80%; margin:auto; margin-bottom:20px;">
 <a href="/browse?shelterId=<%= shelterId %>&sort=views&name=<%= req.query.name || '' %>&breed=<%= req.query.breed || '' %>&size=<%= req.query.size || '' %><%= req.query.vaccinated ? '&vaccinated=true' : '' %><%= req.query.neutered ? '&neutered=true' : '' %><%= req.query.houseTrained ? '&houseTrained=true' : '' %>">Sort by Views</a>        <input type="hidden" name="shelterId" value="<%= shelterId %>">
         <!-- Name -->
@@ -135,8 +137,12 @@
                     <% allPets.forEach(pet=> { %>
                         <tr id="pet-<%= pet._id %>">
                             <td>
-                                <%= pet.name %> <br>👀<%=pet.viewCount%> <br> <% if (pet.viewCount > 3) { %>🔥 Popular<% } %>
-                            </td>
+<%= pet.name %><br>
+<small>
+  👀 <%= pet.viewCount %> <%= pet.viewCount === 1 ? "viewer" : "viewers" %>
+  <% if (pet.viewCount > 3) { %> · 🔥 Popular<% } %>
+</small>                          
+</td>
                             <td>
                                 <%= pet.breed %>
                             </td>
