@@ -249,8 +249,8 @@ if (req.query.sort === "apps_asc") {
             .sort({ createdAt: -1 }); // sort in descending order of date
             
 
-        const validReviews = reviews.filter(review => review.reviewer !== null).slice(0, 3); // keep element if condition is true
-        // filter out any reviews whose userID may be deleted, and show the first 3 only
+        const validReviews = reviews.filter(review => review.reviewer !== null); // keep element if condition is true
+        // filter out any reviews whose userID may be deleted
 
         let totalRating = 0
         validReviews.forEach(review => {
@@ -260,6 +260,8 @@ if (req.query.sort === "apps_asc") {
         const avgRating = validReviews.length > 0
             ? (totalRating / validReviews.length).toFixed(1)
             : null; // calc the avgRating, if no reviews, leave it as null
+        
+        const previewReviews = validReviews.slice(0, 3) // FOR DISPLAY ONLY IN BROWSE
 
         let favouritedPetIds = [];
         if (req.session.user && req.session.user.account !== "Shelter") {
@@ -267,7 +269,7 @@ if (req.query.sort === "apps_asc") {
             favouritedPetIds = userFavs.filter(f => f.petId !== null).map(f => f.petId._id.toString());
         }
 
-        res.render("browse", { allPets, reviews: validReviews, avgRating, shelterId, shelter, user: req.session.user, req, favouritedPetIds, breeds, popularPets });
+        res.render("browse", { allPets, validReviews, reviews: previewReviews, avgRating, shelterId, shelter, user: req.session.user, req, favouritedPetIds, breeds, popularPets });
     } catch (error) {
         console.error(error);
         res.send("Error reading database"); // Send error message if fetching fails

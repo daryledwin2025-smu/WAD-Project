@@ -36,7 +36,7 @@
         <% reviews.forEach(review => { %>
             <p><strong><%= review.reviewer.username %></strong> — ⭐ <%= review.rating %>/5</p>
             <p>
-                <strong>Pet applied for: <%= review.applicationId ? review.applicationId.petName : '' %></strong>
+                <strong>Pet applied for: <%= review.petName || '' %></strong>
             </p>
             <p><%= review.comment %></p>
             <p><small>Posted on: <%= new Date(review.createdAt).toLocaleString('en-SG', { dateStyle: 'medium', timeStyle: 'short' }) %></small></p>
