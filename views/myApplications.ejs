@@ -73,7 +73,9 @@
                             </td>
                             <td>
                                 <% if (reviewMap[app._id.toString()] && !app.pet) { %>
-                                Pet deleted. You may still delete your review.
+                                Pet deleted. You may still make changes or delete your review.
+                                <br><br>
+                                <a href="/browse/reviews/<%= reviewMap[app._id.toString()]._id %>/edit">Edit</a>
                                 <form action="/browse/reviews/<%= reviewMap[app._id.toString()]._id %>/delete" method="POST" style="display:inline;">
                                     <input type="hidden" name="shelterId" value="<%= app.shelterId %>">
                                     <button type="submit">Delete</button>
