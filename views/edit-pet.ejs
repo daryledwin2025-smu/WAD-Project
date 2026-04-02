@@ -91,6 +91,22 @@ Dog size:
         </option>
     </select>
 
+    <select name="status">
+    <option value="">All Status</option>
+
+    <option value="applied" <%= req.query.status === "applied" ? "selected" : "" %>>
+        Applied
+    </option>
+
+    <option value="interested" <%= req.query.status === "interested" ? "selected" : "" %>>
+        Highly Interested
+    </option>
+
+    <option value="browsing" <%= req.query.status === "browsing" ? "selected" : "" %>>
+        Browsing
+    </option>
+</select>
+
     <button type="submit">Apply</button>
     <a href="/pets/editPet?petId=<%= pet._id %>">
     <button type="button">Reset</button>
@@ -104,6 +120,7 @@ Dog size:
                 <th>Email</th>
                 <th>Viewed At</th>
                 <th>View Count</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
@@ -113,6 +130,15 @@ Dog size:
                     <td><%= v.email %></td>
                     <td><%= v.viewedAt.toDateString() %></td>
                     <td><%= v.viewCount %></td>
+                    <td>
+  <% if (v.hasApplied) { %>
+    ✅ Applied
+  <% } else if (v.viewCount >= 5) { %>
+    🔥 Highly Interested
+  <% } else { %>
+    👀 Browsing
+  <% } %>
+</td>
 
                 </tr>
             <% }) %>

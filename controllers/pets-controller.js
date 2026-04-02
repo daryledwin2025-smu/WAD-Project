@@ -2,7 +2,7 @@ const Pet = require("../models/pet-model");
 const UserModel = require("../models/user-model");
 const Favourite = require("../models/favourite-model");
 const View = require("../models/view-model");
-
+const Application = require("../models/Application");
 // DISPLAYS
 exports.displayMyListings = async (req, res) => {
     let userId = req.session.user._id;
@@ -261,13 +261,18 @@ for (let i = 0; i < views.length; i++) {
     if (!views[i].userId) continue;
 
     let user = await UserModel.getUserById(views[i].userId);
-
+// 🔥 CHECK IF APPLIED
+    let application = await Application.findOne({
+        pet: petId,
+        applicant: views[i].userId
+    });
     if (user) {
         viewers.push({
             username: user.username,
             email: user.email,
             viewedAt: views[i].viewedAt,
-            viewCount: views[i].viewCount
+            viewCount: views[i].viewCount,
+            hasApplied: application?true:false  
         });
     }
 }
@@ -287,6 +292,19 @@ if (req.query.sort === "highest") {
 
 if (req.query.sort === "lowest") {
     viewers.sort((a, b) => a.viewCount - b.viewCount);
+}
+
+// STATUS FILTER
+if (req.query.status === "applied") {
+    viewers = viewers.filter(v => v.hasApplied);
+}
+
+if (req.query.status === "interested") {
+    viewers = viewers.filter(v => !v.hasApplied && v.viewCount >= 5);
+}
+
+if (req.query.status === "browsing") {
+    viewers = viewers.filter(v => !v.hasApplied && v.viewCount < 5);
 }
 
     let pet = await Pet.displayPetById(petId);
