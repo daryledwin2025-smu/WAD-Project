@@ -182,11 +182,11 @@ if (req.query.sort === "views") {
             //    username: 'darryl'
             // }
             .populate("applicationId", "petName")
-            .sort({ createdAt: -1 }) // sort in descending order of date
-            .limit(3); // display first 3 items in list only
+            .sort({ createdAt: -1 }); // sort in descending order of date
+            
 
-        const validReviews = reviews.filter(review => review.reviewer !== null); // keep element if condition is true
-        // filter out any reviews whose userID may be deleted 
+        const validReviews = reviews.filter(review => review.reviewer !== null).slice(0, 3); // keep element if condition is true
+        // filter out any reviews whose userID may be deleted, and show the first 3 only
 
         let totalRating = 0
         validReviews.forEach(review => {

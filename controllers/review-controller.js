@@ -1,6 +1,7 @@
 const { application } = require("express");
 const Review = require("../models/Review");
 const UserModel = require("../models/user-model");
+const mongoose = require("mongoose");
 
 // GET /browse/reviews/all?shelterId=xxx
 exports.showAllReviews = async (req, res) => {
@@ -91,12 +92,21 @@ exports.submitNewReview = async (req, res) => {
 // GET /browse/reviews/:id/edit
 exports.showEditReview = async (req, res) => {
     try {
+        // if reviewId is not properly formatted
+        if (!mongoose.isValidObjectId(req.params.id)) {
+            return res.redirect("/home");
+        }
         const review = await Review.findById(req.params.id).populate("shelter"); 
         // .populate fetches the entire shelter document from DB
 
-        // Block if not the reviewer
+        // if reviewId doesn't exist
+        if (!review) {
+            return res.redirect("/home");
+        }
+
+        // Redirect to home if not the reviewer
         if (review.reviewer.toString() !== req.session.user._id.toString()) {
-            return res.redirect(`/browse/reviews/all?shelterId=${review.shelter._id}`);
+            return res.redirect(`/home`);
         }
         res.render("editReview", { review, shelterId: review.shelter._id, user: req.session.user }); // shelterId is passed to ejs
     } catch (error) {
@@ -107,6 +117,10 @@ exports.showEditReview = async (req, res) => {
 // POST /browse/reviews/:id/edit
 exports.submitEditReview = async (req, res) => {
     try {
+        // if reviewId is not properly formatted
+        if (!mongoose.isValidObjectId(req.params.id)) {
+            return res.redirect("/home");
+        }
         // req.params.id refer to the :id in /browse/reviews/:id/edit
         const review = await Review.findById(req.params.id); // built in method to find review ID 
         const newRating = req.body.rating;
@@ -115,9 +129,14 @@ exports.submitEditReview = async (req, res) => {
         const hasChanged = review.rating !== parseInt(newRating) || review.comment !== newComment;
         // hasChanged is a boolean, if either one of new rating or new comment is not equal to old rating or comment, becomes true
 
-        // Block if not the reviewer
+        // if reviewId doesn't exist
+        if (!review) {
+            return res.redirect("/home");
+        }
+
+        // Redirect to home if not the reviewer (only as safety net as the person saving changes can only be the reviewer)
         if (review.reviewer.toString() !== req.session.user._id.toString()) {
-            return res.redirect(`/browse/reviews/all?shelterId=${req.body.shelterId}`); // shelterId is passed from ejs to here
+            return res.redirect(`/home`);
         }
         const updateData = { rating: newRating, comment: newComment };
         if (hasChanged) {
@@ -134,11 +153,19 @@ exports.submitEditReview = async (req, res) => {
 // POST /browse/reviews/:id/delete
 exports.deleteReview = async (req, res) => {
     try {
+        // if reviewId is not properly formatted
+        if (!mongoose.isValidObjectId(req.params.id)) {
+            return res.redirect("/home");
+        }
         const review = await Review.findById(req.params.id);
 
-        // Block if not the reviewer
+        // if reviewId doesn't exist
+        if (!review) {
+            return res.redirect("/home");
+        }
+        // Redirect to home if not the reviewer (only as safety net as the person deleting can only be the reviewer)
         if (review.reviewer.toString() !== req.session.user._id.toString()) {
-            return res.redirect(`/browse/reviews/all?shelterId=${req.body.shelterId}`);
+            return res.redirect(`/home`);
         }
         await Review.findByIdAndDelete(req.params.id);
         res.redirect(`/applications/mine`);
