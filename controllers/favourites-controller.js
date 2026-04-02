@@ -36,6 +36,7 @@ exports.viewFavourites = async (req, res) => {
 
         const validFavourites = favourites.filter(fav => fav.petId !== null);
 
+        // Look up shelter name for each favourite's pet
         for (let fav of validFavourites) {
             const shelter = await User.getUserById(fav.petId.shelterId);
             fav.shelterName = shelter ? shelter.shelterName : "Unknown Shelter";

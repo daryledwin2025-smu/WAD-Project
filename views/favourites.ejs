@@ -45,7 +45,9 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                <%= fav.shelterName %>
+                                                <a href="/browse?shelterId=<%= fav.petId.shelterId %>">
+                                                    <%= fav.shelterName %>
+                                                </a>
                                             </td>
                                             <td>
                                                 <%= fav.petId.breed %>
