@@ -97,7 +97,7 @@
                                     You have yet to complete your application. <br> Complete it before leaving a review!
                                 <% } else { %>
                                     You have not submitted a review for this application yet. <br> Leave a review here! <br>
-                                    <a href="/browse/reviews/new?shelterId=<%= app.shelterId %>&shelterName=<%= app.shelterName %>&applicationId=<%= app._id %>">Submit Review</a>
+                                    <a href="/browse/reviews/new?applicationId=<%= app._id %>">Submit Review</a>
                                 <% } %>
 
                         </td>

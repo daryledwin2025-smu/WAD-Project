@@ -40,15 +40,20 @@ exports.showAllReviews = async (req, res) => {
 // GET /browse/reviews/new
 exports.showNewReviewForm = async (req, res) => {
     try {
-        const shelterId = req.query.shelterId;
-        const shelterName = req.query.shelterName;
-        const applicationId = req.query.applicationId; // pass applicationId 
-        
-        if (!shelterId || !shelterName || !applicationId) {
-            return res.redirect("/home"); // when user has not submitted an application yet and wants to submit review
+        const applicationId = req.query.applicationId; // pass applicationId
+        // if no applicationId or appId invalid 
+        if (!applicationId || !mongoose.isValidObjectId(applicationId)) {
+            return res.redirect("/home");
         }
 
-        res.render("new-review", { shelterId, shelterName, applicationId, user: req.session.user, check_error: [], submittedRating: null, submittedComment: '' });
+        // if application not found or user is not the intended user
+        const application = await Application.findById(applicationId);
+        if (!application || req.session.user._id.toString() !== application.applicant.toString()) {
+            return res.redirect("/home");
+        }
+        
+
+        res.render("new-review", { shelterId: application.shelterId, shelterName: application.shelterName, applicationId, user: req.session.user, check_error: [], submittedRating: null, submittedComment: '' });
     } catch (error) {
         console.log(error);
     }
@@ -58,10 +63,19 @@ exports.showNewReviewForm = async (req, res) => {
 // POST /browse/reviews/new
 exports.submitNewReview = async (req, res) => {
     try {
-        const shelterId = req.body.shelterId;
-        const shelterName = req.body.shelterName; 
         const applicationId = req.body.applicationId; // pass applicationId
-        const application = await Application.findById(applicationId); 
+
+        // if no applicationId or appId invalid 
+        if (!applicationId || !mongoose.isValidObjectId(applicationId)) {
+            return res.redirect("/home");
+        }
+
+        // Fetch application to get shelterId, shelterName, petName, check if intended user
+        const application = await Application.findById(applicationId);
+        if (!application || req.session.user._id.toString() !== application.applicant.toString()) {
+            return res.redirect("/home");
+        }
+
         const rating = req.body.rating;
         const comment = req.body.comment;
         const check_error = [];
@@ -74,11 +88,11 @@ exports.submitNewReview = async (req, res) => {
             check_error.push("Please fill in your comments.");
         }
         if (check_error.length > 0) {
-            return res.render("new-review", { shelterId, shelterName, applicationId, user: req.session.user, check_error, submittedRating: rating, submittedComment: comment });
+            return res.render("new-review", { shelterId: application.shelterId, shelterName: application.shelterName, applicationId, user: req.session.user, check_error, submittedRating: rating, submittedComment: comment });
         }
 
         await Review.create({
-            shelter: shelterId,
+            shelter: application.shelterId,
             reviewer: req.session.user._id,
             rating,
             comment, 
