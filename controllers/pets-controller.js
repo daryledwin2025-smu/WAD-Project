@@ -264,10 +264,27 @@ for (let i = 0; i < views.length; i++) {
         });
     }
 }
+// SEARCH FILTER FOR VIEWERS
+if (req.query.search && req.query.search.trim() !== "") {
+    const search = req.query.search.toLowerCase();
+
+    viewers = viewers.filter(v =>
+        v.username.toLowerCase().includes(search) ||
+        v.email.toLowerCase().includes(search)
+    );
+}
+// SORT
+if (req.query.sort === "highest") {
+    viewers.sort((a, b) => b.viewCount - a.viewCount);
+}
+
+if (req.query.sort === "lowest") {
+    viewers.sort((a, b) => a.viewCount - b.viewCount);
+}
 
     let pet = await Pet.displayPetById(petId);
 
-    res.render("edit-pet", { pet, viewers, error: null });
+    res.render("edit-pet", { pet, viewers, error: null,req });
 };
 
 exports.editPet = async (req, res) => {

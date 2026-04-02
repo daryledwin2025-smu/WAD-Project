@@ -69,7 +69,33 @@ Dog size:
 
     <br>
     <h2>Viewers 👀</h2>
+    <!-- SEARCH & SORT VIEWERS -->
+<form method="GET" action="/pets/editPet" style="margin-bottom:10px;">
+    <input type="hidden" name="petId" value="<%= pet._id %>">
 
+    <input 
+        type="text" 
+        name="search" 
+        placeholder="Search by username or email"
+        value="<%= req.query.search || '' %>"
+    >
+
+    <!-- SORT DROPDOWN -->
+    <select name="sort">
+        <option value="">Sort by</option>
+        <option value="highest" <%= req.query.sort === "highest" ? "selected" : "" %>>
+            Highest Views
+        </option>
+        <option value="lowest" <%= req.query.sort === "lowest" ? "selected" : "" %>>
+            Lowest Views
+        </option>
+    </select>
+
+    <button type="submit">Apply</button>
+    <a href="/pets/editPet?petId=<%= pet._id %>">
+    <button type="button">Reset</button>
+</a>
+</form>
 <% if (viewers.length > 0) { %>
     <table border="1" cellpadding="5">
         <thead>
