@@ -7,7 +7,8 @@ const reviewSchema = new mongoose.Schema({
     comment: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: null },
-    applicationId: { type: mongoose.Schema.Types.ObjectId, ref: 'Application' }
+    applicationId: { type: mongoose.Schema.Types.ObjectId, ref: 'Application' },
+    petName: { type: String }
 });
 
 const Review = mongoose.model("Review", reviewSchema, "reviews");

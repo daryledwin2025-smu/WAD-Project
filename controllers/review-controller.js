@@ -1,5 +1,6 @@
 const { application } = require("express");
 const Review = require("../models/Review");
+const Application = require("../models/Application");
 const UserModel = require("../models/user-model");
 const mongoose = require("mongoose");
 
@@ -59,7 +60,8 @@ exports.submitNewReview = async (req, res) => {
     try {
         const shelterId = req.body.shelterId;
         const shelterName = req.body.shelterName; 
-        const applicationId = req.body.applicationId; // pass applicationId 
+        const applicationId = req.body.applicationId; // pass applicationId
+        const application = await Application.findById(applicationId); 
         const rating = req.body.rating;
         const comment = req.body.comment;
         const check_error = [];
@@ -80,7 +82,8 @@ exports.submitNewReview = async (req, res) => {
             reviewer: req.session.user._id,
             rating,
             comment, 
-            applicationId: req.body.applicationId
+            applicationId: req.body.applicationId,
+            petName: application.petName // store petName
             // Review.create called without passing createdAt, default value is filled, Date.now gets called at the moment of creation 
         });
         res.redirect("/applications/mine");
