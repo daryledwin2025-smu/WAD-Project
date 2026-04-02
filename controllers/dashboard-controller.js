@@ -13,15 +13,15 @@ exports.showDashboard = async (req, res) => {
     try {
     let shelterName = req.session.user._id;
     const petFilter = req.query.pet;
-    let dashboardList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']} } ).populate('pet');
+    let dashboardList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']} } ).populate('pet').populate('applicant');
     let filterList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']} } ).populate('pet');
 
     
     
     if(petFilter){
-        dashboardList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']}, petName: {$in: [petFilter]} } ).populate('pet');
+        dashboardList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']}, petName: {$in: [petFilter]} } ).populate('pet').populate('applicant');
     }else{
-        dashboardList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']} } ).populate('pet');
+        dashboardList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']} } ).populate('pet').populate('applicant');
     };
     
     if(dashboardList.length == 0){
