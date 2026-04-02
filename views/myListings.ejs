@@ -45,12 +45,20 @@
 <select name="sort">
     <option value="">Sort by</option>
 
-    <option value="views" <%= req.query.sort === "views" ? "selected" : "" %>>
-        Most Popular (Views ↓)
+    <option value="views_desc" <%= req.query.sort === "views_desc" ? "selected" : "" %>>
+        Views (High -> Low)
     </option>
 
     <option value="views_asc" <%= req.query.sort === "views_asc" ? "selected" : "" %>>
-        Least Popular (Views ↑)
+        Views (Low -> High)
+    </option>
+
+    <option value="apps_desc" <%= req.query.sort === "apps_desc" ? "selected" : "" %>>
+        Applications (High -> Low)
+    </option>
+
+    <option value="apps_asc" <%= req.query.sort === "apps_asc" ? "selected" : "" %>>
+        Applications (Low -> High)
     </option>
 </select>
         <!-- Name -->
@@ -112,6 +120,11 @@
             House Trained
         </label>
 
+        <label style="margin-left:10px;">
+  <input type="checkbox" name="showAdopted" <%= req.query.showAdopted ? "checked" : "" %>>
+  Show Adopted Pets
+</label>
+
         <!-- Submit -->
         <button type="submit">Filter</button>
 
@@ -140,7 +153,17 @@
                     <% allPets.forEach(pet=> { %>
                         <tr>
                             <td>
-                                <%= pet.name %> <br>👀<%=pet.viewCount%> <br> <% if (pet.viewCount > 5) { %>🔥 Popular<% } %>
+                                <%= pet.name %>
+                                    <% if (pet.isAdopted) { %>
+                                        <span style="color:gray;">(Adopted)</span>
+                                        <% } %>
+                                            <br>
+                                            <small>
+                                                👀 <%= pet.viewCount %>
+                                                    <%= pet.viewCount===1 ? "viewer" : "viewers" %>
+                                                        · 📝 <%= pet.applicationCount %>
+                                                            <%= pet.applicationCount===1 ? "application" : "applications" %>
+                                            </small>
                             </td>
                             <td>
                                 <%= pet.breed %>

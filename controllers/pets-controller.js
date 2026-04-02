@@ -35,19 +35,42 @@ exports.displayMyListings = async (req, res) => {
         query.age = { $gte: 8 };
     }
     let allPets = await Pet.filterPets(query);
+    // CHECK IF PET IS ADOPTED
+for (let i = 0; i < allPets.length; i++) {
+
+    let approvedApp = await Application.findOne({
+        pet: allPets[i]._id,
+        status: "Approved"
+    });
+
+    allPets[i].isAdopted = approvedApp ? true : false;
+}
+
+// 🔥 HIDE adopted pets by default
+if (!req.query.showAdopted) {
+    allPets = allPets.filter(pet => !pet.isAdopted);
+}
     // VIEWS
     let allViews = await View.retrieveAll();
     for (let i = 0; i < allPets.length; i++) {
-    let count = 0;
 
-    for (let j = 0; j < allViews.length; j++) {
-        if (allViews[j].petId.toString() === allPets[i]._id.toString()) {
-            count++;
+        // 👀 VIEW COUNT
+        let count = 0;
+        for (let j = 0; j < allViews.length; j++) {
+            if (allViews[j].petId.toString() === allPets[i]._id.toString()) {
+                count++;
+            }
         }
-    }
+        allPets[i].viewCount = count;
 
-    allPets[i].viewCount = count;
-}
+        // 📝 APPLICATION COUNT (ONLY PENDING)
+        let applications = await Application.find({
+            pet: allPets[i]._id,
+            status: "Pending"
+        });
+
+        allPets[i].applicationCount = applications.length;
+    }
 
     // name filter
     if (req.query.name && req.query.name.trim() !== "") {
@@ -63,16 +86,22 @@ console.log("ALL PETS:", allPets);
         pet.breed.toLowerCase().includes(req.query.breed.trim().toLowerCase())
     );
 }
-// popular pets (e.g. top views)
-let popularPets = [...allPets]
-    .sort((a, b) => b.views - a.views)
-    .slice(0, 3);
+
 // views sort
-if (req.query.sort === "views") {
+if (req.query.sort === "views_desc") {
     allPets.sort((a, b) => b.viewCount - a.viewCount);
 }
+
 if (req.query.sort === "views_asc") {
     allPets.sort((a, b) => a.viewCount - b.viewCount);
+}
+
+if (req.query.sort === "apps_desc") {
+    allPets.sort((a, b) => b.applicationCount - a.applicationCount);
+}
+
+if (req.query.sort === "apps_asc") {
+    allPets.sort((a, b) => a.applicationCount - b.applicationCount);
 }
     res.render("myListings", { allPets, req, breeds });
 };
@@ -184,12 +213,28 @@ let popularPets = [...allPets]
                 }
             }
             allPets[i].viewCount = count; // attach to each pet
+    // 🔥 APPLICATION COUNT
+    let applications = await Application.find({
+        pet: allPets[i]._id,
+        status: { $in: ["Pending"] }
+    });
+
+    allPets[i].applicationCount = applications.length;
 }
-if (req.query.sort === "views") {
+if (req.query.sort === "views_desc") {
     allPets.sort((a, b) => b.viewCount - a.viewCount);
 }
+
 if (req.query.sort === "views_asc") {
     allPets.sort((a, b) => a.viewCount - b.viewCount);
+}
+
+if (req.query.sort === "apps_desc") {
+    allPets.sort((a, b) => b.applicationCount - a.applicationCount);
+}
+
+if (req.query.sort === "apps_asc") {
+    allPets.sort((a, b) => a.applicationCount - b.applicationCount);
 }
 
         // Darryl's reviews logic
