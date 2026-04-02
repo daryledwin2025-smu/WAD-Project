@@ -43,21 +43,9 @@ exports.submitLogin = async (req, res) => {
         });
     }
   }
-//     try {
-//         const user = await User.getUserByUsername(username)
-//         req.session.user = user;
-//         res.render("user-login", { user })
-//     } catch (error) {
-//         console.log("Error")
-//     }
-// }
 
 exports.editProfile = (req, res) => {
   try {
-    if (!req.session || !req.session.user) {
-      return res.redirect('/');  // not logged in
-    }
-
     res.render('user-edit', { user: req.session.user });
   } catch (error) {
     console.log(error);
@@ -106,8 +94,6 @@ exports.submitRegister = async (req, res) => {
     });
   }
 
-  
-
   pass = await bcrypt.hash(pass, 10);
   let newUser = { username, pass, email, phone, gender, account, shelterName, shelterEmail, shelterNumber, shelterAddress };
   // if (username && pass && account) {
@@ -130,10 +116,7 @@ exports.submitRegister = async (req, res) => {
 
 exports.deleteAccount = async (req, res) => {
   try {
-    if (!req.session || !req.session.user) {
-      return res.redirect('/');
-    }
-
+    
     const user = req.session.user;
     // daryl edwin delete all pets of the user before deleting the account (not tested yet)
     await Pet.deletePetsByShelterId(user._id);
@@ -153,9 +136,6 @@ exports.deleteAccount = async (req, res) => {
 
 exports.showHome = async (req, res) => {
   try {
-    if (!req.session.user) {
-      return res.redirect("/");
-    }
     const user = req.session.user;
     const shelters = await User.getAllShelters();
 
@@ -166,11 +146,8 @@ exports.showHome = async (req, res) => {
 };
 
 exports.showHomeShelter = (req, res) => {
-  if (!req.session.user) {
-    return res.redirect("/");
-  } else {
       return res.render("home-shelter", { user: req.session.user }); // edited 
-  }
+  
 }
 
 
@@ -193,16 +170,12 @@ exports.submitLogout = (req, res) => {
 
 exports.submitEditProfile = async (req, res) => {
   try {
-    if (!req.session || !req.session.user) {
-      return res.redirect('/user-login');
-    }
-
     const userId = req.session.user._id;
     const newUsername = req.body.username;
 
     const existingUser = await User.getUserByUsername(newUsername);
 
-    if (existingUser) {
+    if (existingUser && existingUser._id.toString() !== userId.toString()) {
       return res.render('user-edit', {
         user: req.session.user,
         errorMessage: 'Username already exists',
@@ -234,10 +207,6 @@ exports.submitEditProfile = async (req, res) => {
 
 exports.changePassword = async (req, res) => {
   try {
-    if (!req.session || !req.session.user) {
-      return res.redirect("/");
-    }
-
     const userId = req.session.user._id;
     const { currentPass, newPass, confirmNewPass } = req.body;
 
