@@ -181,11 +181,12 @@ if (req.query.sort === "views") {
             //   _id: new ObjectId('69c4db65615b4d548e5c643c'),
             //    username: 'darryl'
             // }
-            .sort({ createdAt: -1 }) // sort in descending order of date
-            .limit(3); // display first 3 items in list only
+            .populate("applicationId", "petName")
+            .sort({ createdAt: -1 }); // sort in descending order of date
+            
 
-        const validReviews = reviews.filter(review => review.reviewer !== null); // keep element if condition is true
-        // filter out any reviews whose userID may be deleted 
+        const validReviews = reviews.filter(review => review.reviewer !== null).slice(0, 3); // keep element if condition is true
+        // filter out any reviews whose userID may be deleted, and show the first 3 only
 
         let totalRating = 0
         validReviews.forEach(review => {
@@ -229,7 +230,15 @@ exports.displayPetDetail = async (req, res) => {
 }
 
     let viewCount = await View.countByPetId(petId);
-    res.render("pet-detail", { pet, user: req.session.user,userViewCount });
+
+    // Check if this pet is already favourited by the user
+    let isFavourited = false;
+    if (req.session.user && req.session.user.account !== "Shelter") {
+        const existing = await Favourite.checkFavourite(req.session.user._id, petId);
+        isFavourited = !!existing;
+    }
+
+    res.render("pet-detail", { pet, user: req.session.user, userViewCount, isFavourited });
 }
 
 exports.displayEditPet = async (req, res) => {

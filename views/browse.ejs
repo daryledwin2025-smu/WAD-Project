@@ -140,7 +140,7 @@
 <%= pet.name %><br>
 <small>
   👀 <%= pet.viewCount %> <%= pet.viewCount === 1 ? "viewer" : "viewers" %>
-  <% if (pet.viewCount > 3) { %> · 🔥 Popular<% } %>
+  <% if (pet.viewCount > 5) { %> · 🔥 Popular<% } %>
 </small>                          
 </td>
                             <td>
@@ -189,21 +189,15 @@
                                         <%= review.reviewer.username %>
                                     </strong> — ⭐ <%= review.rating %>/5</p>
                                 <p>
+                                    <strong>Pet applied for: <%= review.applicationId ? review.applicationId.petName : '' %></strong>
+                                </p>
+                                <p>
                                     <%= review.comment %>
                                 </p>
                                <p><small>Posted on: <%= new Date(review.createdAt).toLocaleString('en-SG', { dateStyle: 'medium', timeStyle: 'short' }) %></small></p>
                                 <% if (review.updatedAt) { %>
                                     <p><small>Updated on: <%= new Date(review.updatedAt).toLocaleString('en-SG', { dateStyle: 'medium', timeStyle: 'short' }) %></small></p>
                                 <% } %>
-
-                                <% if (user && review.reviewer._id.toString()===user._id.toString()) { %>
-                                    <a href="/browse/reviews/<%= review._id %>/edit">Edit</a>
-                                    <form action="/browse/reviews/<%= review._id %>/delete" method="POST"
-                                        style="display:inline;">
-                                        <input type="hidden" name="shelterId" value="<%= shelterId %>">
-                                        <button type="submit">Delete</button>
-                                    </form>
-                                    <% } %>
                                         <% } %>
                                             <hr>
                                             <% }) %>

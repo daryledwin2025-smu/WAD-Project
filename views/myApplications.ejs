@@ -32,9 +32,11 @@
                 <thead>
                     <tr style="background-color: #f2f2f2;">
                         <th>Pet Name</th>
+                        <th>Shelter Name</th>
                         <th>Status</th>
                         <th>Date Started</th>
                         <th>Actions</th>
+                        <th>Review Shelter</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,9 +47,12 @@
                                      <%= app.pet.name %>
                                 <% } else { %>
                                      <span style="color: #d9534f; font-style: italic;">
-                                        <strong><%= app.petName %></strong> is no longer available. Contact the shelter for more info.
+                                        <strong><%= app.petName %></strong> is no longer available. Contact <%= app.shelterName %> for more info.
                                      </span>
                                 <% } %>
+                            </td>
+                            <td>
+                                <%= app.shelterName %>
                             </td>
                             <td>
                                 <span class="status-badge status-<%= app.status.toLowerCase() %>">
@@ -66,6 +71,34 @@
                                     </button>
                                 </form>
                             </td>
+                            <td>
+                                <% if (reviewMap[app._id.toString()] && !app.pet) { %>
+                                Pet deleted. You may still delete your review.
+                                <form action="/browse/reviews/<%= reviewMap[app._id.toString()]._id %>/delete" method="POST" style="display:inline;">
+                                    <input type="hidden" name="shelterId" value="<%= app.shelterId %>">
+                                    <button type="submit">Delete</button>
+                                </form> 
+                                <% } else if (reviewMap[app._id.toString()] && app.pet) { %> 
+                                    <!-- if a review exists for this application (looked up by applicationId) and pet listing still available  -->
+                                    You have already submitted a review for this application. <br> Make changes or delete it here! 
+                                    <br><br>
+                                    <a href="/browse/reviews/<%= reviewMap[app._id.toString()]._id %>/edit">Edit</a>
+                                    <form action="/browse/reviews/<%= reviewMap[app._id.toString()]._id %>/delete" method="POST" style="display:inline;">
+                                        <input type="hidden" name="shelterId" value="<%= app.shelterId %>">
+                                        <button type="submit">Delete</button>
+                                    </form>
+                                <% } else if (!app.pet) { %>
+                                    <span style="color: #d9534f; font-style: italic;">
+                                        <strong>You cannot submit a review for a deleted pet listing.</strong>
+                                     </span>
+                                <% } else if (app.status === 'Draft') { %>
+                                    You have yet to complete your application. <br> Complete it before leaving a review!
+                                <% } else { %>
+                                    You have not submitted a review for this application yet. <br> Leave a review here! <br>
+                                    <a href="/browse/reviews/new?shelterId=<%= app.shelterId %>&shelterName=<%= app.shelterName %>&applicationId=<%= app._id %>">Submit Review</a>
+                                <% } %>
+
+                        </td>
                         </tr>
                     <% }); %>
                 </tbody>
