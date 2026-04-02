@@ -67,7 +67,8 @@ if (!req.query.showAdopted) {
         let applications = await Application.find({
             pet: allPets[i]._id,
             status: "Pending"
-        });
+        }).populate("applicant");
+        applications = applications.filter(app=>app.applicant);
 
         allPets[i].applicationCount = applications.length;
     }
@@ -217,7 +218,8 @@ let popularPets = [...allPets]
     let applications = await Application.find({
         pet: allPets[i]._id,
         status: { $in: ["Pending"] }
-    });
+    }).populate("applicant");
+    applications = applications.filter(app => app.applicant);
 
     allPets[i].applicationCount = applications.length;
 }
