@@ -44,15 +44,6 @@ exports.submitLogin = async (req, res) => {
     }
   }
 
-exports.editProfile = (req, res) => {
-  try {
-    res.render('user-edit', { user: req.session.user });
-  } catch (error) {
-    console.log(error);
-    res.render('error', { error });
-  }
-};
-
 exports.displayRegister = (req, res) => {
   res.render("user-register", { user: undefined });
 }
@@ -96,9 +87,7 @@ exports.submitRegister = async (req, res) => {
 
   pass = await bcrypt.hash(pass, 10);
   let newUser = { username, pass, email, phone, gender, account, shelterName, shelterEmail, shelterNumber, shelterAddress };
-  // if (username && pass && account) {
-  //     user = { username, pass, account };
-  
+
     await User.createUser(newUser);
     console.log("User created success");
     return res.redirect("/user-login");
@@ -109,16 +98,38 @@ exports.submitRegister = async (req, res) => {
         errorMessage: "Registration Unsuccessful"
       });
   }
-  // }
-  // res.render("user-login", { user });
 }
+
+exports.showHome = async (req, res) => {
+  try {
+    const user = req.session.user;
+    const shelters = await User.getAllShelters();
+
+    return res.render("home", { user, shelters });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.showHomeShelter = (req, res) => {
+      return res.render("home-shelter", { user: req.session.user }); // edited 
+}
+
+exports.editProfile = (req, res) => {
+  try {
+    res.render('user-edit', { user: req.session.user });
+  } catch (error) {
+    console.log(error);
+    res.render('error', { error });
+  }
+};
 
 
 exports.deleteAccount = async (req, res) => {
   try {
     
     const user = req.session.user;
-    // daryl edwin delete all pets of the user before deleting the account (not tested yet)
+    // daryl edwin delete all pets of the user before deleting the account 
     await Pet.deletePetsByShelterId(user._id);
     await User.deleteUserByUsername(user.username);
 
@@ -134,39 +145,12 @@ exports.deleteAccount = async (req, res) => {
   }
 };
 
-exports.showHome = async (req, res) => {
-  try {
-    const user = req.session.user;
-    const shelters = await User.getAllShelters();
-
-    return res.render("home", { user, shelters });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-exports.showHomeShelter = (req, res) => {
-      return res.render("home-shelter", { user: req.session.user }); // edited 
-  
-}
-
-
-exports.showAllShelters = async (req, res) => {
-  try {
-    const shelters = await User.getAllShelters();
-    res.render("all-shelters", { shelters });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 exports.submitLogout = (req, res) => {
   // destroy function has async behavior!!!
   req.session.destroy(() => {
     return res.redirect('/');
   });
 }
-
 
 exports.submitEditProfile = async (req, res) => {
   try {

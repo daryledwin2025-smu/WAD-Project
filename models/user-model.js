@@ -52,10 +52,6 @@ exports.getUserByUsername = (username) => {
     return User.findOne({username});
 }
 
-// exports.updateUserByUsername = async (username, password) => {
-//   return User.updateOne({ username }, {password});
-// };
-
 exports.deleteUserByUsername = async (username) => {
   return User.findOneAndDelete({ username });
 };
