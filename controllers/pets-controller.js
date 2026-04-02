@@ -142,7 +142,19 @@ exports.displayAllPets = async (req, res) => {
             query.age = { $gte: 8 };
         }
         let allPets = await Pet.filterPets(query);        // console.log(allPets);
-        
+        // CHECK IF PET IS ADOPTED
+        for (let i = 0; i < allPets.length; i++) {
+
+            let approvedApp = await Application.findOne({
+                pet: allPets[i]._id,
+                status: "Approved"
+            });
+
+            allPets[i].isAdopted = approvedApp ? true : false;
+        }
+
+        // REMOVE adopted pets
+        allPets = allPets.filter(pet => !pet.isAdopted);
         //VIEWS
         const View = require("../models/view-model"); // adjust name if needed
         let allViews = await View.retrieveAll();
