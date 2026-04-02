@@ -71,6 +71,9 @@ let popularPets = [...allPets]
 if (req.query.sort === "views") {
     allPets.sort((a, b) => b.viewCount - a.viewCount);
 }
+if (req.query.sort === "views_asc") {
+    allPets.sort((a, b) => a.viewCount - b.viewCount);
+}
     res.render("myListings", { allPets, req, breeds });
 };
 
@@ -173,6 +176,10 @@ let popularPets = [...allPets]
 if (req.query.sort === "views") {
     allPets.sort((a, b) => b.viewCount - a.viewCount);
 }
+if (req.query.sort === "views_asc") {
+    allPets.sort((a, b) => a.viewCount - b.viewCount);
+}
+
         // Darryl's reviews logic
         const Review = require("../models/Review");
         const reviews = await Review.find({ shelter: shelterId }) // read from reviews collection, .find comes in the model automatically (find reviews for the specific shelter and create a list)
