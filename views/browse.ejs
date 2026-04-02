@@ -198,10 +198,10 @@
                 <!-- DARRYL's SHELTER REVIEWS -->
 
                 <hr>
-                <h3>Shelter Ratings <%= avgRating ? '⭐ ' + avgRating + '/5.0' : '' %> (<%= validReviews.length %>)
+                <h3>Shelter Ratings <%= avgRating ? '⭐ ' + avgRating + '/5.0' : '' %> (<%= reviews.length %>)
                 </h3>
 
-                <% if (validReviews.length===0) { %>
+                <% if (reviews.length===0) { %>
                     <p>No reviews yet.</p>
                     <% } else { %>
                         <% reviews.forEach(review=> { %>
