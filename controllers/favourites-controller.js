@@ -1,5 +1,6 @@
 const Favourite = require("../models/favourite-model");
 const Pet = require("../models/pet-model");
+const User = require("../models/user-model");
 
 exports.addFavourite = async (req, res) => {
     try {
@@ -34,6 +35,11 @@ exports.viewFavourites = async (req, res) => {
         const favourites = await Favourite.getFavouritesByUserId(userId);
 
         const validFavourites = favourites.filter(fav => fav.petId !== null);
+
+        for (let fav of validFavourites) {
+            const shelter = await User.getUserById(fav.petId.shelterId);
+            fav.shelterName = shelter ? shelter.shelterName : "Unknown Shelter";
+        }
 
         res.render("favourites", { favourites: validFavourites, user: req.session.user, msg: req.query.msg || "" });
     } catch (error) {
