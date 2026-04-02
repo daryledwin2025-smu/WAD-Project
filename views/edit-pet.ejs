@@ -69,7 +69,49 @@ Dog size:
 
     <br>
     <h2>Viewers 👀</h2>
+    <!-- SEARCH & SORT VIEWERS -->
+<form method="GET" action="/pets/editPet" style="margin-bottom:10px;">
+    <input type="hidden" name="petId" value="<%= pet._id %>">
 
+    <input 
+        type="text" 
+        name="search" 
+        placeholder="Search by username or email"
+        value="<%= req.query.search || '' %>"
+    >
+
+    <!-- SORT DROPDOWN -->
+    <select name="sort">
+        <option value="">Sort by</option>
+        <option value="highest" <%= req.query.sort === "highest" ? "selected" : "" %>>
+            Highest Views
+        </option>
+        <option value="lowest" <%= req.query.sort === "lowest" ? "selected" : "" %>>
+            Lowest Views
+        </option>
+    </select>
+
+    <select name="status">
+    <option value="">All Status</option>
+
+    <option value="applied" <%= req.query.status === "applied" ? "selected" : "" %>>
+        Applied
+    </option>
+
+    <option value="interested" <%= req.query.status === "interested" ? "selected" : "" %>>
+        Highly Interested
+    </option>
+
+    <option value="browsing" <%= req.query.status === "browsing" ? "selected" : "" %>>
+        Browsing
+    </option>
+</select>
+
+    <button type="submit">Apply</button>
+    <a href="/pets/editPet?petId=<%= pet._id %>">
+    <button type="button">Reset</button>
+</a>
+</form>
 <% if (viewers.length > 0) { %>
     <table border="1" cellpadding="5">
         <thead>
@@ -78,6 +120,7 @@ Dog size:
                 <th>Email</th>
                 <th>Viewed At</th>
                 <th>View Count</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
@@ -87,6 +130,15 @@ Dog size:
                     <td><%= v.email %></td>
                     <td><%= v.viewedAt.toDateString() %></td>
                     <td><%= v.viewCount %></td>
+                    <td>
+  <% if (v.hasApplied) { %>
+    ✅ Applied
+  <% } else if (v.viewCount >= 5) { %>
+    🔥 Highly Interested
+  <% } else { %>
+    👀 Browsing
+  <% } %>
+</td>
 
                 </tr>
             <% }) %>

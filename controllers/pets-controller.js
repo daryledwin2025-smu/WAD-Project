@@ -2,7 +2,7 @@ const Pet = require("../models/pet-model");
 const UserModel = require("../models/user-model");
 const Favourite = require("../models/favourite-model");
 const View = require("../models/view-model");
-
+const Application = require("../models/Application");
 // DISPLAYS
 exports.displayMyListings = async (req, res) => {
     let userId = req.session.user._id;
@@ -35,19 +35,42 @@ exports.displayMyListings = async (req, res) => {
         query.age = { $gte: 8 };
     }
     let allPets = await Pet.filterPets(query);
+    // CHECK IF PET IS ADOPTED
+for (let i = 0; i < allPets.length; i++) {
+
+    let approvedApp = await Application.findOne({
+        pet: allPets[i]._id,
+        status: "Approved"
+    });
+
+    allPets[i].isAdopted = approvedApp ? true : false;
+}
+
+// 🔥 HIDE adopted pets by default
+if (!req.query.showAdopted) {
+    allPets = allPets.filter(pet => !pet.isAdopted);
+}
     // VIEWS
     let allViews = await View.retrieveAll();
     for (let i = 0; i < allPets.length; i++) {
-    let count = 0;
 
-    for (let j = 0; j < allViews.length; j++) {
-        if (allViews[j].petId.toString() === allPets[i]._id.toString()) {
-            count++;
+        // 👀 VIEW COUNT
+        let count = 0;
+        for (let j = 0; j < allViews.length; j++) {
+            if (allViews[j].petId.toString() === allPets[i]._id.toString()) {
+                count++;
+            }
         }
-    }
+        allPets[i].viewCount = count;
 
-    allPets[i].viewCount = count;
-}
+        // 📝 APPLICATION COUNT (ONLY PENDING)
+        let applications = await Application.find({
+            pet: allPets[i]._id,
+            status: "Pending"
+        });
+
+        allPets[i].applicationCount = applications.length;
+    }
 
     // name filter
     if (req.query.name && req.query.name.trim() !== "") {
@@ -63,13 +86,22 @@ console.log("ALL PETS:", allPets);
         pet.breed.toLowerCase().includes(req.query.breed.trim().toLowerCase())
     );
 }
-// popular pets (e.g. top views)
-let popularPets = [...allPets]
-    .sort((a, b) => b.views - a.views)
-    .slice(0, 3);
+
 // views sort
-if (req.query.sort === "views") {
+if (req.query.sort === "views_desc") {
     allPets.sort((a, b) => b.viewCount - a.viewCount);
+}
+
+if (req.query.sort === "views_asc") {
+    allPets.sort((a, b) => a.viewCount - b.viewCount);
+}
+
+if (req.query.sort === "apps_desc") {
+    allPets.sort((a, b) => b.applicationCount - a.applicationCount);
+}
+
+if (req.query.sort === "apps_asc") {
+    allPets.sort((a, b) => a.applicationCount - b.applicationCount);
 }
     res.render("myListings", { allPets, req, breeds });
 };
@@ -139,7 +171,19 @@ exports.displayAllPets = async (req, res) => {
             query.age = { $gte: 8 };
         }
         let allPets = await Pet.filterPets(query);        // console.log(allPets);
-        
+        // CHECK IF PET IS ADOPTED
+        for (let i = 0; i < allPets.length; i++) {
+
+            let approvedApp = await Application.findOne({
+                pet: allPets[i]._id,
+                status: "Approved"
+            });
+
+            allPets[i].isAdopted = approvedApp ? true : false;
+        }
+
+        // REMOVE adopted pets
+        allPets = allPets.filter(pet => !pet.isAdopted);
         //VIEWS
         const View = require("../models/view-model"); // adjust name if needed
         let allViews = await View.retrieveAll();
@@ -169,10 +213,30 @@ let popularPets = [...allPets]
                 }
             }
             allPets[i].viewCount = count; // attach to each pet
+    // 🔥 APPLICATION COUNT
+    let applications = await Application.find({
+        pet: allPets[i]._id,
+        status: { $in: ["Pending"] }
+    });
+
+    allPets[i].applicationCount = applications.length;
 }
-if (req.query.sort === "views") {
+if (req.query.sort === "views_desc") {
     allPets.sort((a, b) => b.viewCount - a.viewCount);
 }
+
+if (req.query.sort === "views_asc") {
+    allPets.sort((a, b) => a.viewCount - b.viewCount);
+}
+
+if (req.query.sort === "apps_desc") {
+    allPets.sort((a, b) => b.applicationCount - a.applicationCount);
+}
+
+if (req.query.sort === "apps_asc") {
+    allPets.sort((a, b) => a.applicationCount - b.applicationCount);
+}
+
         // Darryl's reviews logic
         const Review = require("../models/Review");
         const reviews = await Review.find({ shelter: shelterId }) // read from reviews collection, .find comes in the model automatically (find reviews for the specific shelter and create a list)
@@ -254,20 +318,55 @@ for (let i = 0; i < views.length; i++) {
     if (!views[i].userId) continue;
 
     let user = await UserModel.getUserById(views[i].userId);
-
+// 🔥 CHECK IF APPLIED
+    let application = await Application.findOne({
+        pet: petId,
+        applicant: views[i].userId
+    });
     if (user) {
         viewers.push({
             username: user.username,
             email: user.email,
             viewedAt: views[i].viewedAt,
-            viewCount: views[i].viewCount
+            viewCount: views[i].viewCount,
+            hasApplied: application?true:false  
         });
     }
+}
+// SEARCH FILTER FOR VIEWERS
+if (req.query.search && req.query.search.trim() !== "") {
+    const search = req.query.search.toLowerCase();
+
+    viewers = viewers.filter(v =>
+        v.username.toLowerCase().includes(search) ||
+        v.email.toLowerCase().includes(search)
+    );
+}
+// SORT
+if (req.query.sort === "highest") {
+    viewers.sort((a, b) => b.viewCount - a.viewCount);
+}
+
+if (req.query.sort === "lowest") {
+    viewers.sort((a, b) => a.viewCount - b.viewCount);
+}
+
+// STATUS FILTER
+if (req.query.status === "applied") {
+    viewers = viewers.filter(v => v.hasApplied);
+}
+
+if (req.query.status === "interested") {
+    viewers = viewers.filter(v => !v.hasApplied && v.viewCount >= 5);
+}
+
+if (req.query.status === "browsing") {
+    viewers = viewers.filter(v => !v.hasApplied && v.viewCount < 5);
 }
 
     let pet = await Pet.displayPetById(petId);
 
-    res.render("edit-pet", { pet, viewers, error: null });
+    res.render("edit-pet", { pet, viewers, error: null,req });
 };
 
 exports.editPet = async (req, res) => {
