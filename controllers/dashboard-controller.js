@@ -12,12 +12,22 @@ exports.showApplications = async (req, res) => {
 exports.showDashboard = async (req, res) => {
     try {
     let shelterName = req.session.user._id;
-    let dashboardList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']} } ).populate('pet');;    
+    const petFilter = req.query.pet;
+    let dashboardList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']} } ).populate('pet').populate('applicant');
+    let filterList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']} } ).populate('pet');
+
+    
+    
+    if(petFilter){
+        dashboardList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']}, petName: {$in: [petFilter]} } ).populate('pet').populate('applicant');
+    }else{
+        dashboardList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']} } ).populate('pet').populate('applicant');
+    };
+    
     if(dashboardList.length == 0){
         dashboardList = [];
-        res.render("dashboard", { dashboardList });
-    }else{
-        res.render("dashboard", { dashboardList }) };
+    };
+    res.render("dashboard", { dashboardList, filterList });
     } catch (error) {
     console.error(error);
     res.send("Error reading database"); 
@@ -48,10 +58,10 @@ exports.updateApplicationDetails = async (req, res) => {
             shelterId: shelterId,
             applicantName: appName,
             petName: petName
-        })
+        });
         if(descision == "Approved"){
-            await Application.updateMany({pet: {$in: [petID]}, _id: {$nin: [applicationID]}}, {$set: {status: "Rejected"}})
-        }
+            await Application.updateMany({pet: {$in: [petID]}, _id: {$nin: [applicationID]}}, {$set: {status: "Rejected"}});
+        };
         await Application.updateOne({_id: applicationID}, {$set: { status: descision }});
         
         console.log("Entry Updated!");
@@ -60,7 +70,7 @@ exports.updateApplicationDetails = async (req, res) => {
     }catch(error){
         console.log(error);
     
-    }}
+    }};
 
 exports.showDescisionLogs = async (req, res) => {
     try{
@@ -71,7 +81,7 @@ exports.showDescisionLogs = async (req, res) => {
         };
         res.render("descisionlogs", {descisionlogs});
     }catch(error){
-
+        console.log(error);
     }};
 
 exports.withdrawDescisionLog = async (req, res) => {
@@ -83,9 +93,9 @@ exports.withdrawDescisionLog = async (req, res) => {
         
         await Dashboard.deleteOne({_id: {$in: [applicationId]} });
         await Application.updateMany({pet: {$in: [petId]}, shelterId: {$in: [shelterId]}}, {$set: {status: "Pending"}});
-        res.redirect("/dashboard")
+        res.redirect("/dashboard");
         
     }catch(error){
-        console.log(error)
+        console.log(error);
     }
 }

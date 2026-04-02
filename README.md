@@ -8,7 +8,11 @@ It allows shelters to manage pet listings and adopters to browse and interact wi
 
 ## ⚙️ Setup Instructions
 
-### 1. Install dependencies
+### 1. Create a config.env file in the project root with these values:
+DB=mongodb+srv://izzdanishm2025:wad123@izzwad1.uzdxh6v.mongodb.net/project?retryWrites=true&w=majority
+SECRET=is113-secret-key
+
+### 2. Install dependencies
 Run the following command in your terminal:
 
 ```bash

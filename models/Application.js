@@ -19,17 +19,20 @@ const applicationSchema = new mongoose.Schema({
         type: String, 
         required: true
     },
+    shelterName: { 
+        type: String // not required to prevent old applications from crashing
+    }, 
     petName: {
         type: String,
         required: true
     },
     livingSituation: {
         type: String,
-        required: false 
+        required: true
     },
     experienceDetails: {
         type: String,
-        required: false 
+        required: true
     },
     status: {
         type: String,

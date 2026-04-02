@@ -35,8 +35,12 @@ Dog size:
   <option value="Large" <%= pet.size === "Large" ? "selected" : "" %>>Large</option>
 </select>
 <br><br>
-        <label>Description:</label><br>
-        <textarea name="description" rows="4" cols="40"><%= pet.description %></textarea>
+        <label>Description:</label><br><small style="color:gray;">Maximum 200 characters</small><br>
+        
+        <textarea name="description" rows="4" cols="40" required><%= pet.description %></textarea><% if (error) { %>
+            
+    <p style="color:red;"><%= error %></p>
+<% } %>
 <br>
 <h2>Other Information 📊</h2>
 
@@ -65,13 +69,58 @@ Dog size:
 
     <br>
     <h2>Viewers 👀</h2>
+    <!-- SEARCH & SORT VIEWERS -->
+<form method="GET" action="/pets/editPet" style="margin-bottom:10px;">
+    <input type="hidden" name="petId" value="<%= pet._id %>">
 
+    <input 
+        type="text" 
+        name="search" 
+        placeholder="Search by username or email"
+        value="<%= req.query.search || '' %>"
+    >
+
+    <!-- SORT DROPDOWN -->
+    <select name="sort">
+        <option value="">Sort by</option>
+        <option value="highest" <%= req.query.sort === "highest" ? "selected" : "" %>>
+            Highest Views
+        </option>
+        <option value="lowest" <%= req.query.sort === "lowest" ? "selected" : "" %>>
+            Lowest Views
+        </option>
+    </select>
+
+    <select name="status">
+    <option value="">All Status</option>
+
+    <option value="applied" <%= req.query.status === "applied" ? "selected" : "" %>>
+        Applied
+    </option>
+
+    <option value="interested" <%= req.query.status === "interested" ? "selected" : "" %>>
+        Highly Interested
+    </option>
+
+    <option value="browsing" <%= req.query.status === "browsing" ? "selected" : "" %>>
+        Browsing
+    </option>
+</select>
+
+    <button type="submit">Apply</button>
+    <a href="/pets/editPet?petId=<%= pet._id %>">
+    <button type="button">Reset</button>
+</a>
+</form>
 <% if (viewers.length > 0) { %>
     <table border="1" cellpadding="5">
         <thead>
             <tr>
                 <th>Username</th>
                 <th>Email</th>
+                <th>Viewed At</th>
+                <th>View Count</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
@@ -79,6 +128,18 @@ Dog size:
                 <tr>
                     <td><%= v.username %></td>
                     <td><%= v.email %></td>
+                    <td><%= v.viewedAt.toDateString() %></td>
+                    <td><%= v.viewCount %></td>
+                    <td>
+  <% if (v.hasApplied) { %>
+    ✅ Applied
+  <% } else if (v.viewCount >= 5) { %>
+    🔥 Highly Interested
+  <% } else { %>
+    👀 Browsing
+  <% } %>
+</td>
+
                 </tr>
             <% }) %>
         </tbody>

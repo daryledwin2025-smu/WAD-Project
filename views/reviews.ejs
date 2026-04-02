@@ -3,43 +3,48 @@
 <head><title>All Reviews</title></head>
 <body>
     <a href="/browse?shelterId=<%= shelterId %>">Back to shelter</a>
-    <h2>All Reviews for <%= shelter.shelterName %></h2>
+    <h2>All Reviews for <%= shelter.shelterName %> (<%= reviews.length %>) </h2>
+    
+    <form action="/browse/reviews/all" method="GET">
+    <input type="hidden" name="shelterId" value="<%= shelterId %>">
+    
+    <label>Filter by rating:</label>
+    <select name="filterRating">
+        <option value="">All</option>
+        <option value="5" <%= filterRating === '5' ? 'selected' : '' %>>⭐⭐⭐⭐⭐ 5</option>
+        <option value="4" <%= filterRating === '4' ? 'selected' : '' %>>⭐⭐⭐⭐ 4</option>
+        <option value="3" <%= filterRating === '3' ? 'selected' : '' %>>⭐⭐⭐ 3</option>
+        <option value="2" <%= filterRating === '2' ? 'selected' : '' %>>⭐⭐ 2</option>
+        <option value="1" <%= filterRating === '1' ? 'selected' : '' %>>⭐ 1</option>
+    </select>
+
+    <label>Sort:</label>
+    <select name="sortOrder">
+        <option value="desc" <%= sortOrder === 'desc' ? 'selected' : '' %>>Newest first</option>
+        <option value="asc" <%= sortOrder === 'asc' ? 'selected' : '' %>>Oldest first</option>
+        <option value="ratingDesc" <%= sortOrder === 'ratingDesc' ? 'selected' : '' %>>Rating: High to Low</option>
+        <option value="ratingAsc" <%= sortOrder === 'ratingAsc' ? 'selected' : '' %>>Rating: Low to High</option>
+    </select>
+
+    <button type="submit">Apply</button>
+    <button type="button" onclick="window.location.href='/browse/reviews/all?shelterId=<%= shelterId %>'">Reset</button>
+    </form>
 
     <% if (reviews.length === 0) { %>
-        <p>No reviews yet. Be the first!</p>
+        <p>No reviews yet.</p>
     <% } else { %>
         <% reviews.forEach(review => { %>
             <p><strong><%= review.reviewer.username %></strong> — ⭐ <%= review.rating %>/5</p>
+            <p>
+                <strong>Pet applied for: <%= review.petName || '' %></strong>
+            </p>
             <p><%= review.comment %></p>
-            <p><small><%= new Date(review.createdAt).toDateString() %></small></p>
-
-            <% if (user && review.reviewer._id.toString() === user._id.toString()) { %>
-                <a href="/browse/reviews/<%= review._id %>/edit">Edit</a>
-                <form action="/browse/reviews/<%= review._id %>/delete" method="POST" style="display:inline;">
-                    <input type="hidden" name="shelterId" value="<%= shelterId %>">
-                    <button type="submit">Delete</button>
-                </form>
+            <p><small>Posted on: <%= new Date(review.createdAt).toLocaleString('en-SG', { dateStyle: 'medium', timeStyle: 'short' }) %></small></p>
+            <% if (review.updatedAt) { %>
+                <p><small>Updated on: <%= new Date(review.updatedAt).toLocaleString('en-SG', { dateStyle: 'medium', timeStyle: 'short' }) %></small></p>
             <% } %>
             <hr>
         <% }) %>
     <% } %>
-
-    <h3>Leave a Review</h3>
-    <form action="/browse/reviews" method="POST">
-        <input type="hidden" name="shelterId" value="<%= shelterId %>">
-        <label>Rating:</label>
-        <select name="rating">
-            <option value="5">⭐⭐⭐⭐⭐ 5</option>
-            <option value="4">⭐⭐⭐⭐ 4</option>
-            <option value="3">⭐⭐⭐ 3</option>
-            <option value="2">⭐⭐ 2</option>
-            <option value="1">⭐ 1</option>
-        </select>
-        <br><br>
-        <label>Comment:</label><br>
-        <textarea name="comment" rows="4" cols="50" placeholder="Write your review" required></textarea>
-        <br><br>
-        <button type="submit">Submit Review</button>
-    </form>
 </body>
 </html>

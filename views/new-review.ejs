@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head><title>Submit Review</title></head>
+<body>
+    <a href="/applications/mine">Back to My Applications</a>
+    <h2>Review for <%= shelterName %></h2>
+
+    <form action="/browse/reviews/new" method="POST">
+        <input type="hidden" name="shelterId" value="<%= shelterId %>">
+        <input type="hidden" name="shelterName" value="<%= shelterName %>">
+        <input type="hidden" name="applicationId" value="<%= applicationId %>">
+
+        <label>Rating:</label>
+        <select name="rating">
+            <option value="null" <%= (!submittedRating || submittedRating === 'null') ? 'selected' : '' %>>Please select a rating</option>
+            <option value="5" <%= submittedRating === '5' ? 'selected' : '' %>>⭐⭐⭐⭐⭐ 5</option>
+            <option value="4" <%= submittedRating === '4' ? 'selected' : '' %>>⭐⭐⭐⭐ 4</option>
+            <option value="3" <%= submittedRating === '3' ? 'selected' : '' %>>⭐⭐⭐ 3</option>
+            <option value="2" <%= submittedRating === '2' ? 'selected' : '' %>>⭐⭐ 2</option>
+            <option value="1" <%= submittedRating === '1' ? 'selected' : '' %>>⭐ 1</option>
+        </select>
+        <br><br>
+        <label>Comment:</label><br>
+        <textarea name="comment" rows="4" cols="50" placeholder="Write your review"><%= submittedComment || '' %></textarea>
+        <br><br>
+
+        <% if (check_error && check_error.length > 0) { %>
+            <ul>
+                <% check_error.forEach(error => { %>
+                    <li style="color:red;"><%= error %></li>
+                <% }) %>
+            </ul>
+        <% } %>
+
+        <button type="submit">Submit Review</button>
+    </form>
+</body>
+</html>

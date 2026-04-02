@@ -21,7 +21,7 @@ const descisionLogSchema = new mongoose.Schema({
     },
     livingSituation: {
         type: String,
-        required: true // Not required initially so users can save incomplete drafts
+        required: true 
     },
     experienceDetails: {
         type: String,
@@ -38,7 +38,7 @@ const descisionLogSchema = new mongoose.Schema({
     },
     shelterId:{
         type: String,
-        required: false
+        required: true
     },
     comments:{
         type: String,
@@ -54,13 +54,13 @@ const descisionLogSchema = new mongoose.Schema({
 
 const Descisionlog = mongoose.model('DescisionLog', descisionLogSchema, 'descisionLogs');
 
-module.exports = Descisionlog
+module.exports = Descisionlog;
 
 exports.retrievePending = function (shelterName) {
     return Descisionlog.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']} } );
 };
 
 exports.retrieveAll = function () {
-    return Descisionlog.find()
+    return Descisionlog.find();
 };
 

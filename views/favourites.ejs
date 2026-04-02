@@ -27,6 +27,7 @@
                                 <thead>
                                     <tr>
                                         <th>Pet Name</th>
+                                        <th>Shelter</th>
                                         <th>Breed</th>
                                         <th>Age</th>
                                         <th>Size</th>
@@ -41,6 +42,11 @@
                                             <td>
                                                 <a href="/browse/petDetail?petId=<%= fav.petId._id %>">
                                                     <%= fav.petId.name %>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="/browse?shelterId=<%= fav.petId.shelterId %>">
+                                                    <%= fav.shelterName %>
                                                 </a>
                                             </td>
                                             <td>

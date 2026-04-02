@@ -31,22 +31,47 @@
     <h2 style="text-align:center;">
         <%=allPets.length%> Pets Available In <%=shelter.shelterName%>!
     </h2>
-<h3 style="width:80%; margin:auto; margin-top:20px;">
-    🔥 Top 3 Trending Pets (Based On Current Filter)
-</h3>
+<% if (allPets.length > 0) { %>
+    <h3 style="width:80%; margin:auto; margin-top:20px;">
+        🔥 Top 3 Trending Pets (Based On Current Filter)
+    </h3>
 
-<div style="width:80%; margin:auto; display:flex; gap:15px; margin-bottom:20px;">
-  <% popularPets.forEach(pet => { %>
-    <a href="#pet-<%= pet._id %>" style="text-decoration:none; color:black;">
-      <div style="border:1px solid #ccc; padding:10px; border-radius:8px; width:150px;">
-        <strong><%= pet.name %></strong><br>
-        👀 <%= pet.viewCount %>
-      </div>
-    </a>
-  <% }) %>
-</div>
+    <div style="width:80%; margin:auto; display:flex; gap:15px; margin-bottom:20px;">
+        <% popularPets.forEach(pet => { %>
+            <a href="#pet-<%= pet._id %>" style="text-decoration:none; color:black;">
+                <div style="border:1px solid #ccc; padding:10px; border-radius:8px; width:150px;">
+                    <strong>
+                        <%= pet.name %>
+                    </strong><br>
+<small>
+  👀 <%= pet.viewCount %> <%= pet.viewCount === 1 ? "viewer" : "viewers" %>
+  · 📝 <%= pet.applicationCount %> <%= pet.applicationCount === 1 ? "application" : "applications" %>
+</small>                                </div>
+                                </a>
+                                <% }) %>
+                                    </div>
+                                    <% } %>
     <form method="GET" action="/browse" style="width:80%; margin:auto; margin-bottom:20px;">
-<a href="/browse?shelterId=<%= shelterId %>&sort=views&name=<%= req.query.name || '' %>&breed=<%= req.query.breed || '' %>&size=<%= req.query.size || '' %><%= req.query.vaccinated ? '&vaccinated=true' : '' %><%= req.query.neutered ? '&neutered=true' : '' %><%= req.query.houseTrained ? '&houseTrained=true' : '' %>">Sort by Views</a>        <input type="hidden" name="shelterId" value="<%= shelterId %>">
+<select name="sort">
+    <option value="">Sort by</option>
+
+    <option value="views_desc" <%= req.query.sort === "views_desc" ? "selected" : "" %>>
+        Views (High -> Low)
+    </option>
+
+    <option value="views_asc" <%= req.query.sort === "views_asc" ? "selected" : "" %>>
+        Views (Low -> High)
+    </option>
+
+    <option value="apps_desc" <%= req.query.sort === "apps_desc" ? "selected" : "" %>>
+        Applications (High -> Low)
+    </option>
+
+    <option value="apps_asc" <%= req.query.sort === "apps_asc" ? "selected" : "" %>>
+        Applications (Low -> High)
+    </option>
+</select>
+<input type="hidden" name="shelterId" value="<%= shelterId %>">
         <!-- Name -->
         <input type="text" name="name" placeholder="Search pet name" value="<%= req.query.name || '' %>">
 <input type="text" name="breed" list="breedList" placeholder="Search breed" value="<%= req.query.breed || '' %>">
@@ -133,8 +158,12 @@
                     <% allPets.forEach(pet=> { %>
                         <tr id="pet-<%= pet._id %>">
                             <td>
-                                <%= pet.name %> <br>👀<%=pet.viewCount%> <br> <% if (pet.viewCount > 3) { %>🔥 Popular<% } %>
-                            </td>
+<%= pet.name %><br>
+<small>
+  👀 <%= pet.viewCount %> <%= pet.viewCount === 1 ? "viewer" : "viewers" %>
+  · 📝 <%= pet.applicationCount %> <%= pet.applicationCount === 1 ? "application" : "applications" %>
+</small>                       
+</td>
                             <td>
                                 <%= pet.breed %>
                             </td>
@@ -169,32 +198,27 @@
                 <!-- DARRYL's SHELTER REVIEWS -->
 
                 <hr>
-                <h3>Reviews <%= avgRating ? '⭐ ' + avgRating + '/5' : '' %>
+                <h3>Shelter Ratings <%= avgRating ? '⭐ ' + avgRating + '/5.0' : '' %> (<%= reviews.length %>)
                 </h3>
 
                 <% if (reviews.length===0) { %>
                     <p>No reviews yet.</p>
                     <% } else { %>
                         <% reviews.forEach(review=> { %>
-                            <% if (review.reviewer) { %>
+                            <% if (review.reviewer) { %> <!--if reviewer exists and not deleted, extra layer of check aside from validReviews -->
                                 <p><strong>
                                         <%= review.reviewer.username %>
                                     </strong> — ⭐ <%= review.rating %>/5</p>
                                 <p>
+                                    <strong>Pet applied for: <%= review.petName || '' %></strong>
+                                </p>
+                                <p>
                                     <%= review.comment %>
                                 </p>
-                                <p><small>
-                                        <%= new Date(review.createdAt).toDateString() %>
-                                    </small></p>
-
-                                <% if (user && review.reviewer._id.toString()===user._id.toString()) { %>
-                                    <a href="/browse/reviews/<%= review._id %>/edit">Edit</a>
-                                    <form action="/browse/reviews/<%= review._id %>/delete" method="POST"
-                                        style="display:inline;">
-                                        <input type="hidden" name="shelterId" value="<%= shelterId %>">
-                                        <button type="submit">Delete</button>
-                                    </form>
-                                    <% } %>
+                               <p><small>Posted on: <%= new Date(review.createdAt).toLocaleString('en-SG', { dateStyle: 'medium', timeStyle: 'short' }) %></small></p>
+                                <% if (review.updatedAt) { %>
+                                    <p><small>Updated on: <%= new Date(review.updatedAt).toLocaleString('en-SG', { dateStyle: 'medium', timeStyle: 'short' }) %></small></p>
+                                <% } %>
                                         <% } %>
                                             <hr>
                                             <% }) %>

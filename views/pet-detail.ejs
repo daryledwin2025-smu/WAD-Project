@@ -18,7 +18,11 @@
 </p>
 
 <br>
-
+<% if (userViewCount > 3) { %>
+    <p style="color:green;">
+        💚 Looks like <%= pet.name %> caught your eye — why not apply to adopt?
+    </p>
+<% } %>
 <a href="/applications/applyForm?petId=<%= pet._id %>&petName=<%= pet.name %>">
   🐾 Click here to adopt <%= pet.name %>!
 </a>
@@ -26,8 +30,12 @@
 <br><br>
 
 <% if (user && user.account !== "Shelter") { %>
-    <form action="/favourites/add" method="POST" style="display:inline;">
-        <input type="hidden" name="petId" value="<%= pet._id %>">
-        <button type="submit">❤️ Add to Favourites</button>
-    </form>
+    <% if (isFavourited) { %>
+        <span>❤️ Already in your Favourites</span>
+    <% } else { %>
+        <form action="/favourites/add" method="POST" style="display:inline;">
+            <input type="hidden" name="petId" value="<%= pet._id %>">
+            <button type="submit">🤍 Add to Favourites</button>
+        </form>
+    <% } %>
 <% } %>
