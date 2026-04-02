@@ -31,7 +31,7 @@ exports.showAllReviews = async (req, res) => {
 
         const validReviews = reviews.filter(review => review.reviewer !== null);
 
-        res.render("reviews", { shelter, reviews: validReviews, shelterId, user: req.session.user, check_error: [], submittedRating: null, submittedComment: '', filterRating, sortOrder });
+        res.render("reviews", { shelter, reviews: validReviews, shelterId, user: req.session.user, filterRating, sortOrder });
     } catch (error) {
         console.log(error);
     }
