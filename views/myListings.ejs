@@ -154,16 +154,23 @@
                         <tr>
                             <td>
                                 <%= pet.name %>
-                                    <% if (pet.isAdopted) { %>
-                                        <span style="color:gray;">(Adopted)</span>
+                
+                                    <% if (pet.viewCount> 5 || pet.applicationCount > 2) { %>
+                                        <span style="color:#e67e22; margin-left:5px;">🔥 Popular</span>
                                         <% } %>
-                                            <br>
-                                            <small>
-                                                👀 <%= pet.viewCount %>
-                                                    <%= pet.viewCount===1 ? "viewer" : "viewers" %>
-                                                        · 📝 <%= pet.applicationCount %>
-                                                            <%= pet.applicationCount===1 ? "application" : "applications" %>
-                                            </small>
+                
+                                            <% if (pet.isAdopted) { %>
+                                                <span style="color:gray; margin-left:5px;">(Adopted)</span>
+                                                <% } %>
+                
+                                                    <br>
+                
+                                                    <small>
+                                                        👀 <%= pet.viewCount %>
+                                                            <%= pet.viewCount===1 ? "viewer" : "viewers" %>
+                                                                · 📝 <%= pet.applicationCount %>
+                                                                    <%= pet.applicationCount===1 ? "pending application" : "pending applications" %>
+                                                    </small>
                             </td>
                             <td>
                                 <%= pet.breed %>

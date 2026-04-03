@@ -158,10 +158,15 @@
                     <% allPets.forEach(pet=> { %>
                         <tr id="pet-<%= pet._id %>">
                             <td>
-<%= pet.name %><br>
+<%= pet.name %>
+<% if (pet.viewCount > 5 || pet.applicationCount > 2) { %>
+  <span style="color:#e67e22;"> 🔥 Popular</span>
+<% } %>
+<br>
+
 <small>
   👀 <%= pet.viewCount %> <%= pet.viewCount === 1 ? "viewer" : "viewers" %>
-  · 📝 <%= pet.applicationCount %> <%= pet.applicationCount === 1 ? "application" : "applications" %>
+  · 📝 <%= pet.applicationCount %> <%= pet.applicationCount === 1 ? "pending application" : "pending applications" %>
 </small>                       
 </td>
                             <td>
