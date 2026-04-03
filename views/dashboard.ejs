@@ -14,9 +14,9 @@
             <% let filterName = [] %>
             <option value="">--Select a Pet--</option>
             <% filterList.forEach(application => { %>               
-                <% if(application.pet && !(filterName.includes(application.petName))){ %>
-                <option value="<%= application.petName %>"><%= application.petName %></option>
-                <% filterName.push(application.petName) %>
+                <% if(application.pet && !(filterName.includes(application.pet.name)) && application.applicant){ %>
+                <option value="<%= application.pet.name %>"><%= application.pet.name %></option>
+                <% filterName.push(application.pet.name) %>
                 <% } %>
             <% }) %>            
         </select>
@@ -33,7 +33,7 @@
         <% if (application.pet && application.applicant) { %>
             <p> Application ID: <%= application.id %> </p>
                 <p> Applicant ID: <%= application.applicantName %> </p>
-                    <p> Pet: <%= application.petName %> </p>
+                    <p> Pet: <%= application.pet.name %> </p>
                         <p> Living Situation: <%= application.livingSituation %> </p>
                             <% if(application.experienceDetails.length==0){ %>
                                 <p> Experience Details: Applicant has no experience details! </p>                             

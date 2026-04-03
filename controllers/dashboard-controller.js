@@ -4,7 +4,7 @@ const Application = require('../models/Application');
 
 exports.showApplications = async (req, res) => {
         const applicationID = req.params.id;
-        let applications = await Application.findById(applicationID);
+        let applications = await Application.findById(applicationID).populate('pet');
         applications = [applications];
         res.render("applicationDetails", {applications});
 };
@@ -14,12 +14,12 @@ exports.showDashboard = async (req, res) => {
     let shelterName = req.session.user._id;
     const petFilter = req.query.pet;
     let dashboardList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']} } ).populate('pet').populate('applicant');
-    let filterList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']} } ).populate('pet');
+    let filterList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']} } ).populate('pet').populate('applicant');
 
     
     
     if(petFilter){
-        dashboardList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']}, petName: {$in: [petFilter]} } ).populate('pet').populate('applicant');
+        dashboardList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']},} ).populate({path: 'pet', match: {name: petFilter}  }).populate('applicant');
     }else{
         dashboardList = await Application.find ( { shelterId: {$in: [ shelterName ]}, status: {$in: ['Pending']} } ).populate('pet').populate('applicant');
     };
