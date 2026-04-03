@@ -6,29 +6,34 @@
 <body>
 
     <h1>Manage Pet ✏️</h1>
+    <% if (pet.isAdopted) { %>
+    <p style="color:red; font-weight:bold;">
+        🔒 This pet has been adopted. Editing is disabled.
+    </p>
+<% } %>
 <h2>Pet Details 🐶</h2>
 
     <form action="/pets/editPet" method="POST">
 
         <div>
             <label>Name:</label>
-            <input type="text" name="name" value="<%= pet.name %>" required>
+            <input type="text" name="name" value="<%= pet.name %>" required <%= pet.isAdopted ? "disabled" : "" %>>
         </div>
 <br>
 
         <div>
             <label>Breed:</label>
-            <input type="text" name="breed" value="<%= pet.breed %>" required>
+            <input type="text" name="breed" value="<%= pet.breed %>" required <%= pet.isAdopted ? "disabled" : "" %>>
         </div>
 <br>
 
         <div>
             <label>Age:</label>
-            <input type="number" name="age" value="<%= pet.age %>" required>
+            <input type="number" name="age" value="<%= pet.age %>" required <%= pet.isAdopted ? "disabled" : "" %>>
         </div>
 <br>
 Dog size:
-<select name="size" required>
+<select name="size" required <%= pet.isAdopted ? "disabled" : "" %>>
   <option value="">Select size</option>
   <option value="Small" <%= pet.size === "Small" ? "selected" : "" %>>Small</option>
   <option value="Medium" <%= pet.size === "Medium" ? "selected" : "" %>>Medium</option>
@@ -37,7 +42,7 @@ Dog size:
 <br><br>
         <label>Description:</label><br><small style="color:gray;">Maximum 200 characters</small><br>
         
-        <textarea name="description" rows="4" cols="40" required><%= pet.description %></textarea><% if (error) { %>
+        <textarea name="description" rows="4" cols="40" required <%= pet.isAdopted ? "disabled" : "" %>><%= pet.description %></textarea><% if (error) { %>
             
     <p style="color:red;"><%= error %></p>
 <% } %>
@@ -45,26 +50,32 @@ Dog size:
 <h2>Other Information 📊</h2>
 
 <label>
-  <input type="checkbox" name="vaccinated" <%= pet.vaccinated ? "checked" : "" %>>
+ <input type="checkbox" name="vaccinated" <%= pet.vaccinated ? "checked" : "" %> <%= pet.isAdopted ? "disabled" : "" %>>
   Vaccinated
 </label><br>
 
 <label>
-  <input type="checkbox" name="neutered" <%= pet.neutered ? "checked" : "" %>>
+  <input type="checkbox" name="neutered" <%= pet.neutered ? "checked" : "" %> <%= pet.isAdopted ? "disabled" : "" %>>
   Neutered
 </label><br>
 
 <label>
-  <input type="checkbox" name="houseTrained" <%= pet.houseTrained ? "checked" : "" %>>
+  <input type="checkbox" name="houseTrained" <%= pet.houseTrained ? "checked" : "" %> <%= pet.isAdopted ? "disabled" : "" %>>
   House Trained
 </label><br><br>
 
         <!-- hidden field to keep petId -->
         <input type="hidden" name="_id" value="<%= pet._id %>">
 
-        <button type="submit">Save Changes</button>
+        <% if (!pet.isAdopted) { %>
+    <button type="submit">Save Changes</button>
+<% } %>
         <br><br>
-<a href="/pets/deletePet?petId=<%=pet._id%>" onclick="return confirm('Are you sure you want to delete <%=pet.name%>?')"><button type="button">Delete</button></a>
+<% if (!pet.isAdopted) { %>
+    <a href="/pets/deletePet?petId=<%=pet._id%>" onclick="return confirm('Are you sure you want to delete <%=pet.name%>?')">
+        <button type="button">Delete</button>
+    </a>
+<% } %>
     </form>
 
     <br>

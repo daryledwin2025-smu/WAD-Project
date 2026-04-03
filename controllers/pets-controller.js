@@ -369,12 +369,27 @@ if (req.query.status === "browsing") {
 }
 
     let pet = await Pet.displayPetById(petId);
+    // is this pet approved?
+    let approvedApp = await Application.findOne({
+    pet: petId,
+    status: "Approved"
+});
+
+pet.isAdopted = approvedApp ? true : false;
 
     res.render("edit-pet", { pet, viewers, error: null,req });
 };
 
 exports.editPet = async (req, res) => {
     let pet = req.body;
+    let approvedApp = await Application.findOne({
+    pet: pet._id,
+    status: "Approved"
+});
+
+if (approvedApp) {
+    return res.send("Cannot edit adopted pet");
+}
 
     // handle checkboxes
     pet.vaccinated = pet.vaccinated ? true : false;
@@ -448,6 +463,14 @@ for (let i = 0; i < views.length; i++) {
 exports.deletePet = async (req, res) => {
     const petId = req.query.petId;
     try {
+        let approvedApp = await Application.findOne({
+            pet: petId,
+            status: "Approved"
+        });
+
+        if (approvedApp) {
+            return res.send("Cannot delete adopted pet");
+        }
         // delete all views FIRST
         await View.deleteByPetId(petId);
         // then delete pet
